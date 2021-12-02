@@ -2,34 +2,33 @@ import 'package:flutter/material.dart';
 
 import 'package:mealprep/Models/meal.dart';
 import 'package:mealprep/constant.dart';
-import 'package:mealprep/widgets/app_bar.dart';
-
- 
+import 'package:provider/provider.dart';
 
 class UserMealsScreen extends StatelessWidget {
   const UserMealsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List<Meal> userMeals = Provider.of<UserMealsData>(context).userMeals;
 
-
-var _appBar = AppBar(
-    backgroundColor: aPrimary,
-    leading: Container(
-      padding:EdgeInsets.all(8),
-      child: CircleAvatar( child: Image.asset('assets/images/alphatrait.png'),
-      ),
-    ),
-    title: Text("User Meals"),
-    actions: [
-      Container(
-         padding:EdgeInsets.all(8),
+    var _appBar = AppBar(
+      backgroundColor: aPrimary,
+      leading: Container(
+        padding: EdgeInsets.all(8),
         child: CircleAvatar(
-          child: Image.asset('assets/images/person.png'),
+          child: Image.asset('assets/images/alphatrait.png'),
         ),
-      )
-    ],
-  );
+      ),
+      title: Text("User Meals"),
+      actions: [
+        Container(
+          padding: EdgeInsets.all(8),
+          child: CircleAvatar(
+            child: Image.asset('assets/images/person.png'),
+          ),
+        )
+      ],
+    );
 
     MediaQueryData queryData = MediaQuery.of(context);
     var height = queryData.size.height / 100;
@@ -67,7 +66,7 @@ var _appBar = AppBar(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ContentContainer(
-                    index: index,
+                    meal: userMeals[index]
                   ), //Content Container
                   Container(
                     height: 180,
@@ -90,9 +89,9 @@ var _appBar = AppBar(
 }
 
 class ContentContainer extends StatelessWidget {
-  ContentContainer({required this.index});
 
-  var index;
+  Meal meal;
+  ContentContainer({required this.meal});
 
   @override
   Widget build(BuildContext context) {
@@ -130,11 +129,11 @@ class ContentContainer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  userMeals[index].title,
+                 meal.title,
                   style: Theme.of(context).textTheme.headline6,
                 ),
                 Text(
-                  userMeals[index].subTitle,
+                  meal.subTitle,
                   style: Theme.of(context).textTheme.bodyText2,
                 ),
                 const SizedBox(
@@ -152,11 +151,11 @@ class ContentContainer extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        userMeals[index].calories['weight'],
+                        meal.calories['weight'],
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                       Text(
-                        userMeals[index].calories['unit'],
+                        meal.calories['unit'],
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ],
@@ -166,11 +165,11 @@ class ContentContainer extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        userMeals[index].protein['weight'],
+                        meal.protein['weight'],
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                       Text(
-                        userMeals[index].protein['unit'],
+                        meal.protein['unit'],
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ],
@@ -180,11 +179,11 @@ class ContentContainer extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        userMeals[index].carbohydrates['weight'],
+                        meal.carbohydrates['weight'],
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                       Text(
-                        userMeals[index].carbohydrates['unit'],
+                        meal.carbohydrates['unit'],
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ],
@@ -194,11 +193,11 @@ class ContentContainer extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        userMeals[index].carbohydrates['weight'],
+                        meal.carbohydrates['weight'],
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                       Text(
-                        userMeals[index].carbohydrates['unit'],
+                        meal.carbohydrates['unit'],
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ],

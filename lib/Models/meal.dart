@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 class Meal {
   int id;
   String title;
@@ -31,7 +34,12 @@ class Meal {
   });
 }
 
-List<Meal> userMeals = [
+
+
+
+class UserMealsData with ChangeNotifier{
+
+List<Meal> _userMeals = [
   Meal(
     id: 1,
     title: 'Beef Roasted Beets',
@@ -164,3 +172,14 @@ List<Meal> userMeals = [
  
   ),
 ];
+
+List<Meal> get userMeals{
+  return [..._userMeals];
+}
+
+Meal singleMeal(int id){
+  return _userMeals.firstWhere((element) => element.id == id);
+}
+
+
+}
