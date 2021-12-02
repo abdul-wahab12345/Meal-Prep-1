@@ -13,7 +13,6 @@ class Meal {
 
   String ingredients;
 
-  List<Map<String,dynamic>> nutritions;
 
   bool isFav;
 
@@ -29,7 +28,6 @@ class Meal {
     required this.isFav,
     required this.badges,
     required this.ingredients,
-    required this.nutritions
   });
 }
 
@@ -56,7 +54,7 @@ List<Meal> userMeals = [
     isFav: false,
     badges: ["Gluten Free","Soy Free","Dairy Free","Nut Free"],
     ingredients: "With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff.",
-    nutritions: [{"name": "Abdul Wahab","imageUrl":"","professioin":"Nutritionist","comment":"With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff."}]
+    
   ),
 
   //2
@@ -83,7 +81,7 @@ List<Meal> userMeals = [
     isFav: false,
      badges: ["Gluten Free","Soy Free","Dairy Free","Nut Free"],
     ingredients: "With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff.",
-    nutritions: [{"name": "Abdul Wahab","imageUrl":"","professioin":"Nutritionist","comment":"With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff."}]
+
  
   ),
 
@@ -110,7 +108,7 @@ List<Meal> userMeals = [
     isFav: false,
      badges: ["Gluten Free","Soy Free","Dairy Free","Nut Free"],
     ingredients: "With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff.",
-    nutritions: [{"name": "Abdul Wahab","imageUrl":"","professioin":"Nutritionist","comment":"With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff."}]
+    
  
   ),
   //4
@@ -136,7 +134,7 @@ List<Meal> userMeals = [
     isFav: false,
      badges: ["Gluten Free","Soy Free","Dairy Free","Nut Free"],
     ingredients: "With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff.",
-    nutritions: [{"name": "Abdul Wahab","imageUrl":"","professioin":"Nutritionist","comment":"With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff."}]
+    
  
   ),
   //5
@@ -162,7 +160,7 @@ List<Meal> userMeals = [
     isFav: false,
      badges: ["Gluten Free","Soy Free","Dairy Free","Nut Free"],
     ingredients: "With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff.",
-    nutritions: [{"name": "Abdul Wahab","imageUrl":"","professioin":"Nutritionist","comment":"With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff."}]
+    
  
   ),
 ];
