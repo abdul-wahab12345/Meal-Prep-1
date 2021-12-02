@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mealprep/Models/meal.dart';
 import 'package:mealprep/screens/meal_details_screen.dart';
-import 'package:mealprep/screens/profile_screen.dart';
 import 'package:mealprep/screens/user_meals_screen.dart';
+
 import 'package:provider/provider.dart';
+
+import 'Models/meals.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,8 +16,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (ctx) => UserMealsData(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => UserMealsData(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Meal Prep',
@@ -43,11 +48,13 @@ class MyApp extends StatelessWidget {
               letterSpacing: 2,
             ),
           ),
-         
         ),
-        home: MealDetailsScreen(),
+        routes: {
+          "/": (ctx) => UserMealsScreen(),
+          MealDetailsScreen.routeName: (ctx) => MealDetailsScreen(),
+        },
+        //home: UserMealsScreen(),
       ),
     );
   }
 }
-

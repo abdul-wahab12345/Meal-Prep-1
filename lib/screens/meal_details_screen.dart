@@ -1,26 +1,29 @@
-
 import 'package:flutter/material.dart';
-import 'package:mealprep/Models/meal.dart';
+import 'package:mealprep/Models/meals.dart';
 import 'package:mealprep/constant.dart';
 import 'package:provider/provider.dart';
 
 class MealDetailsScreen extends StatelessWidget {
+  static const routeName = 'meal-details';
   const MealDetailsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Meal meal =
-        Provider.of<UserMealsData>(context, listen: false).singleMeal(1);
+    final mealId = ModalRoute.of(context)!.settings.arguments;
+    final meal = Provider.of<UserMealsData>(context)
+        .singleMeal(mealId as int);
+
+    var textTheme = Theme.of(context).textTheme;
 
     var _appBar = AppBar(
       backgroundColor: aPrimary,
-      leading: Container(
-        padding: EdgeInsets.all(8),
-        child: CircleAvatar(
-          child: Image.asset('assets/images/alphatrait.png'),
-        ),
-      ),
-      title: Text("User Meals"),
+      // leading: Container(
+      //   padding: EdgeInsets.all(8),
+      //   child: CircleAvatar(
+      //     child: Image.asset('assets/images/alphatrait.png'),
+      //   ),
+      // ),
+      title: Text("Meal"),
       actions: [
         Container(
           padding: EdgeInsets.all(8),
@@ -35,17 +38,36 @@ class MealDetailsScreen extends StatelessWidget {
       body: Container(
         width: double.infinity,
         margin: EdgeInsets.only(
-          left: 15,
-          right: 15,
-          top: 15,
+          left: 5,
+          right: 5,
+          top: 5,
         ),
         child: Column(
           children: [
             ListTile(
-              title: Text(meal.title,style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.black),),
-              subtitle: Text(meal.subTitle,style: TextStyle(color: Colors.black),),
-              trailing:
-                  Icon(meal.isFav ? Icons.favorite : Icons.favorite_outline),
+              title: Text(
+                meal.title,
+                style: textTheme.headline6!.copyWith(color: Colors.black),
+              ),
+              subtitle: Text(
+                meal.subTitle,
+                style: textTheme.bodyText2!.copyWith(color: Colors.black),
+              ),
+              trailing: IconButton(
+                  onPressed: () {
+                    Provider.of<UserMealsData>(context,listen:false).toggleFavorite(meal.id);
+                  },
+                  icon: meal.isFav
+                      ? Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                          size: 30,
+                        )
+                      : Icon(
+                          Icons.favorite_outline,
+                          color: Colors.black,
+                          size: 30,
+                        )),
             )
           ],
         ),
@@ -53,3 +75,20 @@ class MealDetailsScreen extends StatelessWidget {
     );
   }
 }
+
+
+// Consumer<Meal>(
+//                 builder: (ctx, meal, _) => IconButton(
+//                     onPressed: () {},
+//                     icon: meal.isFav
+//                         ? Icon(
+//                             Icons.favorite,
+//                             color: Colors.red,
+//                             size: 30,
+//                           )
+//                         : Icon(
+//                             Icons.favorite_outline,
+//                             color: Colors.black,
+//                             size: 30,
+//                           )),
+//               )

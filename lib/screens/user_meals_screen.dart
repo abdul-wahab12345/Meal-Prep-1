@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:mealprep/Models/meal.dart';
+import 'package:mealprep/Models/meals.dart';
 import 'package:mealprep/constant.dart';
+import 'package:mealprep/screens/meal_details_screen.dart';
 import 'package:provider/provider.dart';
 
 class UserMealsScreen extends StatelessWidget {
@@ -52,33 +54,40 @@ class UserMealsScreen extends StatelessWidget {
           ),
           child: ListView.builder(
             itemCount: userMeals.length,
-            itemBuilder: (ctx, index) => Container(
-              //  constraints: BoxConstraints(minHeight: 200),
-              //height: 200,
-              margin: EdgeInsets.only(
-                top: 20,
-              ),
-              decoration: BoxDecoration(
-                color: aPrimary,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ContentContainer(
-                    meal: userMeals[index]
-                  ), //Content Container
-                  Container(
-                    height: 180,
-                    width: width * 35,
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    //color: Colors.white,
-                    child: Image.network(
-                      userMeals[index].imageUrl,
-                      fit: BoxFit.cover,
-                    ),
-                  ), //ImageConatiner
-                ],
+            itemBuilder: (ctx, index) => GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, MealDetailsScreen.routeName,
+                    arguments: userMeals[index].id);
+              },
+              child: Container(
+                //  constraints: BoxConstraints(minHeight: 200),
+                //height: 200,
+                margin: EdgeInsets.only(
+                  top: 20,
+                ),
+                decoration: BoxDecoration(
+                  color: aPrimary,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ChangeNotifierProvider.value(
+                      value: userMeals[index],
+                      child: ContentContainer(),
+                    ), //Content Container
+                    Container(
+                      height: 180,
+                      width: width * 35,
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      //color: Colors.white,
+                      child: Image.network(
+                        userMeals[index].imageUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    ), //ImageConatiner
+                  ],
+                ),
               ),
             ),
           ),
@@ -89,16 +98,15 @@ class UserMealsScreen extends StatelessWidget {
 }
 
 class ContentContainer extends StatelessWidget {
-
-  Meal meal;
-  ContentContainer({required this.meal});
+  ContentContainer();
 
   @override
   Widget build(BuildContext context) {
-    MediaQueryData queryData = MediaQuery.of(context);
-    var height = queryData.size.height / 100;
-    var width = queryData.size.width / 100;
 
+    Meal meal  = Provider.of<Meal>(context,listen: false);
+
+    MediaQueryData queryData = MediaQuery.of(context);
+    var width = queryData.size.width / 100;
     Orientation currentOrientation = MediaQuery.of(context).orientation;
 
     if (currentOrientation == Orientation.landscape) {
@@ -115,9 +123,20 @@ class ContentContainer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.favorite_border_outlined,
-            color: Colors.white,
+          Consumer<Meal>(
+            builder: (ctx, meal, _) => IconButton(
+                onPressed: () {
+                 meal.toggleFavorite();
+                },
+                icon: meal.isFav
+                    ? const Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                      )
+                    : const Icon(
+                        Icons.favorite_outline,
+                        color: Colors.white,
+                      )),
           ),
           const SizedBox(
             height: 12,
@@ -129,7 +148,7 @@ class ContentContainer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                 meal.title,
+                  meal.title,
                   style: Theme.of(context).textTheme.headline6,
                 ),
                 Text(
