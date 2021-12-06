@@ -4,10 +4,29 @@ import 'package:mealprep/Models/meal.dart';
 import 'package:mealprep/Models/meals.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/meal_details_screen.dart';
+import 'package:mealprep/screens/profile_screen.dart';
 import 'package:provider/provider.dart';
 
-class UserMealsScreen extends StatelessWidget {
+class UserMealsScreen extends StatefulWidget {
   const UserMealsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<UserMealsScreen> createState() => _UserMealsScreenState();
+}
+
+class _UserMealsScreenState extends State<UserMealsScreen> {
+  bool isFirst = true;
+
+  @override
+  void didChangeDependencies() {
+    if (isFirst) {
+      Provider.of<UserMealsData>(context, listen: false).fetchAndSetMeals();
+      isFirst = false;
+    }
+
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,17 +35,22 @@ class UserMealsScreen extends StatelessWidget {
     var _appBar = AppBar(
       backgroundColor: aPrimary,
       leading: Container(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: CircleAvatar(
           child: Image.asset('assets/images/alphatrait.png'),
         ),
       ),
       title: Text("User Meals"),
       actions: [
-        Container(
-          padding: EdgeInsets.all(8),
-          child: CircleAvatar(
-            child: Image.asset('assets/images/person.png'),
+        GestureDetector(
+            onTap: () {
+            Navigator.pushNamed(context, ProfileScreen.routeName);
+          },
+          child: Container(
+            padding: EdgeInsets.all(8),
+            child: CircleAvatar(
+              child: Image.asset('assets/images/person.png'),
+            ),
           ),
         )
       ],
@@ -62,7 +86,7 @@ class UserMealsScreen extends StatelessWidget {
               child: Container(
                 //  constraints: BoxConstraints(minHeight: 200),
                 //height: 200,
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                   top: 20,
                 ),
                 decoration: BoxDecoration(
@@ -71,6 +95,7 @@ class UserMealsScreen extends StatelessWidget {
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ChangeNotifierProvider.value(
                       value: userMeals[index],
@@ -79,7 +104,7 @@ class UserMealsScreen extends StatelessWidget {
                     Container(
                       height: 180,
                       width: width * 35,
-                      padding: EdgeInsets.symmetric(vertical: 20),
+                      padding: const EdgeInsets.symmetric(vertical: 20),
                       //color: Colors.white,
                       child: Image.network(
                         userMeals[index].imageUrl,
@@ -102,8 +127,7 @@ class ContentContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    Meal meal  = Provider.of<Meal>(context,listen: false);
+    Meal meal = Provider.of<Meal>(context, listen: false);
 
     MediaQueryData queryData = MediaQuery.of(context);
     var width = queryData.size.width / 100;
@@ -118,15 +142,16 @@ class ContentContainer extends StatelessWidget {
         horizontal: width * 5,
       ),
       padding: const EdgeInsets.symmetric(
-        vertical: 20,
+        vertical: 10,
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Consumer<Meal>(
             builder: (ctx, meal, _) => IconButton(
                 onPressed: () {
-                 meal.toggleFavorite();
+                  meal.toggleFavorite();
                 },
                 icon: meal.isFav
                     ? const Icon(
@@ -170,11 +195,11 @@ class ContentContainer extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        meal.calories['weight'],
+                        meal.calories['weight'] as String,
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                       Text(
-                        meal.calories['unit'],
+                        meal.calories['type'] as String,
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ],
@@ -184,11 +209,11 @@ class ContentContainer extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        meal.protein['weight'],
+                        meal.protein['weight'] as String,
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                       Text(
-                        meal.protein['unit'],
+                        meal.protein['type'] as String,
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ],
@@ -198,11 +223,11 @@ class ContentContainer extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        meal.carbohydrates['weight'],
+                        meal.carbohydrates['weight'] as String,
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                       Text(
-                        meal.carbohydrates['unit'],
+                        meal.carbohydrates['type'] as String,
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ],
@@ -212,11 +237,11 @@ class ContentContainer extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        meal.carbohydrates['weight'],
+                        meal.fat['weight'] as String,
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                       Text(
-                        meal.carbohydrates['unit'],
+                        meal.fat['type'] as String,
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ],

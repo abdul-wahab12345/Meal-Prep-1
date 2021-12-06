@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/screens/meal_details_screen.dart';
+import 'package:mealprep/screens/profile_screen.dart';
 import 'package:mealprep/screens/user_meals_screen.dart';
 
 import 'package:provider/provider.dart';
@@ -34,12 +35,17 @@ class MyApp extends StatelessWidget {
               fontSize: 20,
               // height: 19.88,
             ),
+            headline5: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 24,
+            ),
             bodyText2: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w400,
               fontStyle: FontStyle.normal,
               fontSize: 13,
-              letterSpacing: 1.68,
+              letterSpacing: 1.3,
             ),
             caption: const TextStyle(
               fontWeight: FontWeight.w400,
@@ -52,6 +58,7 @@ class MyApp extends StatelessWidget {
         routes: {
           "/": (ctx) => UserMealsScreen(),
           MealDetailsScreen.routeName: (ctx) => MealDetailsScreen(),
+          ProfileScreen.routeName: (ctx) => ProfileScreen(),
         },
         //home: UserMealsScreen(),
       ),

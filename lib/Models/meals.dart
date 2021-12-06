@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:mealprep/Models/meal.dart';
 
 class UserMealsData with ChangeNotifier {
@@ -11,16 +13,16 @@ class UserMealsData with ChangeNotifier {
           'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1.png',
       calories: {
         'weight': '1802',
-        'unit': 'kcal',
+        'type': 'kcal',
       },
       carbohydrates: {
         'weight': '37g',
-        'unit': 'Carb',
+        'type': 'Carb',
       },
-      fat: {'weight': '114g', 'unit': 'Fat'},
+      fat: {'weight': '114g', 'type': 'Fat'},
       protein: {
         'weight': '112g',
-        'unit': 'Protein',
+        'type': 'Protein',
       },
       isFav: true,
       badges: ["Gluten Free", "Soy Free", "Dairy Free", "Nut Free"],
@@ -38,16 +40,16 @@ class UserMealsData with ChangeNotifier {
           'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1.png',
       calories: {
         'weight': '22g',
-        'unit': 'kcal',
+        'type': 'kcal',
       },
       carbohydrates: {
         'weight': '42g',
-        'unit': 'Carb',
+        'type': 'Carb',
       },
-      fat: {'weight': '2g', 'unit': 'Fat'},
+      fat: {'weight': '2g', 'type': 'Fat'},
       protein: {
         'weight': '342g',
-        'unit': 'Protein',
+        'type': 'Protein',
       },
       isFav: false,
       badges: ["Gluten Free", "Soy Free", "Dairy Free", "Nut Free"],
@@ -64,16 +66,16 @@ class UserMealsData with ChangeNotifier {
           'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1.png',
       calories: {
         'weight': '32g',
-        'unit': 'kcal',
+        'type': 'kcal',
       },
       carbohydrates: {
         'weight': '622g',
-        'unit': 'Carb',
+        'type': 'Carb',
       },
-      fat: {'weight': '2g', 'unit': 'Fat'},
+      fat: {'weight': '2g', 'type': 'Fat'},
       protein: {
         'weight': '32g',
-        'unit': 'Protein',
+        'type': 'Protein',
       },
       isFav: false,
       badges: ["Gluten Free", "Soy Free", "Dairy Free", "Nut Free"],
@@ -89,16 +91,16 @@ class UserMealsData with ChangeNotifier {
           'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1.png',
       calories: {
         'weight': '232g',
-        'unit': 'kcal',
+        'type': 'kcal',
       },
       carbohydrates: {
         'weight': '12g',
-        'unit': 'Carb',
+        'type': 'Carb',
       },
-      fat: {'weight': '2g', 'unit': 'Fat'},
+      fat: {'weight': '2g', 'type': 'Fat'},
       protein: {
         'weight': '72g',
-        'unit': 'Protein',
+        'type': 'Protein',
       },
       isFav: false,
       badges: ["Gluten Free", "Soy Free", "Dairy Free", "Nut Free"],
@@ -114,16 +116,16 @@ class UserMealsData with ChangeNotifier {
           'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1.png',
       calories: {
         'weight': '23g',
-        'unit': 'kcal',
+        'type': 'kcal',
       },
       carbohydrates: {
         'weight': '122g',
-        'unit': 'Carb',
+        'type': 'Carb',
       },
-      fat: {'weight': '2g', 'unit': 'Fat'},
+      fat: {'weight': '2g', 'type': 'Fat'},
       protein: {
         'weight': '32g',
-        'unit': 'Protein',
+        'type': 'Protein',
       },
       isFav: false,
       badges: ["Gluten Free", "Soy Free", "Dairy Free", "Nut Free"],
@@ -140,12 +142,94 @@ class UserMealsData with ChangeNotifier {
     return _userMeals.firstWhere((element) => element.id == id);
   }
 
-  void toggleFavorite(int id) {
+  Future<void> toggleFavorite(int id) async {
     Meal meal = _userMeals.firstWhere((element) => element.id == id);
     if (meal != null) {
+      final url;
+      if (!meal.isFav) {
+        url = Uri.parse(
+            "https://u1s.ee6.myftpupload.com/wp-json/meal-prep/v1/like-meal?user_id=7&meal_id=$id");
+        http.get(url);
+      } else {
+        url = Uri.parse(
+            "https://u1s.ee6.myftpupload.com/wp-json/meal-prep/v1/unlike-meal?user_id=7&meal_id=$id");
+        http.get(url);
+      }
+      print(url);
+
       meal.isFav = !meal.isFav;
-      print(meal.isFav);
+
       notifyListeners();
     }
+  }
+
+  Future<void> fetchAndSetMeals() async {
+    var url = Uri.parse(
+        'https://u1s.ee6.myftpupload.com/wp-json/meal-prep/v1/user-meals?user_id=7');
+
+    final response = await http.get(url);
+
+    // print(json.decode(response.body));
+    List<Meal> newMeals = [];
+
+    final extractedData = json.decode(response.body) as List<dynamic>;
+    if (extractedData.isEmpty) {
+      return;
+    }
+
+    extractedData.forEach(
+      (meal) {
+        //print(meal['calories']);
+
+        List<String> badges = [];
+
+        var responseBadges = meal['badges'] as List;
+
+        responseBadges.forEach(
+          (element) {
+            badges.add(element as String);
+          },
+        );
+
+        Map<String, String> calories = {
+          'weight': meal['calories']['weight'].toString(),
+          'type': meal['calories']['type'] as String,
+        };
+
+        Map<String, String> carbohydrates = {
+          'weight': meal['carbohydrates']['weight'].toString(),
+          'type': meal['carbohydrates']['type'] as String,
+        };
+
+        Map<String, String> fat = {
+          'weight': meal['fat']['weight'].toString(),
+          'type': meal['fat']['type'] as String,
+        };
+
+        Map<String, String> protein = {
+          'weight': meal['protein']['weight'].toString(),
+          'type': meal['protein']['type'] as String,
+        };
+
+        newMeals.add(
+          Meal(
+            id: meal['id'],
+            title: meal['title'],
+            subTitle: meal['subTitle'],
+            imageUrl: meal['imageUrl'],
+            calories: calories,
+            carbohydrates: carbohydrates,
+            fat: fat,
+            protein: protein,
+            isFav: meal['isFavorite'],
+            badges: badges,
+            ingredients: meal['ingredients'] as String,
+          ),
+        );
+      },
+    );
+    _userMeals = newMeals;
+
+    notifyListeners();
   }
 }

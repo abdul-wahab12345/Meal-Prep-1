@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mealprep/constant.dart';
 
 class ProfileScreen extends StatefulWidget {
+  static const routeName = 'profile-details';
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
@@ -9,6 +10,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  
   int navBarIndex = 0;
   int profileTabIndex = 0;
   @override
@@ -29,12 +31,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 var _appBar = AppBar(
     backgroundColor: aPrimary,
-    leading: Container(
-      padding:EdgeInsets.all(8),
-      child: CircleAvatar( child: Image.asset('assets/images/alphatrait.png'),
-      ),
-    ),
-    title: Text("User Meals"),
+    
+    title: Text("Profile"),
     actions: [
       Container(
          padding:EdgeInsets.all(8),
