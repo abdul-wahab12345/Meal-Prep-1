@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/screens/meal_details_screen.dart';
 import 'package:mealprep/screens/profile_screen.dart';
+import 'package:mealprep/screens/splash_screen.dart';
 import 'package:mealprep/screens/user_meals_screen.dart';
 
 import 'package:provider/provider.dart';
@@ -56,7 +57,8 @@ class MyApp extends StatelessWidget {
           ),
         ),
         routes: {
-          "/": (ctx) => UserMealsScreen(),
+          '/': (ctx) => SplashScreen(),
+          "home": (ctx) => UserMealsScreen(),
           MealDetailsScreen.routeName: (ctx) => MealDetailsScreen(),
           ProfileScreen.routeName: (ctx) => ProfileScreen(),
         },
