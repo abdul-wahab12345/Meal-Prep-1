@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/constant.dart';
+import 'package:mealprep/widgets/auth_button.dart';
+import 'package:mealprep/widgets/input_feild.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const routeName = 'profile-details';
@@ -159,33 +161,11 @@ var _appBar = AppBar(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ProfileInput("abd@gmail.com", height),
-                        ProfileInput("Current Password", height),
-                        ProfileInput("New Password", height),
-                        ProfileInput("Confirm New Password", height),
-                        Container(
-                          margin: EdgeInsets.only(top: 27),
-                          width: width * 45,
-                          height: height * 6.5,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100)),
-                          child: ElevatedButton(
-                            clipBehavior: Clip.hardEdge,
-                            onPressed: () {},
-                            child: Text("Save Changes",style: Theme.of(context).textTheme.bodyText2,),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                Color.fromRGBO(142, 77, 255, 1),
-                              ),
-                              shape:
-                                  MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                        InputFeild("abd@gmail.com", height),
+                        InputFeild("Current Password", height),
+                        InputFeild("New Password", height),
+                        InputFeild("Confirm New Password", height),
+                        AuthButton(width: width, height: height,text: 'Save Changes',),
                       ],
                     ),
                   ),
@@ -199,30 +179,39 @@ var _appBar = AppBar(
   }
 }
 
-class ProfileInput extends StatelessWidget {
-  String hinntText;
-  var height;
-  ProfileInput(this.hinntText, this.height);
+class AuthButton extends StatelessWidget {
+  const AuthButton({
+    Key? key,
+    required this.width,
+    required this.height,
+    required this.text
+  }) : super(key: key);
+
+  final double width;
+  final double height;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height * 6,
-      margin: EdgeInsets.only(top: height * 2.5),
-      child: TextFormField(
-        style: TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          fillColor: Colors.white,
-          contentPadding: EdgeInsets.all(18),
-          hintStyle: TextStyle(color: Colors.white, fontSize: 14),
-          hintText: hinntText,
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(color: Colors.white, width: 2.0),
+      margin:const EdgeInsets.only(top: 27),
+      width: width * 45,
+      height: height * 6.5,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100)),
+      child: ElevatedButton(
+        clipBehavior: Clip.hardEdge,
+        onPressed: () {},
+        child: Text(text,style: Theme.of(context).textTheme.bodyText2,),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(
+            Color.fromRGBO(142, 77, 255, 1),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(color: Colors.white, width: 2.0),
+          shape:
+              MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
           ),
         ),
       ),
@@ -230,31 +219,3 @@ class ProfileInput extends StatelessWidget {
   }
 }
 
-class TabButton extends StatelessWidget {
-  VoidCallback onTap;
-  bool isActive;
-  String text;
-  var height;
-  TabButton(this.onTap, this.text, this.isActive, this.height);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding:  EdgeInsets.symmetric(horizontal: 10, vertical: height * 1),
-        decoration: BoxDecoration(
-          color: isActive ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-              color: isActive ? Colors.black : Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w400,letterSpacing: .5,),
-        ),
-      ),
-    );
-  }
-}
