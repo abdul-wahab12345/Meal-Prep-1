@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/screens/cites_screen.dart';
 import 'package:mealprep/screens/forget_screen.dart';
 import 'package:mealprep/screens/login_screen.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+         ChangeNotifierProvider(
+          create: (ctx) => Auth(),
+        ),
         ChangeNotifierProvider(
           create: (ctx) => UserMealsData(),
         ),

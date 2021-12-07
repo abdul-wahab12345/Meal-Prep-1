@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mealprep/Models/auth.dart';
 
 import 'package:mealprep/constant.dart';
+import 'package:mealprep/screens/login_screen.dart';
 
 import 'package:mealprep/widgets/auth_button.dart';
+import 'package:provider/provider.dart';
 
 class CityScreen extends StatefulWidget {
   static const routeName = '/forget';
@@ -15,28 +18,27 @@ class CityScreen extends StatefulWidget {
 class _CityScreenState extends State<CityScreen> {
   String dropdownValue = 'Select a City';
 
-    List<Map<String, String>> cities = <Map<String, String>>[
-      {
-        'text': 'Select a City',
-        'value': 'Select a City',
-      },
-      {
-        'text': 'Austin Demo',
-        'value': 'https://u1s.ee6.myftpupload.com/',
-      },
-      {
-        'text': 'Austin',
-        'value': 'https://austinmealprep.com/',
-      },
-    ];
+  List<Map<String, String>> cities = <Map<String, String>>[
+    {
+      'text': 'Select a City',
+      'value': 'Select a City',
+    },
+    {
+      'text': 'Austin Demo',
+      'value': 'https://u1s.ee6.myftpupload.com/',
+    },
+    {
+      'text': 'Austin',
+      'value': 'https://austinmealprep.com/',
+    },
+  ];
 
-    List<String> cityNames = ['Select a City','Austin Demo','Austin'];
-    
+  List<String> cityNames = ['Select a City', 'Austin Demo', 'Austin'];
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
-
 
     return Scaffold(
       backgroundColor: abackground,
@@ -81,7 +83,6 @@ class _CityScreenState extends State<CityScreen> {
                 onChanged: (String? newValue) {
                   setState(() {
                     dropdownValue = newValue!;
-                    
                   });
                 },
                 items: cityNames.map<DropdownMenuItem<String>>((String value) {
@@ -99,13 +100,21 @@ class _CityScreenState extends State<CityScreen> {
             CustomButton(
               text: 'Next',
               callback: () {
+                if (dropdownValue == "Select a City") {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: aPrimary,
+                      content: Text(
+                    "Please Select a City!",
+                    style: TextStyle(fontWeight: FontWeight.bold,),
+                    textAlign: TextAlign.center,
+                  )));
+                } else {
 
-                if(dropdownValue == "Select a City"){
-
-                }else{
-                  print(dropdownValue);
+                  var city = cities.firstWhere((element) => element['text'] == dropdownValue);
+print(city['value']);
+                  Provider.of<Auth>(context,listen:false).setWebUrl(city['value'] as String);
+                  Navigator.of(context).pushNamed(LoginScreen.routeName);
                 }
-
               },
             ),
 
