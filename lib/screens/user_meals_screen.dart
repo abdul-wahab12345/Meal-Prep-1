@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:mealprep/Models/meal.dart';
@@ -21,7 +24,6 @@ class _UserMealsScreenState extends State<UserMealsScreen> {
   @override
   void didChangeDependencies() {
     if (isFirst) {
-
       Provider.of<UserMealsData>(context, listen: false).fetchAndSetMeals();
       isFirst = false;
     }
@@ -33,7 +35,6 @@ class _UserMealsScreenState extends State<UserMealsScreen> {
   @override
   Widget build(BuildContext context) {
     List<Meal> userMeals = Provider.of<UserMealsData>(context).userMeals;
-    
 
     var _appBar = AppBar(
       backgroundColor: aPrimary,
@@ -46,7 +47,7 @@ class _UserMealsScreenState extends State<UserMealsScreen> {
       title: Text("User Meals"),
       actions: [
         GestureDetector(
-            onTap: () {
+          onTap: () {
             Navigator.pushNamed(context, ProfileScreen.routeName);
           },
           child: Container(
@@ -72,55 +73,59 @@ class _UserMealsScreenState extends State<UserMealsScreen> {
       appBar: _appBar,
       backgroundColor: abackground,
       body: Center(
-        child: userMeals.isEmpty? CircularProgressIndicator(color: Colors.white,): Container(
-          width: currentOrientation == Orientation.landscape
-              ? 550
-              : double.infinity,
-          margin: EdgeInsets.symmetric(
-            horizontal: width * 2,
-            vertical: 10
-          ),
-          child: ListView.builder(
-            itemCount: userMeals.length,
-            itemBuilder: (ctx, index) => GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, MealDetailsScreen.routeName,
-                    arguments: userMeals[index].id);
-              },
-              child: Container(
-                //  constraints: BoxConstraints(minHeight: 200),
-                //height: 200,
-                margin: const EdgeInsets.only(
-                  top: 20,
-                ),
-                decoration: BoxDecoration(
-                  color: aPrimary,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ChangeNotifierProvider.value(
-                      value: userMeals[index],
-                      child: ContentContainer(),
-                    ), //Content Container
-                    Container(
-                      height: 180,
-                      width: width * 35,
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      //color: Colors.white,
-                      child: Image.network(
-                        userMeals[index].imageUrl,
-                        fit: BoxFit.cover,
+        child: userMeals.isEmpty
+            ? Platform.isIOS
+                ? CupertinoActivityIndicator(radius: 40)
+                : CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+            : Container(
+                width: currentOrientation == Orientation.landscape
+                    ? 550
+                    : double.infinity,
+                margin:
+                    EdgeInsets.symmetric(horizontal: width * 2, vertical: 10),
+                child: ListView.builder(
+                  itemCount: userMeals.length,
+                  itemBuilder: (ctx, index) => GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, MealDetailsScreen.routeName,
+                          arguments: userMeals[index].id);
+                    },
+                    child: Container(
+                      //  constraints: BoxConstraints(minHeight: 200),
+                      //height: 200,
+                      margin: const EdgeInsets.only(
+                        top: 20,
                       ),
-                    ), //ImageConatiner
-                  ],
+                      decoration: BoxDecoration(
+                        color: aPrimary,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ChangeNotifierProvider.value(
+                            value: userMeals[index],
+                            child: ContentContainer(),
+                          ), //Content Container
+                          Container(
+                            height: 180,
+                            width: width * 35,
+                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            //color: Colors.white,
+                            child: Image.network(
+                              userMeals[index].imageUrl,
+                              fit: BoxFit.cover,
+                            ),
+                          ), //ImageConatiner
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:mealprep/Models/meal.dart';
 
 class UserMealsData with ChangeNotifier {
+ 
   List<Meal> _userMeals = [
     // Meal(
     //   id: 1,
@@ -133,6 +134,10 @@ class UserMealsData with ChangeNotifier {
     //       "With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff.",
     // ),
   ];
+  final int userId;
+ final String webUrl;
+
+  UserMealsData( this.userId, this.webUrl,  this._userMeals);
 
   List<Meal> get userMeals {
     return [..._userMeals];
@@ -143,16 +148,17 @@ class UserMealsData with ChangeNotifier {
   }
 
   Future<void> toggleFavorite(int id) async {
+    
     Meal meal = _userMeals.firstWhere((element) => element.id == id);
     if (meal != null) {
       final url;
       if (!meal.isFav) {
         url = Uri.parse(
-            "https://u1s.ee6.myftpupload.com/wp-json/meal-prep/v1/like-meal?user_id=7&meal_id=$id");
+            "${webUrl}wp-json/meal-prep/v1/like-meal?user_id=7&meal_id=$id");
         http.get(url);
       } else {
         url = Uri.parse(
-            "https://u1s.ee6.myftpupload.com/wp-json/meal-prep/v1/unlike-meal?user_id=7&meal_id=$id");
+            "${webUrl}wp-json/meal-prep/v1/unlike-meal?user_id=7&meal_id=$id");
         http.get(url);
       }
       print(url);
@@ -165,12 +171,12 @@ class UserMealsData with ChangeNotifier {
 
   Future<void> fetchAndSetMeals() async {
     var url = Uri.parse(
-        'https://u1s.ee6.myftpupload.com/wp-json/meal-prep/v1/user-meals');
+        '${webUrl}wp-json/meal-prep/v1/user-meals');
 
-    final response = await http.post(url, body: {'user_id': '7'});
+    final response = await http.post(url, body: {'user_id': userId.toString()});
 
      print(response.body);
-     print(123);
+    
     List<Meal> newMeals = [];
 
     final extractedData = json.decode(response.body) as List<dynamic>;

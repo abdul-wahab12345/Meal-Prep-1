@@ -25,11 +25,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-         ChangeNotifierProvider(
+        ChangeNotifierProvider(
           create: (ctx) => Auth(),
         ),
-        ChangeNotifierProvider(
-          create: (ctx) => UserMealsData(),
+        ChangeNotifierProxyProvider<Auth, UserMealsData>(
+          create: (_) => UserMealsData(0,'',[]),
+          update: (ctx, auth, previousData) => UserMealsData(
+            auth.id as int,
+            auth.websiteUrl as String,
+            previousData==null?[]:previousData.userMeals,
+            
+          ),
         ),
       ],
       child: MaterialApp(
@@ -65,13 +71,14 @@ class MyApp extends StatelessWidget {
           ),
         ),
         routes: {
-          '/': (ctx) => ProfileScreen(),
+          '/': (ctx) => SplashScreen(),
           "home": (ctx) => UserMealsScreen(),
           MealDetailsScreen.routeName: (ctx) => MealDetailsScreen(),
           ProfileScreen.routeName: (ctx) => ProfileScreen(),
-          RegisterScreen.routeName:(ctx) =>RegisterScreen(),
-          LoginScreen.routeName:(ctx) => LoginScreen(),
-          ForgetScreen.routeName:(ctx) => ForgetScreen(),
+          RegisterScreen.routeName: (ctx) => RegisterScreen(),
+          LoginScreen.routeName: (ctx) => LoginScreen(),
+          ForgetScreen.routeName: (ctx) => ForgetScreen(),
+          CityScreen.routeName: (ctx) => CityScreen(),
         },
         //home: RegisterScreen(),
       ),

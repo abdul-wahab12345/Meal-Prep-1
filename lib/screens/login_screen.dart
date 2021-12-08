@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/forget_screen.dart';
@@ -32,6 +36,9 @@ class _LoginScreenState extends State<LoginScreen> {
     var width = MediaQuery.of(context).size.width / 100;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: abackground,
+      ),
       backgroundColor: abackground,
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 20),
@@ -39,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.only(top: height * 12),
+                margin: EdgeInsets.only(top: height * 7),
                 height: height * 16,
                 width: height * 16,
                 child: Image.asset('assets/images/login_screen_image.png'),
@@ -79,9 +86,11 @@ class _LoginScreenState extends State<LoginScreen> {
               //TextFeild Container
 
               isLoading
-                  ? CircularProgressIndicator(
-                      color: Colors.white,
-                    )
+                  ? Platform.isIOS
+                      ? CupertinoActivityIndicator(radius: 30,)
+                      : CircularProgressIndicator(
+                          color: Colors.white,
+                        )
                   : CustomButton(
                       text: 'Login',
                       callback: () async {
@@ -99,6 +108,34 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.of(context).pushReplacementNamed('home');
                           } catch (error) {
                             print(error);
+                            await showDialog(
+                                context: context,
+                                builder: (ctx) {
+                                  return Platform.isIOS
+                                      ? CupertinoAlertDialog(
+                                          title: Text('An error has occured!'),
+                                          content: Text(error as String),
+                                          actions: [
+                                            CupertinoDialogAction(
+                                                child: Text("Okay!"),
+                                                onPressed: () {
+                                                  Navigator.of(ctx).pop(true);
+                                                }),
+                                          ],
+                                        )
+                                      : AlertDialog(
+                                          title: Text("An error has occured",style: TextStyle(color: Colors.black,)),
+                                          content: Text(error as String),
+                                          actions: [
+                                            TextButton(
+                                              child: const Text('Okay!'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                });
                           } finally {
                             setState(() {
                               isLoading = false;

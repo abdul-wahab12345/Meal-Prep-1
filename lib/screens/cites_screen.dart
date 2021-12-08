@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 
@@ -8,7 +11,7 @@ import 'package:mealprep/widgets/auth_button.dart';
 import 'package:provider/provider.dart';
 
 class CityScreen extends StatefulWidget {
-  static const routeName = '/forget';
+  static const routeName = '/city-screen';
   const CityScreen({Key? key}) : super(key: key);
 
   @override
@@ -99,20 +102,42 @@ class _CityScreenState extends State<CityScreen> {
 
             CustomButton(
               text: 'Next',
-              callback: () {
+              callback: () async {
                 if (dropdownValue == "Select a City") {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    backgroundColor: aPrimary,
-                      content: Text(
-                    "Please Select a City!",
-                    style: TextStyle(fontWeight: FontWeight.bold,),
-                    textAlign: TextAlign.center,
-                  )));
+                  await showDialog(
+                      context: context,
+                      builder: (ctx) {
+                        return Platform.isIOS
+                            ? CupertinoAlertDialog(
+                                // title: Text('An error has occured!'),
+                                content: Text("Please select a city!"),
+                                actions: [
+                                  CupertinoDialogAction(
+                                      child: Text("Okay!"),
+                                      onPressed: () {
+                                        Navigator.of(ctx).pop(true);
+                                      }),
+                                ],
+                              )
+                            : AlertDialog(
+                                 //title: Text("An error has occured"),
+                                content: Text("Please select a city!",style: TextStyle(color: Colors.black,)),
+                                actions: [
+                                  TextButton(
+                                    child:  Text('Okay!',style: TextStyle(color: btnColor),),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                      });
                 } else {
-
-                  var city = cities.firstWhere((element) => element['text'] == dropdownValue);
-print(city['value']);
-                  Provider.of<Auth>(context,listen:false).setWebUrl(city['value'] as String);
+                  var city = cities.firstWhere(
+                      (element) => element['text'] == dropdownValue);
+                  print(city['value']);
+                  Provider.of<Auth>(context, listen: false)
+                      .setWebUrl(city['value'] as String);
                   Navigator.of(context).pushNamed(LoginScreen.routeName);
                 }
               },

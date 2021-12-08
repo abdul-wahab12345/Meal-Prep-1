@@ -1,6 +1,10 @@
+
 import 'package:flutter/material.dart';
+import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/constant.dart';
+import 'package:mealprep/screens/cites_screen.dart';
 import 'package:mealprep/widgets/input_feild.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const routeName = 'profile-details';
@@ -39,12 +43,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: aPrimary,
       title: Text("Profile"),
       actions: [
-        Container(
-          padding: EdgeInsets.all(8),
-          child: CircleAvatar(
-            child: Image.asset('assets/images/person.png'),
-          ),
-        )
+        IconButton(
+            onPressed: () async {
+              await Provider.of<Auth>(context, listen: false)
+                  .logout()
+                  .then((value) {
+                Navigator.of(context)
+                    .pushReplacementNamed(CityScreen.routeName);
+              });
+            },
+            icon: Icon(Icons.logout))
       ],
     );
 
@@ -232,7 +240,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               );
                             }
-
                           },
                         ),
                       ],

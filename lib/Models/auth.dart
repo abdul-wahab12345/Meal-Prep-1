@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
   String? websiteUrl;
@@ -19,8 +20,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> userLogin(String username, String password) async {
-    var url = Uri.parse(
-        'https://u1s.ee6.myftpupload.com/wp-json/meal-prep/v1/user-login');
+    var url = Uri.parse('${websiteUrl}wp-json/meal-prep/v1/user-login');
     var body = {'username': username, 'password': password};
     print(body);
 
@@ -30,6 +30,14 @@ class Auth with ChangeNotifier {
     if (user['status'] == "success") {
       id = user['data']['ID'];
       name = user['data']['fullName'];
+
+      final prefs = await SharedPreferences.getInstance();
+      final userData = json.encode({
+        'websiteUrl': websiteUrl,
+        'userId': id,
+        'userName': name,
+      });
+      prefs.setString('userData', userData);
     } else {
       var message = user['message'];
 
@@ -44,5 +52,31 @@ class Auth with ChangeNotifier {
     }
 
     print(user);
+  }
+
+  Future<bool> tryAutoLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      return false;
+    }
+    final extractedUserData =
+        json.decode(prefs.getString('userData')!) as Map<String, dynamic>;
+
+    websiteUrl = extractedUserData['websiteUrl'] as String;
+    id = extractedUserData['userId'];
+    name = extractedUserData['name'];
+    notifyListeners();
+
+    return true;
+  }
+
+  Future<void> logout() async {
+    id = 0;
+    websiteUrl = '';
+    name = '';
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+
+    notifyListeners();
   }
 }
