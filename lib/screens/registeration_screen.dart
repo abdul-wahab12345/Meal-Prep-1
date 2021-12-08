@@ -8,62 +8,117 @@ import 'package:mealprep/widgets/input_feild.dart';
 import 'package:mealprep/widgets/text_button.dart';
 
 class RegisterScreen extends StatelessWidget {
-   static const routeName='/register';
-  const RegisterScreen({Key? key}) : super(key: key);
+  static const routeName = '/register';
+  RegisterScreen({Key? key}) : super(key: key);
+
+  var _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
 
+    var emailController = TextEditingController();
+    var passwordController = TextEditingController();
+    var userNameController = TextEditingController();
+
     return Scaffold(
       backgroundColor: abackground,
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: [
-            Container(
-              margin:EdgeInsets.only(top:height*12 ),
-              height: height*16,
-              width: height*16,
-              child: Image.asset('assets/images/login_screen_image.png'),
-            ), //Image Container
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: height * 12),
+                height: height * 16,
+                width: height * 16,
+                child: Image.asset('assets/images/login_screen_image.png'),
+              ), //Image Container
 
-            Container(
-              margin: EdgeInsets.only(bottom: height*5,top: height*5),
-              child: Column(
-                children: [
-                  InputFeild('UserName', height),
-                  InputFeild('Email', height),
-                  InputFeild('PassWord', height),
-                ],
+              Container(
+                margin: EdgeInsets.only(bottom: height * 5, top: height * 5),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      InputFeild(
+                        hinntText: 'Username',
+                        validatior: (String value) {
+                          if (value.isEmpty) {
+                            return "Enter username !";
+                          }
+
+                          return null;
+                        },
+                        inputController: userNameController,
+                      ),
+                      InputFeild(
+                        hinntText: 'Email',
+                        validatior: (String value) {
+                          if (value.isEmpty) {
+                            return "Enter email address !";
+                          }
+                          if (!value.contains('@') || !value.contains('.com')) {
+                            return "Enter a valid email address";
+                          }
+
+                          return null;
+                        },
+                        inputController: emailController,
+                      ),
+                      InputFeild(
+                        hinntText: 'Password',
+                        secure: true,
+                        validatior: (String value) {
+                          if (value.isEmpty) {
+                            return "Enter password";
+                          }
+                          if (value.length < 6) {
+                            return "Must have 6 characters";
+                          }
+                          return null;
+                        },
+                        inputController: passwordController,
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            //TextFeild Container
+              //TextFeild Container
 
-            CustomButton(
-              
-              text: 'Register',
-              callback: (){},
-            ),
-
-            Container(
-              margin: EdgeInsets.only(top: height*7,left: 20,right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AtextButton(text: 'Back',callBack: (){
-                    Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
-                  },),
-                  
-                ],
+              CustomButton(
+                text: 'Register',
+                callback: () {
+                  if (_formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Shani'),
+                      ),
+                    );
+                  }
+                },
               ),
-            ), //Text button Container
-          ],
+
+              Container(
+                margin: EdgeInsets.only(top: height * 7, left: 20, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AtextButton(
+                      text: 'Back',
+                      callBack: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(LoginScreen.routeName);
+                      },
+                    ),
+                  ],
+                ),
+              ), //Text button Container
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
-

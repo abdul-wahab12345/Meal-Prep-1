@@ -16,10 +16,12 @@ class UserMealsScreen extends StatefulWidget {
 
 class _UserMealsScreenState extends State<UserMealsScreen> {
   bool isFirst = true;
+  bool isLoading = false;
 
   @override
   void didChangeDependencies() {
     if (isFirst) {
+
       Provider.of<UserMealsData>(context, listen: false).fetchAndSetMeals();
       isFirst = false;
     }
@@ -31,6 +33,7 @@ class _UserMealsScreenState extends State<UserMealsScreen> {
   @override
   Widget build(BuildContext context) {
     List<Meal> userMeals = Provider.of<UserMealsData>(context).userMeals;
+    
 
     var _appBar = AppBar(
       backgroundColor: aPrimary,
@@ -69,12 +72,13 @@ class _UserMealsScreenState extends State<UserMealsScreen> {
       appBar: _appBar,
       backgroundColor: abackground,
       body: Center(
-        child: Container(
+        child: userMeals.isEmpty? CircularProgressIndicator(color: Colors.white,): Container(
           width: currentOrientation == Orientation.landscape
               ? 550
               : double.infinity,
           margin: EdgeInsets.symmetric(
             horizontal: width * 2,
+            vertical: 10
           ),
           child: ListView.builder(
             itemCount: userMeals.length,

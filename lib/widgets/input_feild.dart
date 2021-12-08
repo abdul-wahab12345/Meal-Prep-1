@@ -1,60 +1,77 @@
 import 'package:flutter/material.dart';
 
-class InputFeild extends StatelessWidget {
+class InputFeild extends StatefulWidget {
   String hinntText;
-  var height;
-  InputFeild(this.hinntText, this.height);
+
+  Function validatior;
+  TextEditingController inputController;
+  TextInputType? type;
+  bool secure = true;
+
+  InputFeild(
+      {required this.hinntText,
+      required this.validatior,
+      required this.inputController,
+      this.type,
+      this.secure = false});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: height * 6,
-      margin: EdgeInsets.only(top: height * 2.5),
-      child: TextFormField(
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          fillColor: Colors.white,
-          contentPadding: EdgeInsets.all(18),
-          hintStyle:const TextStyle(color: Colors.white, fontSize: 14),
-          hintText: hinntText,
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide:const BorderSide(color: Colors.white, width: 2.0),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide:const BorderSide(color: Colors.white, width: 2.0),
-          ),
-        ),
-      ),
-    );
-  }
+  State<InputFeild> createState() => _InputFeildState();
 }
 
-class TabButton extends StatelessWidget {
-  VoidCallback onTap;
-  bool isActive;
-  String text;
-  var height;
-  TabButton(this.onTap, this.text, this.isActive, this.height);
+class _InputFeildState extends State<InputFeild> {
+  var isError = false;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding:  EdgeInsets.symmetric(horizontal: 10, vertical: height * 1),
-        decoration: BoxDecoration(
-          color: isActive ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-              color: isActive ? Colors.black : Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w400,letterSpacing: .5,),
-        ),
+    var height = MediaQuery.of(context).size.height / 100;
+    return Container(
+      height: isError ? height * 9 : height * 6,
+      margin: EdgeInsets.only(top: height * 2.5),
+      child: TextFormField(
+        obscureText: widget.secure,
+        keyboardType: widget.type,
+        controller: widget.inputController,
+        validator: (value) {
+          var error = widget.validatior(value);
+          if (error != null) {
+            setState(() {
+              isError = true;
+            });
+          }else{
+            setState(() {
+              isError = false;
+            });
+          }
+           
+          return error;
+        },
+        style: const TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+            fillColor: Colors.white,
+            contentPadding: EdgeInsets.all(18),
+            hintStyle: const TextStyle(color: Colors.white, fontSize: 14),
+            hintText: widget.hinntText,
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: const BorderSide(color: Colors.white, width: 2.0),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: const BorderSide(color: Colors.white, width: 2.0),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: const BorderSide(color: Colors.red, width: 2.0),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: const BorderSide(color: Colors.red, width: 2.0),
+            ),
+            errorStyle: Theme.of(context)
+                .textTheme
+                .caption!
+                .copyWith(color: Colors.red, fontSize: 12)),
       ),
     );
   }

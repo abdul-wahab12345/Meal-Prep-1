@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         routes: {
-          '/': (ctx) => CityScreen(),
+          '/': (ctx) => ProfileScreen(),
           "home": (ctx) => UserMealsScreen(),
           MealDetailsScreen.routeName: (ctx) => MealDetailsScreen(),
           ProfileScreen.routeName: (ctx) => ProfileScreen(),
