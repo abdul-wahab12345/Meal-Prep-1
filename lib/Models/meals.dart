@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:mealprep/Models/meal.dart';
 
 class UserMealsData with ChangeNotifier {
- 
   List<Meal> _userMeals = [
     // Meal(
     //   id: 1,
@@ -135,9 +134,9 @@ class UserMealsData with ChangeNotifier {
     // ),
   ];
   final int userId;
- final String webUrl;
+  final String webUrl;
 
-  UserMealsData( this.userId, this.webUrl,  this._userMeals);
+  UserMealsData(this.userId, this.webUrl, this._userMeals);
 
   List<Meal> get userMeals {
     return [..._userMeals];
@@ -148,17 +147,16 @@ class UserMealsData with ChangeNotifier {
   }
 
   Future<void> toggleFavorite(int id) async {
-    
     Meal meal = _userMeals.firstWhere((element) => element.id == id);
     if (meal != null) {
       final url;
       if (!meal.isFav) {
         url = Uri.parse(
-            "${webUrl}wp-json/meal-prep/v1/like-meal?user_id=7&meal_id=$id");
+            "${webUrl}wp-json/meal-prep/v1/like-meal?user_id=$userId&meal_id=$id");
         http.get(url);
       } else {
         url = Uri.parse(
-            "${webUrl}wp-json/meal-prep/v1/unlike-meal?user_id=7&meal_id=$id");
+            "${webUrl}wp-json/meal-prep/v1/unlike-meal?user_id=$userId&meal_id=$id");
         http.get(url);
       }
       print(url);
@@ -169,14 +167,26 @@ class UserMealsData with ChangeNotifier {
     }
   }
 
+  Future<bool> dislikeMeal(int id, String sms) async {
+    final url = Uri.parse("${webUrl}wp-json/meal-prep/v1/dislike-meal");
+    await http.post(
+      url,
+      body: {
+        'user_id': userId.toString(),
+        'id': id.toString(),
+        'aw_sms': sms,
+      },
+    );
+    return true;
+  }
+
   Future<void> fetchAndSetMeals() async {
-    var url = Uri.parse(
-        '${webUrl}wp-json/meal-prep/v1/user-meals');
+    var url = Uri.parse('${webUrl}wp-json/meal-prep/v1/user-meals');
 
     final response = await http.post(url, body: {'user_id': userId.toString()});
 
-     print(response.body);
-    
+    print(response.body);
+
     List<Meal> newMeals = [];
 
     final extractedData = json.decode(response.body) as List<dynamic>;

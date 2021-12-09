@@ -9,85 +9,110 @@ import 'package:provider/provider.dart';
 
 class MealDetailsScreen extends StatelessWidget {
   static const routeName = 'meal-details';
-  const MealDetailsScreen({Key? key}) : super(key: key);
+  MealDetailsScreen({Key? key}) : super(key: key);
+  var _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final mealId = ModalRoute.of(context)!.settings.arguments;
     final meal = Provider.of<UserMealsData>(context).singleMeal(mealId as int);
     var height = MediaQuery.of(context).size.height / 100;
+    TextEditingController feedbackController = TextEditingController();
 
     var textTheme = Theme.of(context).textTheme;
 
     showModal(String imageUrl) {
       showModalBottomSheet<void>(
           context: context,
-          builder: (BuildContext context) {
+          builder: (BuildContext ctx) {
             return Container(
-              height: height * 55,
+              height: height * 100,
               color: abackground,
               child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Center(
-                      child: Container(
-                        height: height * 20,
-                        width: 224,
-                        child: Image.network(imageUrl),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      // Center(
+                      //   child: Container(
+                      //     height: height * 20,
+                      //     width: 224,
+                      //     child: Image.network(imageUrl),
+                      //   ),
+                      // ),
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        // margin: EdgeInsets.only(top: height * 2),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: aPrimary,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Form(
+                          key: _formKey,
+                          child: TextFormField(
+                            controller: feedbackController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Please enter your message";
+                              }
+                              return null;
+                            },
+                            maxLines: 6,
+                            decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  //borderRadius: BorderRadius.circular(20),
+                                  borderSide: const BorderSide(
+                                    color: Colors.transparent,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  // borderRadius: BorderRadius.circular(20),
+                                  borderSide: const BorderSide(
+                                    color: Colors.transparent,
+                                  ),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: const BorderSide(
+                                      color: Colors.red, width: 2.0),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: const BorderSide(
+                                      color: Colors.red, width: 2.0),
+                                ),
+                                errorStyle: Theme.of(context)
+                                    .textTheme
+                                    .caption!
+                                    .copyWith(color: Colors.red, fontSize: 12),
+                                hintStyle: Theme.of(context).textTheme.headline6,
+                                hintText: "What don’t you like about this meal?"),
+                          ),
+                        ),
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                     // margin: EdgeInsets.only(top: height * 2),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: aPrimary,
-                        borderRadius: BorderRadius.circular(12),
+                      SizedBox(
+                        height: height * 2,
                       ),
-                      child: TextField(
-                        maxLines: 6,
-                        decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              //borderRadius: BorderRadius.circular(20),
-                              borderSide: const BorderSide(
-                                  color: Colors.transparent, width: 2.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                             // borderRadius: BorderRadius.circular(20),
-                              borderSide: const BorderSide(
-                                  color: Colors.transparent, width: 2.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: const BorderSide(
-                                  color: Colors.red, width: 2.0),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: const BorderSide(
-                                  color: Colors.red, width: 2.0),
-                            ),
-                            errorStyle: Theme.of(context)
-                                .textTheme
-                                .caption!
-                                .copyWith(color: Colors.red, fontSize: 12),
-                            hintStyle: Theme.of(context).textTheme.headline6,
-                            hintText: "What don’t you like about this meal?"),
+                      CustomButton(
+                        text: "Submit Feedback",
+                        callback: () async {
+                          if (_formKey.currentState!.validate()) {
+                            Provider.of<UserMealsData>(context, listen: false)
+                                .dislikeMeal(meal.id, feedbackController.text)
+                                .then((value) {
+                                  feedbackController.text = '';
+                              Navigator.of(ctx).pop();
+                            });
+                          }
+                        },
                       ),
-                    ),
-                    SizedBox(
-                      height: height * 2,
-                    ),
-                    CustomButton(
-                      text: "Submit Feedback",
-                      callback: () {},
-                    ),
-                     SizedBox(
-                      height: height * 2,
-                    ),
-                  ],
+                      SizedBox(
+                        height: height * 2,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
