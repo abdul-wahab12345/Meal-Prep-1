@@ -3,6 +3,7 @@ import 'package:mealprep/Models/meal.dart';
 import 'package:mealprep/Models/meals.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/profile_screen.dart';
+import 'package:mealprep/widgets/auth_button.dart';
 
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,7 @@ class MealDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mealId = ModalRoute.of(context)!.settings.arguments;
     final meal = Provider.of<UserMealsData>(context).singleMeal(mealId as int);
+    var height = MediaQuery.of(context).size.height / 100;
 
     var textTheme = Theme.of(context).textTheme;
 
@@ -21,39 +23,71 @@ class MealDetailsScreen extends StatelessWidget {
       showModalBottomSheet<void>(
           context: context,
           builder: (BuildContext context) {
-            return SingleChildScrollView(
-              child: Container(
-                height: 400,
-                color: abackground,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Center(
-                        child: Container(
-                          height: 190,
-                          width: 224,
-                          child: Image.network(imageUrl),
-                        ),
+            return Container(
+              height: height * 55,
+              color: abackground,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Center(
+                      child: Container(
+                        height: height * 20,
+                        width: 224,
+                        child: Image.network(imageUrl),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(top: 10),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: aPrimary,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: TextField(
-                        maxLines:6,
-                          decoration: InputDecoration(
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                     // margin: EdgeInsets.only(top: height * 2),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: aPrimary,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: TextField(
+                        maxLines: 6,
+                        decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              //borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                  color: Colors.transparent, width: 2.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                             // borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                  color: Colors.transparent, width: 2.0),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                  color: Colors.red, width: 2.0),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                  color: Colors.red, width: 2.0),
+                            ),
+                            errorStyle: Theme.of(context)
+                                .textTheme
+                                .caption!
+                                .copyWith(color: Colors.red, fontSize: 12),
                             hintStyle: Theme.of(context).textTheme.headline6,
-                              hintText: "What don’t you like about this meal?"),
-                        ),
-                      
-                      ),SizedBox(height: 40,)
-                    ],
-                  ),
+                            hintText: "What don’t you like about this meal?"),
+                      ),
+                    ),
+                    SizedBox(
+                      height: height * 2,
+                    ),
+                    CustomButton(
+                      text: "Submit Feedback",
+                      callback: () {},
+                    ),
+                     SizedBox(
+                      height: height * 2,
+                    ),
+                  ],
                 ),
               ),
             );
@@ -101,7 +135,7 @@ class MealDetailsScreen extends StatelessWidget {
                 child: Row(children: [
                   IconButton(
                       onPressed: () {
-                       // print()
+                        // print()
                         showModal(meal.imageUrl);
                       },
                       icon: Icon(
@@ -111,7 +145,8 @@ class MealDetailsScreen extends StatelessWidget {
                       )),
                   IconButton(
                     onPressed: () {
-                      Provider.of<UserMealsData>(context,listen:false).toggleFavorite(mealId);
+                      Provider.of<UserMealsData>(context, listen: false)
+                          .toggleFavorite(mealId);
                     },
                     icon: meal.isFav
                         ? Icon(
@@ -248,20 +283,3 @@ class MealDetailsScreen extends StatelessWidget {
     );
   }
 }
-
-
-// Consumer<Meal>(
-//                 builder: (ctx, meal, _) => IconButton(
-//                     onPressed: () {},
-//                     icon: meal.isFav
-//                         ? Icon(
-//                             Icons.favorite,
-//                             color: Colors.red,
-//                             size: 30,
-//                           )
-//                         : Icon(
-//                             Icons.favorite_outline,
-//                             color: Colors.black,
-//                             size: 30,
-//                           )),
-//               )
