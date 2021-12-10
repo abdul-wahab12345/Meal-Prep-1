@@ -185,7 +185,7 @@ class UserMealsData with ChangeNotifier {
 
     final response = await http.post(url, body: {'user_id': userId.toString()});
 
-    print(response.body);
+    // print(response.body);
 
     List<Meal> newMeals = [];
 
