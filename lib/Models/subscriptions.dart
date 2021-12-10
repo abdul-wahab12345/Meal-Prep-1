@@ -26,9 +26,9 @@ class Subscriptions {
       id: 1,
       title: 'Protein + Plan',
       imageUrl:
-          'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/04/15meals-100x100.jpg',
+          'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1-300x300.png',
           nextDelivery: '26/11/2021',
-          status: 'active',
+          status: 'Active',
           isCutOf: true,
           productId: 3,
           variationId:32, 
@@ -38,9 +38,9 @@ class Subscriptions {
       id: 2,
       title: 'Lean + Plan',
       imageUrl:
-          'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/04/15meals-100x100.jpg',
+          'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1-300x300.png',
           nextDelivery: '27/11/2021',
-          status: 'active',
+          status: 'Paused',
           isCutOf: true,
           productId: 3,
           variationId:32, 
@@ -50,12 +50,44 @@ class Subscriptions {
       id: 3,
       title: 'Balanced Plan',
       imageUrl:
-          'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/04/15meals-100x100.jpg',
+          'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1-300x300.png',
           nextDelivery: '26/11/2021',
-          status: 'active',
+          status: 'Inactive',
+          isCutOf: true,
+          productId: 3,
+          variationId:32, 
+    ),
+    //4
+    Subscription(
+      id: 4,
+      title: 'Deit + Plan',
+      imageUrl:
+          'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1-300x300.png',
+          nextDelivery: '2/11/2021',
+          status: 'Paused',
+          isCutOf: true,
+          productId: 3,
+          variationId:32, 
+    ),
+    //5
+    Subscription(
+      id: 5,
+      title: 'Fatty + Plan',
+      imageUrl:
+          'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1-300x300.png',
+          nextDelivery: '2/11/2021',
+          status: 'Active',
           isCutOf: true,
           productId: 3,
           variationId:32, 
     ),
   ];
+
+
+
+  List<Subscription> get subscriptions {
+    return [..._subscriptions];
+  }
+
+
 }

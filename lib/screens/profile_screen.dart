@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/cites_screen.dart';
+import 'package:mealprep/widgets/bottom_bar.dart';
 import 'package:mealprep/widgets/input_feild.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   var _formKey = GlobalKey<FormState>();
 
-  int navBarIndex = 0;
+  
   int profileTabIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -58,34 +59,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       appBar: _appBar,
-      backgroundColor: Color.fromRGBO(17, 17, 17, 1),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
-        child: BottomNavigationBar(
-          backgroundColor: Color.fromRGBO(38, 43, 55, 1),
-          iconSize: 27,
-          unselectedItemColor: Colors.white,
-          selectedItemColor: Color.fromRGBO(142, 77, 255, 1),
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.delivery_dining),
-              label: "Delivery",
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.next_plan_sharp), label: "Plans"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline), label: "Profile"),
-          ],
-          currentIndex: navBarIndex,
-          onTap: (index) {
-            print(index);
-            setState(() {
-              print(index);
-              navBarIndex = index;
-            });
-          },
-        ),
-      ),
+      backgroundColor: const Color.fromRGBO(17, 17, 17, 1),
+      bottomNavigationBar: BottomNavBar(),
       body: SingleChildScrollView(
         child: Center(
           child: Container(

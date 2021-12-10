@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
+import 'package:mealprep/screens/add_plan_screen.dart';
 import 'package:mealprep/screens/cites_screen.dart';
 import 'package:mealprep/screens/forget_screen.dart';
 import 'package:mealprep/screens/login_screen.dart';
 import 'package:mealprep/screens/meal_details_screen.dart';
+import 'package:mealprep/screens/plans_screen.dart';
 import 'package:mealprep/screens/profile_screen.dart';
 import 'package:mealprep/screens/registeration_screen.dart';
 import 'package:mealprep/screens/splash_screen.dart';
@@ -71,7 +73,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         routes: {
-          '/': (ctx) => SplashScreen(),
+          '/': (ctx) => PlanScreen(),
           "home": (ctx) => UserMealsScreen(),
           MealDetailsScreen.routeName: (ctx) => MealDetailsScreen(),
           ProfileScreen.routeName: (ctx) => ProfileScreen(),
@@ -79,6 +81,8 @@ class MyApp extends StatelessWidget {
           LoginScreen.routeName: (ctx) => LoginScreen(),
           ForgetScreen.routeName: (ctx) => ForgetScreen(),
           CityScreen.routeName: (ctx) => CityScreen(),
+          PlanScreen.routeName:(ctx)=>PlanScreen(),
+          AddPlan.routeName:(ctx)=>AddPlan(),
         },
         //home: RegisterScreen(),
       ),
