@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/constant.dart';
+import 'package:mealprep/screens/check_out.dart';
 import 'package:mealprep/screens/forget_screen.dart';
 import 'package:mealprep/screens/registeration_screen.dart';
 import 'package:mealprep/widgets/auth_button.dart';
@@ -105,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               passwordController.text,
                             );
 
-                            Navigator.of(context).pushReplacementNamed('home');
+                            Navigator.of(context).pushReplacementNamed(CheckOut.routeName);
                           } catch (error) {
                             print(error);
                             await showDialog(

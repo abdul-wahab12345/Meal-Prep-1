@@ -6,9 +6,19 @@ import 'package:mealprep/widgets/bottom_bar.dart';
 
 import '../constant.dart';
 
-class PlanScreen extends StatelessWidget {
+class PlanScreen extends StatefulWidget {
   static const routeName = '/plans_screen';
   const PlanScreen({Key? key}) : super(key: key);
+
+  @override
+  State<PlanScreen> createState() => _PlanScreenState();
+}
+
+class _PlanScreenState extends State<PlanScreen> {
+  int bottomIndex = 0;
+  var _key = GlobalKey();
+
+  Type _type = Type.Default;
 
   @override
   Widget build(BuildContext context) {
@@ -29,21 +39,73 @@ class PlanScreen extends StatelessWidget {
       width = 550 / 100;
     }
 
-    var _key = GlobalKey();
+    Widget bottomBar;
 
-    var bottomBar = BottomNavBar(
-      key: _key,
-    );
+    if (_type == Type.Reactive) {
+      bottomBar = Container(
+         width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        height: 70,
+        margin: EdgeInsets.only(bottom: 15, left: 15, right: 15),
+        decoration: BoxDecoration(
+            color: ashwhite, borderRadius: BorderRadius.circular(25)),
+        child: BottomNavItem(
+              text: "Reactivate",
+              onTap: () {},
+              icon: Icons.play_arrow_outlined,
+            ),
+      );
+    } else if (Type.Pause == _type) {
+      bottomBar = Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        height: 70,
+        margin: EdgeInsets.only(bottom: 15, left: 15, right: 15),
+        decoration: BoxDecoration(
+            color: ashwhite, borderRadius: BorderRadius.circular(25)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            BottomNavItem(
+              text: "Pause",
+              onTap: () {},
+              icon: Icons.pause_outlined,
+            ),
+            BottomNavItem(
+              text: "Switch",
+              onTap: () {},
+              icon: Icons.sync_alt,
+            ),
+            BottomNavItem(
+              text: "Add note",
+              onTap: () {},
+              icon: Icons.note_add_outlined,
+            ),
+          ],
+        ),
+      );
+    } else {
+      bottomBar = BottomNavBar(
+        index: bottomIndex,
+        type: _type,
+        onTap: (index) {
+          setState(() {
+            bottomIndex = index;
+            print(index);
+          });
+        },
+      );
+    }
 
     var _appBar = AppBar(
-      backgroundColor: aPrimary,
+      backgroundColor: Colors.black,
       leading: Container(
         padding: const EdgeInsets.all(8),
         child: CircleAvatar(
           child: Image.asset('assets/images/alphatrait.png'),
         ),
       ),
-      title: const Text("My Plans"),
+      title: Center(child: const Text("My Plans")),
       actions: [
         GestureDetector(
           onTap: () {
@@ -62,7 +124,9 @@ class PlanScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: _appBar,
       bottomNavigationBar: bottomBar,
-      floatingActionButtonLocation: currentOrientation == Orientation.landscape? FloatingActionButtonLocation.endFloat: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: currentOrientation == Orientation.landscape
+          ? FloatingActionButtonLocation.endFloat
+          : FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Container(
           width: 60,
@@ -94,13 +158,22 @@ class PlanScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: currentOrientation == Orientation.landscape? height*70: height * 78,
-                 
+                  height: currentOrientation == Orientation.landscape
+                      ? height * 70
+                      : height * 78,
                   child: ListView.builder(
                     itemCount: subs.length,
                     itemBuilder: (ctx, index) => GestureDetector(
-                      onTap: (){
-                        
+                      onTap: () {
+                        setState(() {
+                          if (subs[index].status == "Inactive") {
+                            _type = Type.Reactive;
+                          } else if (subs[index].status == "Active") {
+                            _type = Type.Pause;
+                          } else {
+                            _type = Type.Default;
+                          }
+                        });
                       },
                       child: Container(
                         margin: const EdgeInsets.only(
@@ -122,12 +195,14 @@ class PlanScreen extends StatelessWidget {
                                 vertical: 19,
                               ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(subs[index].title,
-                                      style:
-                                          Theme.of(context).textTheme.headline6),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
                                   SizedBox(
                                     height: subs[index].status != "Inactive"
                                         ? 10
@@ -141,8 +216,8 @@ class PlanScreen extends StatelessWidget {
                                         .textTheme
                                         .bodyText2!
                                         .copyWith(
-                                            color:
-                                                statusColors[subs[index].status]),
+                                            color: statusColors[
+                                                subs[index].status]),
                                   ),
                                 ],
                               ),
@@ -163,6 +238,32 @@ class PlanScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class BottomNavItem extends StatelessWidget {
+  String text;
+  IconData icon;
+  VoidCallback onTap;
+  BottomNavItem({required this.text, required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Icon(icon),
+          Text(
+            text,
+            style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                  color: Colors.black,
+                ),
+          ),
+        ],
       ),
     );
   }

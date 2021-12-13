@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/constant.dart';
@@ -23,8 +22,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   var _formKey = GlobalKey<FormState>();
 
-  
   int profileTabIndex = 0;
+  int bottomIndex = 0;
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData;
@@ -60,7 +59,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: _appBar,
       backgroundColor: const Color.fromRGBO(17, 17, 17, 1),
-      bottomNavigationBar: BottomNavBar(),
+      bottomNavigationBar: BottomNavBar(
+        index: bottomIndex,
+        onTap: (index) {
+          setState(() {
+            bottomIndex = index;
+          });
+        },
+      ),
       body: SingleChildScrollView(
         child: Center(
           child: Container(

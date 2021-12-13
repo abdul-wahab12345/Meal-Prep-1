@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
+import 'package:mealprep/Models/products.dart';
 import 'package:mealprep/screens/add_plan_screen.dart';
+import 'package:mealprep/screens/check_out.dart';
 import 'package:mealprep/screens/cites_screen.dart';
 import 'package:mealprep/screens/forget_screen.dart';
 import 'package:mealprep/screens/login_screen.dart';
@@ -10,6 +12,7 @@ import 'package:mealprep/screens/profile_screen.dart';
 import 'package:mealprep/screens/registeration_screen.dart';
 import 'package:mealprep/screens/splash_screen.dart';
 import 'package:mealprep/screens/user_meals_screen.dart';
+import 'package:mealprep/screens/variations_plan_screen.dart';
 
 import 'package:provider/provider.dart';
 
@@ -38,6 +41,9 @@ class MyApp extends StatelessWidget {
             previousData==null?[]:previousData.userMeals,
             
           ),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Products(),
         ),
       ],
       child: MaterialApp(
@@ -73,7 +79,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         routes: {
-          '/': (ctx) => PlanScreen(),
+          '/': (ctx) => SplashScreen(),
           "home": (ctx) => UserMealsScreen(),
           MealDetailsScreen.routeName: (ctx) => MealDetailsScreen(),
           ProfileScreen.routeName: (ctx) => ProfileScreen(),
@@ -83,6 +89,9 @@ class MyApp extends StatelessWidget {
           CityScreen.routeName: (ctx) => CityScreen(),
           PlanScreen.routeName:(ctx)=>PlanScreen(),
           AddPlan.routeName:(ctx)=>AddPlan(),
+          VariationsScreen.routeName:(ctx)=>VariationsScreen(),
+          CheckOut.routeName:(ctx)=>CheckOut(),
+          
         },
         //home: RegisterScreen(),
       ),
