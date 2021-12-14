@@ -3,17 +3,37 @@ import 'package:mealprep/Models/products.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/profile_screen.dart';
 import 'package:mealprep/screens/variations_plan_screen.dart';
+import 'package:provider/provider.dart';
 
-class AddPlan extends StatelessWidget {
+class AddPlan extends StatefulWidget {
   static const routeName = '/addPlan';
   const AddPlan({Key? key}) : super(key: key);
 
   @override
+  State<AddPlan> createState() => _AddPlanState();
+}
+
+class _AddPlanState extends State<AddPlan> {
+List<Product> prod = [];
+@override
+  void initState() {
+
+Future.delayed(Duration.zero).then((value) {
+  Provider.of<Products>(context,listen: false).fetchAndSetProducts();
+
+});
+
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
-    var product = Products();
-    List<Product> prod = product.products;
+    
+     prod = Provider.of<Products>(context).products;
 
     var currentOrientation = Orientation.landscape;
     var _appBar = AppBar(

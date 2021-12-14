@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io' as plateform;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/constant.dart';
@@ -20,6 +21,8 @@ class _CheckOutState extends State<CheckOut> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
+  bool isLoading = false;
+
   var webUrl;
   @override
   void initState() {
@@ -32,7 +35,11 @@ class _CheckOutState extends State<CheckOut> {
   @override
   Widget build(BuildContext context) {
     _controller.future.then((value) => print(value.currentUrl()));
+
     webUrl = Provider.of<Auth>(context, listen: false).websiteUrl;
+
+    var userId = Provider.of<Auth>(context, listen: false).id;
+    var aw_hash = Provider.of<Auth>(context, listen: false).aw_hash;
 
     var _appBar = AppBar(
       backgroundColor: aPrimary,
@@ -40,18 +47,7 @@ class _CheckOutState extends State<CheckOut> {
       actions: [
         GestureDetector(
           onTap: () async {
-            FutureBuilder<WebViewController>(
-                future: _controller.future,
-                builder: (BuildContext context,
-                    AsyncSnapshot<WebViewController> controller) {
-                  if (controller.hasData) {
-                    controller.data!.currentUrl().then((value) => print(value));
-                  }
-                  if (controller.hasError) {
-                    print('g error ha');
-                  }
-                  return Container();
-                });
+            Navigator.of(context).pushReplacementNamed(ProfileScreen.routeName);
           },
           child: Container(
             padding: EdgeInsets.all(8),
@@ -64,18 +60,33 @@ class _CheckOutState extends State<CheckOut> {
     );
     return Scaffold(
         appBar: _appBar,
-        body: WebView(
-          onWebViewCreated: (value) {
-            value.currentUrl().then((value) => print(value));
-          },
-          onPageStarted: (value) {
-            print(value);
-          },
-          onPageFinished: (value) {
-            print(value);
-          },
-          initialUrl: webUrl + "?add-to-cart=1000",
-          javascriptMode: JavascriptMode.unrestricted,
+        body: Stack(
+          children: [
+            WebView(
+              onWebViewCreated: (value) {
+                value.currentUrl().then((value) => print(value));
+              },
+              onPageStarted: (value) {
+                setState(() {
+                  isLoading = true;
+                });
+                print(value);
+              },
+              onPageFinished: (value) {
+                setState(() {
+                  isLoading = false;
+                });
+                print(value);
+              }, //aw_user_id=7&aw_secure_hash=a1572204518cdff08453a7ab6026885f7
+              initialUrl: webUrl +
+                  "?add-to-cart=1000&aw_user_id=${userId}&aw_secure_hash=${aw_hash}",
+              javascriptMode: JavascriptMode.unrestricted,
+            ),
+            if(isLoading)
+            Center(
+              child: CupertinoActivityIndicator(radius: 15,),
+            )
+          ],
         ));
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/products.dart';
 import 'package:mealprep/constant.dart';
+import 'package:mealprep/screens/check_out.dart';
 import 'package:mealprep/screens/profile_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -74,8 +75,12 @@ class VariationsScreen extends StatelessWidget {
                                       )),
                                   actions: [
                                     CupertinoDialogAction(
-                                      child: Text(
-                                        'Yes',
+                                      child: TextButton(
+                                        child: Text('Yes'),
+                                      
+                                        onPressed: (){
+                                          Navigator.of(context).pushNamed(CheckOut.routeName,arguments:variation[index].id,);
+                                        },
                                        
                                       ),
                                       onPressed: () {

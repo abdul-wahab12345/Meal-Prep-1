@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Variation {
   int id;
@@ -10,7 +13,6 @@ class Variation {
     required this.price,
     required this.title,
     required this.deliverDate,
-    
   });
 }
 
@@ -31,7 +33,7 @@ class Product {
   });
 }
 
-class Products with ChangeNotifier{
+class Products with ChangeNotifier {
   List<Product> _products = [
     Product(
       id: 1,
@@ -45,7 +47,6 @@ class Products with ChangeNotifier{
           id: 11,
           title: 'One Week Only',
           deliverDate: '17/9/2021',
-
           price: 'Starting \$76.25',
         ),
         Variation(
@@ -81,7 +82,7 @@ class Products with ChangeNotifier{
         Variation(
           id: 22,
           title: 'Five Meals',
-         deliverDate: '06/12/2021',
+          deliverDate: '06/12/2021',
           price: 'Starting \$62.25',
         ),
         Variation(
@@ -117,7 +118,7 @@ class Products with ChangeNotifier{
         Variation(
           id: 33,
           title: '10 Meals',
-         deliverDate: '26/12/2021',
+          deliverDate: '26/12/2021',
           price: 'Starting \$6.25',
         ),
       ],
@@ -127,8 +128,53 @@ class Products with ChangeNotifier{
   List<Product> get products {
     return [..._products];
   }
+
   Product findById(int id) {
     //print(id);
     return _products.firstWhere((element) => element.id == id);
+  }
+
+  Future<void> fetchAndSetProducts() async {
+    final url = Uri.parse(
+        'https://u1s.ee6.myftpupload.com/wp-json/meal-prep/v1/products?doing_wp_cron=1639480626.7294850349426269531250');
+
+    final response = await http.get(url);
+
+    // print(response.body);
+    final extractedData = json.decode(response.body) as List<dynamic>;
+    //print(extractedData);
+    List<Product> extractedProducts = [];
+    extractedData.forEach((prod) {
+      List<Variation> variations = [];
+
+      var extractedVariations = prod['variations'] as List<dynamic>;
+
+      extractedVariations.forEach((variation) {
+        variations.add(
+          Variation(
+            id: variation['id'],
+            title: variation['title'],
+            deliverDate: prod['delivery_date'],
+            price: variation['price'],
+          ),
+        );
+      });
+
+
+      extractedProducts.add(
+        Product(
+          id: prod['id'],
+          title: prod['title'],
+          variations: variations,
+          imageUrl: prod['imageUrl'],
+          price: prod['price'],
+          deliveryDate: prod['delivery_date'],
+        ),
+      );
+    });
+
+    _products = extractedProducts;
+
+    notifyListeners();
   }
 }

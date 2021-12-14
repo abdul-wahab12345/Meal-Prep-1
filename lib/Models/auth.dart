@@ -7,6 +7,7 @@ class Auth with ChangeNotifier {
   String? websiteUrl;
   int? id;
   String? name;
+  String? aw_hash;
 
   List<Map<String, String>> errorcodes = [
     {'code': 'invalid_username', 'text': "Username is invalid!"},
@@ -26,16 +27,19 @@ class Auth with ChangeNotifier {
 
     final response = await http.post(url, body: body);
     var user = json.decode(response.body);
+    print(user);
 
     if (user['status'] == "success") {
       id = user['data']['ID'];
       name = user['data']['fullName'];
+      aw_hash = user['data']['hash'];
 
       final prefs = await SharedPreferences.getInstance();
       final userData = json.encode({
         'websiteUrl': websiteUrl,
         'userId': id,
         'userName': name,
+        'hash': aw_hash,
       });
       prefs.setString('userData', userData);
     } else {
@@ -65,6 +69,8 @@ class Auth with ChangeNotifier {
     websiteUrl = extractedUserData['websiteUrl'] as String;
     id = extractedUserData['userId'];
     name = extractedUserData['name'];
+    aw_hash = extractedUserData['hash'];
+    print(aw_hash);
     notifyListeners();
 
     return true;
