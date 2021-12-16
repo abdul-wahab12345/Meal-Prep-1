@@ -6,6 +6,7 @@ import 'package:mealprep/screens/Plans/pause.dart';
 import 'package:mealprep/screens/profile_screen.dart';
 import 'package:mealprep/screens/user_meals_screen.dart';
 import 'package:mealprep/widgets/bottom_bar.dart';
+import 'package:provider/provider.dart';
 
 import '../../constant.dart';
 
@@ -18,18 +19,21 @@ class PlanScreen extends StatefulWidget {
 }
 
 class _PlanScreenState extends State<PlanScreen> {
-  int selectedPlanId=0;
+  int selectedPlanId = 0;
   int bottomIndex = 0;
   var _key = GlobalKey();
 
   Type _type = Type.Default;
-
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    Provider.of<Subscriptions>(context, listen: false).fetchAndSetSubs();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var subscrip = Subscriptions();
-    List<Subscription> subs = subscrip.subscriptions;
+    List<Subscription> subs = Provider.of<Subscriptions>(context).subscriptions;
 
     Map<String, Color> statusColors = {
       'Active': Colors.green,
@@ -49,17 +53,17 @@ class _PlanScreenState extends State<PlanScreen> {
 
     if (_type == Type.Reactive) {
       bottomBar = Container(
-         width: double.infinity,
+        width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         height: 70,
         margin: EdgeInsets.only(bottom: 15, left: 15, right: 15),
         decoration: BoxDecoration(
             color: ashwhite, borderRadius: BorderRadius.circular(25)),
         child: BottomNavItem(
-              text: "Reactivate",
-              onTap: () {},
-              icon: Icons.play_arrow_outlined,
-            ),
+          text: "Reactivate",
+          onTap: () {},
+          icon: Icons.play_arrow_outlined,
+        ),
       );
     } else if (Type.Pause == _type) {
       bottomBar = Container(
@@ -75,15 +79,15 @@ class _PlanScreenState extends State<PlanScreen> {
             BottomNavItem(
               text: "Pause",
               onTap: () {
-                Navigator.of(context).pushNamed(Calender.routeName);
+                Navigator.of(context).pushNamed(Pause.routeName);
               },
               icon: Icons.pause_outlined,
             ),
-            
             BottomNavItem(
               text: "Switch",
               onTap: () {
-                Navigator.of(context).pushNamed(AddPlan.routeName,arguments:selectedPlanId);
+                Navigator.of(context)
+                    .pushNamed(AddPlan.routeName, arguments: selectedPlanId);
               },
               icon: Icons.sync_alt,
             ),
@@ -94,7 +98,7 @@ class _PlanScreenState extends State<PlanScreen> {
               },
               icon: Icons.note_add_outlined,
             ),
-             BottomNavItem(
+            BottomNavItem(
               text: "Meals",
               onTap: () {
                 Navigator.of(context).pushNamed('home');
@@ -148,7 +152,6 @@ class _PlanScreenState extends State<PlanScreen> {
           ? FloatingActionButtonLocation.endFloat
           : FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        
         child: Container(
           width: 60,
           height: 60,
@@ -189,14 +192,13 @@ class _PlanScreenState extends State<PlanScreen> {
                     itemBuilder: (ctx, index) => GestureDetector(
                       onTap: () {
                         setState(() {
-                          selectedPlanId=subs[index].id;
+                          selectedPlanId = subs[index].id;
                           if (subs[index].status == "Inactive") {
                             _type = Type.Reactive;
                           } else if (subs[index].status == "Active") {
                             _type = Type.Pause;
                           } else {
                             _type = Type.Default;
-                            
                           }
                         });
                       },
@@ -248,10 +250,22 @@ class _PlanScreenState extends State<PlanScreen> {
                               ),
                             ), //ContentConatiner
                             Container(
+                              decoration: BoxDecoration(
+                               
+                                borderRadius: BorderRadius.circular(
+                                  20,
+                                ),
+                              ),
                               width: 100,
+                              margin: const EdgeInsets.only(
+                                right: 15,
+                              ),
                               padding: const EdgeInsets.symmetric(vertical: 20),
-                              child: Image.network(subs[index].imageUrl,
-                                  fit: BoxFit.cover),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.network(subs[index].imageUrl,
+                                    fit: BoxFit.cover),
+                              ),
                             ), //imageContainer
                           ],
                         ),

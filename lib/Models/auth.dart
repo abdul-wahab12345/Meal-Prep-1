@@ -42,6 +42,7 @@ class Auth with ChangeNotifier {
         'hash': aw_hash,
       });
       prefs.setString('userData', userData);
+      notifyListeners();
     } else {
       var message = user['message'];
 

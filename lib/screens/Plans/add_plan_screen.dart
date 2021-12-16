@@ -18,10 +18,10 @@ List<Product> prod = [];
 @override
   void initState() {
 
-// Future.delayed(Duration.zero).then((value) {
-//   Provider.of<Products>(context,listen: false).fetchAndSetProducts();
+Future.delayed(Duration.zero).then((value) {
+  Provider.of<Products>(context,listen: false).fetchAndSetProducts();
 
-// });
+});
 
     // TODO: implement initState
     super.initState();
@@ -61,10 +61,17 @@ List<Product> prod = [];
       body: FutureBuilder(
         future: Provider.of<Products>(context,listen: false).fetchAndSetProducts(),
         builder: (context,snapShot) {
+          // if(snapShot.connectionState==ConnectionState.done){
+          //   print('shani1122');
+          // }
+          // if(snapShot.hasError){
+          //   print('errrrroroorororor');
+          // }
           // if(snapShot.connectionState==ConnectionState.waiting){
 
           //   return Center(child: CircularProgressIndicator());
           // }
+          
           
           
           return Center(
@@ -141,8 +148,11 @@ List<Product> prod = [];
                                     width: 120,
                                     padding: const EdgeInsets.symmetric(vertical: 20),
                                     margin: EdgeInsets.only(right: 15),
-                                    child: Image.network(prod[index].imageUrl,
-                                        fit: BoxFit.cover),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.network(prod[index].imageUrl,
+                                          fit: BoxFit.cover),
+                                    ),
                                   ),
                                 ), //imageContainer
                               ],

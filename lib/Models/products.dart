@@ -174,7 +174,9 @@ class Products with ChangeNotifier {
     });
 
     _products = extractedProducts;
+    
 
     notifyListeners();
+    
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/products.dart';
+import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/screens/Plans/add_note_screen.dart';
 import 'package:mealprep/screens/Plans/add_plan_screen.dart';
 import 'package:mealprep/screens/Plans/pause.dart';
@@ -46,6 +47,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => Products(),
+        ),
+        ChangeNotifierProxyProvider<Auth,Subscriptions>(
+          create: (_) => Subscriptions(userId: 0,webUrl: ''),
+          update: (ctx,auth,previousData)=>Subscriptions(userId: auth.id,webUrl: auth.websiteUrl as String,),
         ),
       ],
       child: MaterialApp(
@@ -94,7 +99,7 @@ class MyApp extends StatelessWidget {
           VariationsScreen.routeName:(ctx)=>VariationsScreen(),
           CheckOut.routeName:(ctx)=>CheckOut(),
           AddNote.routeName:(ctx)=>AddNote(),
-          Calender.routeName:(ctx)=>Calender(),
+          Pause.routeName:(ctx)=>Pause(),
         },
         //home: RegisterScreen(),
       ),

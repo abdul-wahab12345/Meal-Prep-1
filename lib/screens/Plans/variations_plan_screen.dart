@@ -59,7 +59,7 @@ class VariationsScreen extends StatelessWidget {
               children: [
                 Container(
                   height: currentOrientation == Orientation.landscape
-                      ? height * 70
+                      ? height * 80
                       : height * 78,
                   child: ListView.builder(
                     itemCount: variation.length,
@@ -69,7 +69,7 @@ class VariationsScreen extends StatelessWidget {
                           context: ctx,
                           builder: (ctx) => Platform.isIOS
                               ? CupertinoAlertDialog(
-                                  content: Text("Do wana take this deal",
+                                  content: const Text("Do wana take this deal",
                                       style: TextStyle(
                                         color: Colors.black,
                                       )),
@@ -88,9 +88,13 @@ class VariationsScreen extends StatelessWidget {
                                       },
                                     ),
                                     CupertinoDialogAction(
-                                      child: Text(
-                                        'No',
+                                      child:TextButton(
+                                        child: Text('No'),
                                       
+                                        onPressed: (){
+                                          Navigator.of(context).pop();
+                                        },
+                                       
                                       ),
                                       onPressed: () {
                                         Navigator.of(context).pop();
@@ -174,7 +178,7 @@ class VariationsScreen extends StatelessWidget {
                                     height: 25,
                                   ),
                                   Text(
-                                    variation[index].price,
+                                    'Starting \$${variation[index].price}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyText2!
@@ -185,6 +189,7 @@ class VariationsScreen extends StatelessWidget {
                             ), //ContentConatiner
                             Container(
                               width: 100,
+                              margin: EdgeInsets.only(right: 15),
                               padding: const EdgeInsets.symmetric(vertical: 20),
                               child: Image.network(product.imageUrl,
                                   fit: BoxFit.cover),
