@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 
 import 'package:mealprep/constant.dart';
-import 'package:mealprep/screens/login_screen.dart';
+import 'package:mealprep/screens/Auth/login_screen.dart';
 
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:provider/provider.dart';

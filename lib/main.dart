@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/products.dart';
-import 'package:mealprep/screens/add_plan_screen.dart';
-import 'package:mealprep/screens/check_out.dart';
-import 'package:mealprep/screens/cites_screen.dart';
-import 'package:mealprep/screens/forget_screen.dart';
-import 'package:mealprep/screens/login_screen.dart';
+import 'package:mealprep/screens/Plans/add_note_screen.dart';
+import 'package:mealprep/screens/Plans/add_plan_screen.dart';
+import 'package:mealprep/screens/Plans/pause.dart';
+import 'package:mealprep/screens/Plans/check_out.dart';
+import 'package:mealprep/screens/Auth/cites_screen.dart';
+import 'package:mealprep/screens/Auth/forget_screen.dart';
+import 'package:mealprep/screens/Auth/login_screen.dart';
 import 'package:mealprep/screens/meal_details_screen.dart';
-import 'package:mealprep/screens/plans_screen.dart';
+import 'package:mealprep/screens/Plans/plans_screen.dart';
 import 'package:mealprep/screens/profile_screen.dart';
-import 'package:mealprep/screens/registeration_screen.dart';
+import 'package:mealprep/screens/Auth/registeration_screen.dart';
 import 'package:mealprep/screens/splash_screen.dart';
 import 'package:mealprep/screens/user_meals_screen.dart';
-import 'package:mealprep/screens/variations_plan_screen.dart';
+import 'package:mealprep/screens/Plans/variations_plan_screen.dart';
 
 import 'package:provider/provider.dart';
 
@@ -79,7 +81,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         routes: {
-          '/': (ctx) => AddPlan(),
+          '/': (ctx) => SplashScreen(),
           "home": (ctx) => UserMealsScreen(),
           MealDetailsScreen.routeName: (ctx) => MealDetailsScreen(),
           ProfileScreen.routeName: (ctx) => ProfileScreen(),
@@ -91,7 +93,8 @@ class MyApp extends StatelessWidget {
           AddPlan.routeName:(ctx)=>AddPlan(),
           VariationsScreen.routeName:(ctx)=>VariationsScreen(),
           CheckOut.routeName:(ctx)=>CheckOut(),
-          
+          AddNote.routeName:(ctx)=>AddNote(),
+          Calender.routeName:(ctx)=>Calender(),
         },
         //home: RegisterScreen(),
       ),

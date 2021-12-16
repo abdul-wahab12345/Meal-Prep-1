@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/subscriptions.dart';
-import 'package:mealprep/screens/add_plan_screen.dart';
+import 'package:mealprep/screens/Plans/add_note_screen.dart';
+import 'package:mealprep/screens/Plans/add_plan_screen.dart';
+import 'package:mealprep/screens/Plans/pause.dart';
 import 'package:mealprep/screens/profile_screen.dart';
+import 'package:mealprep/screens/user_meals_screen.dart';
 import 'package:mealprep/widgets/bottom_bar.dart';
 
-import '../constant.dart';
+import '../../constant.dart';
 
 class PlanScreen extends StatefulWidget {
   static const routeName = '/plans_screen';
@@ -15,10 +18,13 @@ class PlanScreen extends StatefulWidget {
 }
 
 class _PlanScreenState extends State<PlanScreen> {
+  int selectedPlanId=0;
   int bottomIndex = 0;
   var _key = GlobalKey();
 
   Type _type = Type.Default;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,18 +74,32 @@ class _PlanScreenState extends State<PlanScreen> {
           children: [
             BottomNavItem(
               text: "Pause",
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pushNamed(Calender.routeName);
+              },
               icon: Icons.pause_outlined,
             ),
+            
             BottomNavItem(
               text: "Switch",
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pushNamed(AddPlan.routeName,arguments:selectedPlanId);
+              },
               icon: Icons.sync_alt,
             ),
             BottomNavItem(
               text: "Add note",
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pushNamed(AddNote.routeName);
+              },
               icon: Icons.note_add_outlined,
+            ),
+             BottomNavItem(
+              text: "Meals",
+              onTap: () {
+                Navigator.of(context).pushNamed('home');
+              },
+              icon: Icons.restaurant,
             ),
           ],
         ),
@@ -128,10 +148,11 @@ class _PlanScreenState extends State<PlanScreen> {
           ? FloatingActionButtonLocation.endFloat
           : FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
+        
         child: Container(
           width: 60,
           height: 60,
-          child: Icon(
+          child: const Icon(
             Icons.add,
             size: 33,
           ),
@@ -142,7 +163,9 @@ class _PlanScreenState extends State<PlanScreen> {
             ),
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed(AddPlan.routeName);
+        },
       ),
       body: Center(
         heightFactor: 1,
@@ -166,12 +189,14 @@ class _PlanScreenState extends State<PlanScreen> {
                     itemBuilder: (ctx, index) => GestureDetector(
                       onTap: () {
                         setState(() {
+                          selectedPlanId=subs[index].id;
                           if (subs[index].status == "Inactive") {
                             _type = Type.Reactive;
                           } else if (subs[index].status == "Active") {
                             _type = Type.Pause;
                           } else {
                             _type = Type.Default;
+                            
                           }
                         });
                       },

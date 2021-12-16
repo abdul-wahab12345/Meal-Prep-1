@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/constant.dart';
-import 'package:mealprep/screens/cites_screen.dart';
+import 'package:mealprep/screens/Auth/cites_screen.dart';
 import 'package:mealprep/widgets/bottom_bar.dart';
 import 'package:mealprep/widgets/input_feild.dart';
 import 'package:provider/provider.dart';

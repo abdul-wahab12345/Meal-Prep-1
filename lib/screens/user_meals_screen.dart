@@ -38,12 +38,12 @@ class _UserMealsScreenState extends State<UserMealsScreen> {
 
     var _appBar = AppBar(
       backgroundColor: aPrimary,
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        child: CircleAvatar(
-          child: Image.asset('assets/images/alphatrait.png'),
-        ),
-      ),
+      // leading: Container(
+      //   padding: const EdgeInsets.all(8),
+      //   child: CircleAvatar(
+      //     child: Image.asset('assets/images/alphatrait.png'),
+      //   ),
+      // ),
       title: Text("User Meals"),
       actions: [
         GestureDetector(
@@ -75,7 +75,7 @@ class _UserMealsScreenState extends State<UserMealsScreen> {
       body: Center(
         child: userMeals.isEmpty
             ? Platform.isIOS
-                ? CupertinoActivityIndicator(radius: 40)
+                ? CupertinoActivityIndicator(radius: 30)
                 : CircularProgressIndicator(
                     color: Colors.white,
                   )

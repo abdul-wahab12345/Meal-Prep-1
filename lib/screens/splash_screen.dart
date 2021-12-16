@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/meals.dart';
 import 'package:mealprep/constant.dart';
-import 'package:mealprep/screens/check_out.dart';
-import 'package:mealprep/screens/cites_screen.dart';
-import 'package:mealprep/screens/login_screen.dart';
+import 'package:mealprep/screens/Plans/check_out.dart';
+import 'package:mealprep/screens/Auth/cites_screen.dart';
+import 'package:mealprep/screens/Auth/login_screen.dart';
+import 'package:mealprep/screens/Plans/plans_screen.dart';
 import 'package:mealprep/screens/user_meals_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
           await Provider.of<Auth>(context, listen: false).tryAutoLogin();
 
       if (isLoggedIn) {
-        Navigator.of(context).pushReplacementNamed(CheckOut.routeName);
+        Navigator.of(context).pushReplacementNamed(PlanScreen.routeName);
       } else {
         Navigator.of(context).pushReplacementNamed(CityScreen.routeName);
       }
