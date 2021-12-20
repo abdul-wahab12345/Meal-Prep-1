@@ -101,7 +101,8 @@ class Subscriptions with ChangeNotifier {
       ));
     });
 
-    _subscriptions=newSubs;
+    _subscriptions = newSubs;
     notifyListeners();
+  
   }
 }

@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
-import 'package:mealprep/Models/meals.dart';
 import 'package:mealprep/constant.dart';
-import 'package:mealprep/screens/Plans/check_out.dart';
 import 'package:mealprep/screens/Auth/cites_screen.dart';
-import 'package:mealprep/screens/Auth/login_screen.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
-import 'package:mealprep/screens/user_meals_screen.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,22 +13,25 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    // TODO: implement initState
+  bool isFirst = true;
 
-    Future.delayed(Duration(seconds: 3)).then((value) async {
+  @override
+  void didChangeDependencies() async {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+
+    if (isFirst) {
+      isFirst = false;
       var isLoggedIn =
           await Provider.of<Auth>(context, listen: false).tryAutoLogin();
 
       if (isLoggedIn) {
-        Navigator.of(context).pushReplacementNamed(PlanScreen.routeName);
+        Future.delayed(Duration(seconds: 3)).then((value) =>
+            Navigator.of(context).pushReplacementNamed(PlanScreen.routeName));
       } else {
         Navigator.of(context).pushReplacementNamed(CityScreen.routeName);
       }
-    });
-
-    super.initState();
+    }
   }
 
   @override

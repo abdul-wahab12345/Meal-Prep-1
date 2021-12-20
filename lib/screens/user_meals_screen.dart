@@ -8,6 +8,7 @@ import 'package:mealprep/Models/meals.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/meal_details_screen.dart';
 import 'package:mealprep/screens/profile_screen.dart';
+import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:provider/provider.dart';
 
 class UserMealsScreen extends StatefulWidget {
@@ -74,11 +75,7 @@ class _UserMealsScreenState extends State<UserMealsScreen> {
       backgroundColor: abackground,
       body: Center(
         child: userMeals.isEmpty
-            ? Platform.isIOS
-                ? CupertinoActivityIndicator(radius: 30)
-                : CircularProgressIndicator(
-                    color: Colors.white,
-                  )
+            ? AdaptiveIndecator()
             : Container(
                 width: currentOrientation == Orientation.landscape
                     ? 550

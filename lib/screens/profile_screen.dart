@@ -105,44 +105,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TabButton(
-                        () {
+                        onTap: () {
                           setState(() {
                             profileTabIndex = 0;
                           });
                         },
-                        'Details',
-                        profileTabIndex == 0,
-                        height,
+                        text:'Details',
+                       isActive: profileTabIndex == 0,
+                       height: height,
                       ),
                       TabButton(
-                        () {
+                        onTap: () {
                           setState(() {
                             profileTabIndex = 1;
                           });
                         },
-                        'Payments',
-                        profileTabIndex == 1,
-                        height,
+                        text:'Payments',
+                       isActive: profileTabIndex == 1,
+                       height: height,
                       ),
                       TabButton(
-                        () {
+                        onTap: () {
                           setState(() {
                             profileTabIndex = 2;
                           });
                         },
-                        'Address',
-                        profileTabIndex == 2,
-                        height,
+                        text: 'Address',
+                       isActive: profileTabIndex == 2,
+                       height: height,
                       ),
                       TabButton(
-                        () {
+                       onTap:  () {
                           setState(() {
                             profileTabIndex = 3;
                           });
                         },
-                        'Taste',
-                        profileTabIndex == 3,
-                        height,
+                        text:'Taste',
+                       isActive: profileTabIndex == 3,
+                       height: height,
                       ),
                     ],
                   ),
@@ -284,7 +284,7 @@ class TabButton extends StatelessWidget {
   bool isActive;
   String text;
   var height;
-  TabButton(this.onTap, this.text, this.isActive, this.height);
+  TabButton({required this.onTap, required this.text, required this.isActive, required this.height,});
 
   @override
   Widget build(BuildContext context) {

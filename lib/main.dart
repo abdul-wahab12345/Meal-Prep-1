@@ -86,7 +86,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         routes: {
-          '/': (ctx) => SplashScreen(),
+          '/': (ctx) => ProfileScreen(),
           "home": (ctx) => UserMealsScreen(),
           MealDetailsScreen.routeName: (ctx) => MealDetailsScreen(),
           ProfileScreen.routeName: (ctx) => ProfileScreen(),

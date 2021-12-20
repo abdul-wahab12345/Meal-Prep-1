@@ -8,6 +8,7 @@ Color gra1 = Color.fromRGBO(163, 80, 228, 1);
 Color gra2 = Color.fromRGBO(3, 154, 199, 1);
 Color ashwhite = Color.fromRGBO(224, 224, 224, 1);
 
+
 enum Type{
   Default,
   Reactive,

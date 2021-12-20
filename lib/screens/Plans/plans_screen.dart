@@ -5,6 +5,7 @@ import 'package:mealprep/screens/Plans/add_plan_screen.dart';
 import 'package:mealprep/screens/Plans/pause.dart';
 import 'package:mealprep/screens/profile_screen.dart';
 import 'package:mealprep/screens/user_meals_screen.dart';
+import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:mealprep/widgets/bottom_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -22,12 +23,19 @@ class _PlanScreenState extends State<PlanScreen> {
   int selectedPlanId = 0;
   int bottomIndex = 0;
   var _key = GlobalKey();
+  bool isLoading = false;
 
   Type _type = Type.Default;
   @override
   void initState() {
     // TODO: implement initState
-    Provider.of<Subscriptions>(context, listen: false).fetchAndSetSubs();
+
+    List<Subscription> subs =
+        Provider.of<Subscriptions>(context, listen: false).subscriptions;
+    if (subs.length <= 0) {
+      Provider.of<Subscriptions>(context, listen: false).fetchAndSetSubs();
+    }
+
     super.initState();
   }
 
@@ -115,7 +123,7 @@ class _PlanScreenState extends State<PlanScreen> {
         onTap: (index) {
           setState(() {
             bottomIndex = index;
-            print(index);
+           
           });
         },
       );
@@ -170,114 +178,119 @@ class _PlanScreenState extends State<PlanScreen> {
           Navigator.of(context).pushNamed(AddPlan.routeName);
         },
       ),
-      body: Center(
-        heightFactor: 1,
-        child: Container(
-          width: currentOrientation == Orientation.landscape
-              ? 550
-              : double.infinity,
-          margin: const EdgeInsets.symmetric(
-            horizontal: 15,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: currentOrientation == Orientation.landscape
-                      ? height * 70
-                      : height * 78,
-                  child: ListView.builder(
-                    itemCount: subs.length,
-                    itemBuilder: (ctx, index) => GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedPlanId = subs[index].id;
-                          if (subs[index].status == "Inactive") {
-                            _type = Type.Reactive;
-                          } else if (subs[index].status == "Active") {
-                            _type = Type.Pause;
-                          } else {
-                            _type = Type.Default;
-                          }
-                        });
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.only(
-                          top: 17,
-                        ),
-                        decoration: BoxDecoration(
-                          color: aPrimary,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(
-                                left: width * 5,
+      body: subs.isEmpty
+          ? AdaptiveIndecator()
+          : Center(
+              heightFactor: 1,
+              child: Container(
+                width: currentOrientation == Orientation.landscape
+                    ? 550
+                    : double.infinity,
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: currentOrientation == Orientation.landscape
+                            ? height * 70
+                            : height * 78,
+                        child: ListView.builder(
+                          itemCount: subs.length,
+                          itemBuilder: (ctx, index) => GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedPlanId = subs[index].id;
+                                if (subs[index].status == "Inactive") {
+                                  _type = Type.Reactive;
+                                } else if (subs[index].status == "Active") {
+                                  _type = Type.Pause;
+                                } else {
+                                  _type = Type.Default;
+                                }
+                              });
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                top: 17,
                               ),
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 19,
+                              decoration: BoxDecoration(
+                                color: aPrimary,
+                                borderRadius: BorderRadius.circular(15),
                               ),
-                              child: Column(
+                              child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(subs[index].title,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6),
-                                  SizedBox(
-                                    height: subs[index].status != "Inactive"
-                                        ? 10
-                                        : 60,
-                                  ),
-                                  if (subs[index].status != "Inactive")
-                                    ConditionalInfo(subs[index]),
-                                  Text(
-                                    subs[index].status,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText2!
-                                        .copyWith(
-                                            color: statusColors[
-                                                subs[index].status]),
-                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                      left: width * 5,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 19,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(subs[index].title,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6),
+                                        SizedBox(
+                                          height:
+                                              subs[index].status != "Inactive"
+                                                  ? 10
+                                                  : 60,
+                                        ),
+                                        if (subs[index].status != "Inactive")
+                                          ConditionalInfo(subs[index]),
+                                        Text(
+                                          subs[index].status,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText2!
+                                              .copyWith(
+                                                  color: statusColors[
+                                                      subs[index].status]),
+                                        ),
+                                      ],
+                                    ),
+                                  ), //ContentConatiner
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                        20,
+                                      ),
+                                    ),
+                                    width: 100,
+                                    margin: const EdgeInsets.only(
+                                      right: 15,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.network(subs[index].imageUrl,
+                                          fit: BoxFit.cover),
+                                    ),
+                                  ), //imageContainer
                                 ],
                               ),
-                            ), //ContentConatiner
-                            Container(
-                              decoration: BoxDecoration(
-                               
-                                borderRadius: BorderRadius.circular(
-                                  20,
-                                ),
-                              ),
-                              width: 100,
-                              margin: const EdgeInsets.only(
-                                right: 15,
-                              ),
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.network(subs[index].imageUrl,
-                                    fit: BoxFit.cover),
-                              ),
-                            ), //imageContainer
-                          ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                      ), //Listview end
+                    ],
                   ),
-                ), //Listview end
-              ],
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
