@@ -59,9 +59,6 @@ class _AddPlanState extends State<AddPlan> {
       body: prod.isEmpty?AdaptiveIndecator(): Center(
               heightFactor: 1,
               child: Container(
-                width: currentOrientation == Orientation.landscape
-                    ? 550
-                    : double.infinity,
                 margin: const EdgeInsets.symmetric(
                   horizontal: 15,
                 ),

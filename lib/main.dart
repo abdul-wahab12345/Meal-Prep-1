@@ -10,6 +10,7 @@ import 'package:mealprep/screens/Plans/check_out.dart';
 import 'package:mealprep/screens/Auth/cites_screen.dart';
 import 'package:mealprep/screens/Auth/forget_screen.dart';
 import 'package:mealprep/screens/Auth/login_screen.dart';
+import 'package:mealprep/screens/delivery_screen.dart';
 import 'package:mealprep/screens/meal_details_screen.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 import 'package:mealprep/screens/profile/address.dart';
@@ -93,7 +94,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         routes: {
-          '/': (ctx) => ProfileScreen(),
+          '/': (ctx) => DeliveryScreen(),
           "home": (ctx) => UserMealsScreen(),
           MealDetailsScreen.routeName: (ctx) => MealDetailsScreen(),
           ProfileScreen.routeName: (ctx) => ProfileScreen(),
@@ -107,6 +108,7 @@ class MyApp extends StatelessWidget {
           CheckOut.routeName:(ctx)=>CheckOut(),
           AddNote.routeName:(ctx)=>AddNote(),
           Pause.routeName:(ctx)=>Pause(),
+          DeliveryScreen.routeName:(ctx)=>DeliveryScreen(),
         },
         //home: RegisterScreen(),
       ),

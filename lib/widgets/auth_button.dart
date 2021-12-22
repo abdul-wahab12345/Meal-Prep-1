@@ -31,8 +31,10 @@ class CustomButton extends StatelessWidget {
         onPressed: callback,
         child: Text(text,style: Theme.of(context).textTheme.bodyText2,),
         style: ButtonStyle(
+          
           backgroundColor: MaterialStateProperty.all<Color>(
             Color.fromRGBO(142, 77, 255, 1),
+            
           ),
           shape:
               MaterialStateProperty.all<RoundedRectangleBorder>(

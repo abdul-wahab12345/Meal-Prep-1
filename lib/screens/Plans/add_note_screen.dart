@@ -31,7 +31,7 @@ class AddNote extends StatelessWidget {
     }
     var _appBar = AppBar(
       backgroundColor: Colors.black,
-      title: const Text("Add Plan"),
+      title: const Text("Add Note"),
       actions: [
         GestureDetector(
           onTap: () {

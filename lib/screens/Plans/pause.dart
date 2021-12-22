@@ -8,6 +8,11 @@ import 'package:mealprep/widgets/input_feild.dart';
 
 import '../../constant.dart';
 
+enum RadioButton {
+  Yes,
+  No,
+}
+
 class Pause extends StatefulWidget {
   const Pause({Key? key}) : super(key: key);
   static const routeName = '/pause';
@@ -17,7 +22,11 @@ class Pause extends StatefulWidget {
 }
 
 class _PauseState extends State<Pause> {
-  var _controller = TextEditingController();
+  //var _controller = TextEditingController();
+  var _dateController = TextEditingController();
+  var _reasonController = TextEditingController();
+  RadioButton? _chk = RadioButton.No;
+  String errorText = '';
   @override
   Widget build(BuildContext context) {
     DateTime _dateTime;
@@ -40,13 +49,11 @@ class _PauseState extends State<Pause> {
       ],
     );
 
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
 
-SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
-
-      
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: _appBar,
@@ -67,7 +74,7 @@ SystemChrome.setPreferredOrientations([
                   Flexible(
                     flex: 2,
                     child: InputFeild(
-                      inputController: _controller,
+                      inputController: _dateController,
                       hinntText: 'Choose a Date',
                       validatior: (value) {
                         return null;
@@ -77,7 +84,10 @@ SystemChrome.setPreferredOrientations([
                   Flexible(
                     flex: 1,
                     child: TextButton(
-                      child: Text('Choose Date',style: TextStyle(color: btnColor),),
+                      child: Text(
+                        'Choose Date',
+                        style: TextStyle(color: btnColor),
+                      ),
                       onPressed: () {
                         var now = DateTime.now();
 
@@ -92,13 +102,14 @@ SystemChrome.setPreferredOrientations([
                           selectableDayPredicate: (DateTime val) =>
                               val.weekday != 7 ? false : true,
                         ).then((value) {
-                          if(value == null){
+                          if (value == null) {
                             return;
                           }
                           setState(() {
                             _dateTime = value;
 
-                            _controller.text = DateFormat("M/d/y").format(value);
+                            _dateController.text =
+                                DateFormat("M/d/y").format(value);
                             print(_dateTime.toString());
                           });
                         });
@@ -109,8 +120,79 @@ SystemChrome.setPreferredOrientations([
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top:15,left: 10,right: 10),
+              // color: Colors.white,
+              margin: EdgeInsets.only(
+                top: 20,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      'Do you want meals this Sunday ?',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'IBM',
+                        // fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Row(
+                        children: [
+                          Radio(
+                              overlayColor: MaterialStateProperty.all(btnColor),
+                              hoverColor: btnColor,
+                              fillColor: MaterialStateProperty.all(btnColor),
+                              activeColor: btnColor,
+                              focusColor: btnColor,
+                              value: RadioButton.Yes,
+                              groupValue: _chk,
+                              onChanged: (RadioButton? value) {
+                                setState(() {
+                                  print(value);
+                                  _chk = value;
+                                });
+                              }),
+                          Text(
+                            'Yes',
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Radio(
+                              overlayColor: MaterialStateProperty.all(btnColor),
+                              hoverColor: btnColor,
+                              fillColor: MaterialStateProperty.all(btnColor),
+                              activeColor: btnColor,
+                              focusColor: btnColor,
+                              value: RadioButton.No,
+                              groupValue: _chk,
+                              onChanged: (RadioButton? value) {
+                                setState(() {
+                                  _chk = value;
+                                  print(value);
+                                });
+                              }),
+                          Text(
+                            'No',
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ), //radio button
+            Container(
+              margin: EdgeInsets.only(top: 15, left: 10, right: 10),
               child: TextFormField(
+                controller: _reasonController,
                 validator: (value) {
                   return null;
                 },
@@ -119,7 +201,8 @@ SystemChrome.setPreferredOrientations([
                 decoration: InputDecoration(
                     fillColor: Colors.white,
                     contentPadding: EdgeInsets.all(18),
-                    hintStyle: const TextStyle(color: Colors.white, fontSize: 14),
+                    hintStyle:
+                        const TextStyle(color: Colors.white, fontSize: 14),
                     hintText: "Reason!",
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -133,11 +216,13 @@ SystemChrome.setPreferredOrientations([
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(color: Colors.red, width: 2.0),
+                      borderSide:
+                          const BorderSide(color: Colors.red, width: 2.0),
                     ),
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(color: Colors.red, width: 2.0),
+                      borderSide:
+                          const BorderSide(color: Colors.red, width: 2.0),
                     ),
                     errorStyle: Theme.of(context)
                         .textTheme
@@ -145,6 +230,14 @@ SystemChrome.setPreferredOrientations([
                         .copyWith(color: Colors.red, fontSize: 12)),
               ),
             ),
+            if (errorText != '')
+              Container(
+                  margin: EdgeInsets.only(top: 20),
+                  child: Text(
+                    errorText,
+                    style: TextStyle(color: Colors.red),
+                  )),
+
             Container(
               margin: EdgeInsets.symmetric(horizontal: 10),
               child: Flex(
@@ -153,12 +246,29 @@ SystemChrome.setPreferredOrientations([
                   Flexible(
                       flex: 1,
                       fit: FlexFit.tight,
-                      child: CustomButton(text: "Save Changes", callback: () {})),
+                      child: CustomButton(
+                          text: "Save Changes",
+                          callback: () {
+                            if (_reasonController.text.isEmpty ||
+                                _dateController.text.isEmpty) {
+                              setState(() {
+                                errorText = 'Please enter the date and reason';
+                              });
+                            }
+                          })),
                   SizedBox(width: 15),
                   Flexible(
                       flex: 1,
                       fit: FlexFit.tight,
-                      child: CustomButton(text: "Pause Indefinitely", callback: () {})),
+                      child: CustomButton(
+                          text: "Pause Indefinitely",
+                          callback: () {
+                            if (_reasonController.text.isEmpty) {
+                              setState(() {
+                                errorText = 'Please enter a reason';
+                              });
+                            }
+                          })),
                 ],
               ),
             ),
