@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:mealprep/screens/profile_screen.dart';
+import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:mealprep/widgets/input_feild.dart';
 

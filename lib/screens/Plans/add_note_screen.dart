@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/constant.dart';
-import 'package:mealprep/screens/profile_screen.dart';
+import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 
 class AddNote extends StatelessWidget {

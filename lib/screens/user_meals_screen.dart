@@ -7,7 +7,7 @@ import 'package:mealprep/Models/meal.dart';
 import 'package:mealprep/Models/meals.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/meal_details_screen.dart';
-import 'package:mealprep/screens/profile_screen.dart';
+import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:provider/provider.dart';
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mealprep/Models/address.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/products.dart';
 import 'package:mealprep/Models/subscriptions.dart';
@@ -11,7 +12,9 @@ import 'package:mealprep/screens/Auth/forget_screen.dart';
 import 'package:mealprep/screens/Auth/login_screen.dart';
 import 'package:mealprep/screens/meal_details_screen.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
-import 'package:mealprep/screens/profile_screen.dart';
+import 'package:mealprep/screens/profile/address.dart';
+import 'package:mealprep/screens/profile/taste.dart';
+import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:mealprep/screens/Auth/registeration_screen.dart';
 import 'package:mealprep/screens/splash_screen.dart';
 import 'package:mealprep/screens/user_meals_screen.dart';
@@ -52,6 +55,9 @@ class MyApp extends StatelessWidget {
           create: (_) => Subscriptions(userId: 0,webUrl: ''),
           update: (ctx,auth,previousData)=>Subscriptions(userId: auth.id,webUrl: auth.websiteUrl as String,),
         ),
+         ChangeNotifierProvider(
+          create: (ctx) => Addreses(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -83,6 +89,7 @@ class MyApp extends StatelessWidget {
               fontSize: 9,
               letterSpacing: 2,
             ),
+            
           ),
         ),
         routes: {

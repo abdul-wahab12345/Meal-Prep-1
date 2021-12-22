@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/products.dart';
 import 'package:mealprep/constant.dart';
-import 'package:mealprep/screens/profile_screen.dart';
+import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:mealprep/screens/Plans/variations_plan_screen.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:provider/provider.dart';

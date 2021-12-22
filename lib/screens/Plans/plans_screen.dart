@@ -3,7 +3,7 @@ import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/screens/Plans/add_note_screen.dart';
 import 'package:mealprep/screens/Plans/add_plan_screen.dart';
 import 'package:mealprep/screens/Plans/pause.dart';
-import 'package:mealprep/screens/profile_screen.dart';
+import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:mealprep/screens/user_meals_screen.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:mealprep/widgets/bottom_bar.dart';

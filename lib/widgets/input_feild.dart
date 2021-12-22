@@ -25,9 +25,12 @@ class _InputFeildState extends State<InputFeild> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height / 100;
+     if (height < 700) {
+      height = 700 / 100;
+    }
     return Container(
-      height: isError ? height * 9 : height * 6,
-      margin: EdgeInsets.only(top: height * 2.5),
+      height: isError ? height * 9 : height *7,
+      margin: EdgeInsets.only(top: height * 3),
       child: TextFormField(
         obscureText: widget.secure,
         keyboardType: widget.type,

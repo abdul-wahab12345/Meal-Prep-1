@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mealprep/Models/address.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Auth/cites_screen.dart';
+import 'package:mealprep/screens/profile/address.dart';
+import 'package:mealprep/screens/profile/payment.dart';
+import 'package:mealprep/screens/profile/taste.dart';
 import 'package:mealprep/widgets/bottom_bar.dart';
 import 'package:mealprep/widgets/input_feild.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +28,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   int profileTabIndex = 0;
   int bottomIndex = 0;
+
+  @override
+  
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData;
@@ -55,6 +63,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             icon: Icon(Icons.logout))
       ],
     );
+
+    List<Widget> tabs = [
+      UserFields(
+          height: height,
+          formKey: _formKey,
+          emailController: emailController,
+          currentPass: currentPass,
+          newPass: newPass,
+          confirmPass: confirmPass,
+          width: width),
+      PaymentTab(),
+      AddressTab(),
+      TasteTab(),
+    ];
 
     return Scaffold(
       appBar: _appBar,
@@ -110,9 +132,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             profileTabIndex = 0;
                           });
                         },
-                        text:'Details',
-                       isActive: profileTabIndex == 0,
-                       height: height,
+                        text: 'Details',
+                        isActive: profileTabIndex == 0,
+                        height: height,
                       ),
                       TabButton(
                         onTap: () {
@@ -120,9 +142,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             profileTabIndex = 1;
                           });
                         },
-                        text:'Payments',
-                       isActive: profileTabIndex == 1,
-                       height: height,
+                        text: 'Payments',
+                        isActive: profileTabIndex == 1,
+                        height: height,
                       ),
                       TabButton(
                         onTap: () {
@@ -131,105 +153,131 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           });
                         },
                         text: 'Address',
-                       isActive: profileTabIndex == 2,
-                       height: height,
+                        isActive: profileTabIndex == 2,
+                        height: height,
                       ),
                       TabButton(
-                       onTap:  () {
+                        onTap: () {
                           setState(() {
                             profileTabIndex = 3;
                           });
                         },
-                        text:'Taste',
-                       isActive: profileTabIndex == 3,
-                       height: height,
+                        text: 'Taste',
+                        isActive: profileTabIndex == 3,
+                        height: height,
                       ),
                     ],
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(left: 20, right: 20, top: height * 2),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        InputFeild(
-                          hinntText: "abd@gmail.com",
-                          validatior: (String value) {
-                            if (value.isEmpty) {
-                              return "Please enter your email!";
-                            }
-                            if (!value.contains('@') ||
-                                !value.contains('.com')) {
-                              return "Enter a valid email address";
-                            }
-                            return null;
-                          },
-                          inputController: emailController,
-                        ),
-                        InputFeild(
-                          hinntText: "Current Password",
-                          validatior: (String value) {
-                            if (value.isEmpty) {
-                              return "Please enter current password!";
-                            }
-
-                            return null;
-                          },
-                          secure: true,
-                          inputController: currentPass,
-                        ),
-                        InputFeild(
-                          hinntText: "New Password",
-                          secure: true,
-                          validatior: (String value) {
-                            if (value.isEmpty) {
-                              return "Please enter new password!";
-                            }
-                            if (value.length < 6) {
-                              return "Must have 6 characters !";
-                            }
-
-                            return null;
-                          },
-                          inputController: newPass,
-                        ),
-                        InputFeild(
-                          hinntText: "Confirm New Password",
-                          secure: true,
-                          validatior: (String value) {
-                            if (value.isEmpty) {
-                              return "Please enter new password!";
-                            }
-                            if (newPass.text != value) {
-                              return "Password didn't match";
-                            }
-                            return null;
-                          },
-                          inputController: confirmPass,
-                        ),
-                        AuthButton(
-                          width: width,
-                          height: height,
-                          text: 'Save Changes',
-                          callback: () {
-                            if (_formKey.currentState!.validate()) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('shani'),
-                                ),
-                              );
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                tabs[profileTabIndex],
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class UserFields extends StatelessWidget {
+  const UserFields({
+    Key? key,
+    required this.height,
+    required GlobalKey<FormState> formKey,
+    required this.emailController,
+    required this.currentPass,
+    required this.newPass,
+    required this.confirmPass,
+    required this.width,
+  })  : _formKey = formKey,
+        super(key: key);
+
+  final double height;
+  final GlobalKey<FormState> _formKey;
+  final TextEditingController emailController;
+  final TextEditingController currentPass;
+  final TextEditingController newPass;
+  final TextEditingController confirmPass;
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left: 20, right: 20, top: height * 4),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InputFeild(
+              hinntText: "abd@gmail.com",
+              validatior: (String value) {
+                if (value.isEmpty) {
+                  return "Please enter your email!";
+                }
+                if (!value.contains('@') || !value.contains('.com')) {
+                  return "Enter a valid email address";
+                }
+                return null;
+              },
+              inputController: emailController,
+            ),
+            InputFeild(
+              hinntText: "Current Password",
+              validatior: (String value) {
+                if (value.isEmpty) {
+                  return "Please enter current password!";
+                }
+
+                return null;
+              },
+              secure: true,
+              inputController: currentPass,
+            ),
+            InputFeild(
+              hinntText: "New Password",
+              secure: true,
+              validatior: (String value) {
+                if (value.isEmpty) {
+                  return "Please enter new password!";
+                }
+                if (value.length < 6) {
+                  return "Must have 6 characters !";
+                }
+
+                return null;
+              },
+              inputController: newPass,
+            ),
+            InputFeild(
+              hinntText: "Confirm New Password",
+              secure: true,
+              validatior: (String value) {
+                if (value.isEmpty) {
+                  return "Please enter new password!";
+                }
+                if (newPass.text != value) {
+                  return "Password didn't match";
+                }
+                return null;
+              },
+              inputController: confirmPass,
+            ),
+            AuthButton(
+              width: width,
+              height: height,
+              text: 'Save Changes',
+              callback: () {
+                if (_formKey.currentState!.validate()) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('shani'),
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -284,7 +332,12 @@ class TabButton extends StatelessWidget {
   bool isActive;
   String text;
   var height;
-  TabButton({required this.onTap, required this.text, required this.isActive, required this.height,});
+  TabButton({
+    required this.onTap,
+    required this.text,
+    required this.isActive,
+    required this.height,
+  });
 
   @override
   Widget build(BuildContext context) {
