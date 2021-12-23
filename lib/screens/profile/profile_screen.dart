@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mealprep/Models/address.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Auth/cites_screen.dart';
@@ -27,7 +26,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var _formKey = GlobalKey<FormState>();
 
   int profileTabIndex = 0;
-  int bottomIndex = 0;
 
   @override
   
@@ -47,22 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       width = 550 / 100;
     }
 
-    var _appBar = AppBar(
-      backgroundColor: aPrimary,
-      title: Text("Profile"),
-      actions: [
-        IconButton(
-            onPressed: () async {
-              await Provider.of<Auth>(context, listen: false)
-                  .logout()
-                  .then((value) {
-                Navigator.of(context)
-                    .pushReplacementNamed(CityScreen.routeName);
-              });
-            },
-            icon: Icon(Icons.logout))
-      ],
-    );
+   
 
     List<Widget> tabs = [
       UserFields(
@@ -78,18 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       TasteTab(),
     ];
 
-    return Scaffold(
-      appBar: _appBar,
-      backgroundColor: const Color.fromRGBO(17, 17, 17, 1),
-      bottomNavigationBar: BottomNavBar(
-        index: bottomIndex,
-        onTap: (index) {
-          setState(() {
-            bottomIndex = index;
-          });
-        },
-      ),
-      body: SingleChildScrollView(
+    return  SingleChildScrollView(
         child: Center(
           child: Container(
             width: queryData.size.width > 550 ? 550 : double.infinity,
@@ -173,8 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-        ),
-      ),
+        )
     );
   }
 }

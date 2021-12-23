@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mealprep/constant.dart';
 
 class BottomNavBar extends StatefulWidget {
   int index;
   Function onTap;
-  Type type;
-  BottomNavBar({required this.index, required this.onTap,this.type = Type.Default});
+  BottomNavBar({required this.index, required this.onTap});
 
   @override
   _BottomNavBarState createState() => _BottomNavBarState();
@@ -23,21 +21,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    switch (widget.type) {
-      case Type.Reactive:
-        items = [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.play_arrow),
-            label: "Plans",
-          ),
-        ];
-        break;
-      case Type.Pause:
-        break;
-      default:
-        break;
-    }
-
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
       child: BottomNavigationBar(

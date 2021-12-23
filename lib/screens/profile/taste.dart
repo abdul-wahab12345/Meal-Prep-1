@@ -11,23 +11,24 @@ class TasteTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-          child: Column(
-            children: [
-               SizedBox(height: 20,),
-              TasteContainer(
-                controller: _Alergcontroller,
-                title: '⛔ Allergens',
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              TasteContainer(
-                controller: _disLikeController,
-                title: '🤢 Dislikes',
-              ),
-            ],
-          )
-    );
+        child: Column(
+      children: [
+        SizedBox(
+          height: 20,
+        ),
+        TasteContainer(
+          controller: _Alergcontroller,
+          title: '⛔ Allergens',
+        ),
+        SizedBox(
+          height: 18,
+        ),
+        TasteContainer(
+          controller: _disLikeController,
+          title: '🤢 Dislikes',
+        ),
+      ],
+    ));
   }
 }
 
@@ -43,10 +44,16 @@ class TasteContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   Orientation currentOrientation = MediaQuery.of(context).orientation;
+    var height = MediaQuery.of(context).size.height / 100;
+    var width = MediaQuery.of(context).size.width / 100;
+
+   
+
     return Container(
       padding: EdgeInsets.all(30),
-      height: 250,
-      width: 340,
+      height:currentOrientation==Orientation.landscape?height*60: height * 23,
+      width:currentOrientation==Orientation.landscape?width*50: width * 80,
       decoration: BoxDecoration(
         color: aPrimary,
         borderRadius: BorderRadius.circular(20),
@@ -56,7 +63,6 @@ class TasteContainer extends StatelessWidget {
           Container(
             child: Row(
               children: [
-               
                 Text(
                   title,
                   style: TextStyle(

@@ -10,19 +10,22 @@ class AddressTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     Map<String,Address> add=Provider.of<Addreses>(context).address;
    print(add);
 
 
   
     return  Center(
-          child: Column(
-            children: [
-               SizedBox(height: 20,),
-              AddressContainer(title: '🚘 Delivery Address',address:add['Delivery'] as Address),
-              SizedBox(height: 30,),
-              AddressContainer(title: '🚩 Billing Address',address:add['Billing'] as Address),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                 SizedBox(height: 20,),
+                AddressContainer(title: '🚘 Delivery Address',address:add['Delivery'] as Address),
+                SizedBox(height: 20,),
+                AddressContainer(title: '🚩 Billing Address',address:add['Billing'] as Address),
+              ],
+            ),
           )
     );
   }
@@ -36,13 +39,16 @@ class AddressContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    final height=MediaQuery.of(context).size.height/100;
+    final width=MediaQuery.of(context).size.width/100;
     print(address.state);
      print(address.street);
       print(address.suit);
     return Container(
       padding: EdgeInsets.all(40),
-      height: 235,
-      width: 340,
+      height: height*23,
+      width: width*80,
       decoration: BoxDecoration(
         color: aPrimary,
         borderRadius: BorderRadius.circular(20),

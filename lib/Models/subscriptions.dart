@@ -27,7 +27,7 @@ class Subscriptions with ChangeNotifier {
   int? userId;
   String webUrl;
   Subscriptions({this.userId = 0, required this.webUrl});
-   List<Subscription> _subscriptions = [
+  List<Subscription> _subscriptions = [
     // Subscription(
     //   id: 1,
     //   title: 'Protein + Plan',
@@ -66,6 +66,18 @@ class Subscriptions with ChangeNotifier {
     return [..._subscriptions];
   }
 
+  List<Subscription> getSubscriptionById(int id) {
+    if (_subscriptions.length <= 0) {
+      return [];
+    }
+    var index = _subscriptions.indexWhere((element) => element.id == id);
+    if (index < 0) {
+      return [];
+    }
+    var subscription = _subscriptions.firstWhere((element) => element.id == id);
+    return [subscription];
+  }
+
   Future<void> fetchAndSetSubs() async {
     print(userId);
     final url = Uri.parse('${webUrl}wp-json/meal-prep/v1/user-subscriptions');
@@ -78,31 +90,27 @@ class Subscriptions with ChangeNotifier {
     final extractedData = json.decode(response.body) as List<dynamic>;
     List<Subscription> newSubs = [];
     extractedData.forEach((sub) {
+      List<int> products = [];
 
-      List<int> products=[];
+      List<dynamic> pIds = sub['products'];
+      pIds.forEach((element) {
+        products.add(
+          element as int,
+        );
+      });
 
-     List<dynamic> pIds=sub['products'];
-     pIds.forEach((element) { 
-       products.add(
-         element as int,
-       );
-
-     });
-
-      newSubs.add(
-        Subscription(
+      newSubs.add(Subscription(
         id: sub['ID'],
         title: sub['title'],
-        imageUrl: sub['imageUrl']==null?'':sub['imageUrl'],
-        nextDelivery: sub['next_delivery']==null?'':sub['next_delivery'],
+        imageUrl: sub['imageUrl'] == null ? '' : sub['imageUrl'],
+        nextDelivery: sub['next_delivery'] == null ? '' : sub['next_delivery'],
         status: sub['status'],
-        isCutOf:false,
+        isCutOf: false,
         productIds: products,
       ));
     });
 
     _subscriptions = newSubs;
     notifyListeners();
-  
   }
 }

@@ -34,6 +34,17 @@ class _CheckOutState extends State<CheckOut> {
 
   @override
   Widget build(BuildContext context) {
+    Map<String,int> argsData = ModalRoute.of(context)!.settings.arguments as Map<String,int>;
+    int varId=0;
+    if(argsData['varId']!=0){
+      varId=argsData['varId'] as int ;
+    }
+    int subId=0;
+    if(argsData['subId']!=0){
+      subId=argsData['subId'] as int;
+    }
+    print(varId);
+    print(subId);
     _controller.future.then((value) => print(value.currentUrl()));
 
     webUrl = Provider.of<Auth>(context, listen: false).websiteUrl;
@@ -79,7 +90,7 @@ class _CheckOutState extends State<CheckOut> {
                 print(value);
               }, //aw_user_id=7&aw_secure_hash=a1572204518cdff08453a7ab6026885f7
               initialUrl: webUrl +
-                  "?add-to-cart=1000&aw_user_id=${userId}&aw_secure_hash=${aw_hash}",
+                  "?add-to-cart=1000&aw_user_id=${userId}&aw_secure_hash=${aw_hash}&subId=${subId}",
               javascriptMode: JavascriptMode.unrestricted,
             ),
             if(isLoading)

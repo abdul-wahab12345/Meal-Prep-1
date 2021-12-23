@@ -94,7 +94,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         routes: {
-          '/': (ctx) => DeliveryScreen(),
+          '/': (ctx) => SplashScreen(),
           "home": (ctx) => UserMealsScreen(),
           MealDetailsScreen.routeName: (ctx) => MealDetailsScreen(),
           ProfileScreen.routeName: (ctx) => ProfileScreen(),
@@ -110,7 +110,7 @@ class MyApp extends StatelessWidget {
           Pause.routeName:(ctx)=>Pause(),
           DeliveryScreen.routeName:(ctx)=>DeliveryScreen(),
         },
-        //home: RegisterScreen(),
+       
       ),
     );
   }

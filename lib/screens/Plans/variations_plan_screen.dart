@@ -11,16 +11,25 @@ import 'package:provider/provider.dart';
 class VariationsScreen extends StatelessWidget {
   static const routeName = '/variations';
   const VariationsScreen({Key? key}) : super(key: key);
-  
 
   @override
   Widget build(BuildContext context) {
     var currentOrientation = Orientation.landscape;
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
-    final prodId = ModalRoute.of(context)!.settings.arguments;
+    Map<String, int> argsData =
+        ModalRoute.of(context)!.settings.arguments as Map<String, int>;
+    int prodId = 0;
+    if (argsData['prodID'] != 0) {
+      prodId = argsData['prodId'] as int;
+    }
+    int subId = 0;
+    if (argsData['subId'] != 0) {
+      subId = argsData['subId'] as int;
+    }
+    print(subId);
     var product =
-        Provider.of<Products>(context, listen: false).findById(prodId as int);
+        Provider.of<Products>(context, listen: false).findById(prodId);
     var variation = product.variations;
     var _appBar = AppBar(
       backgroundColor: Colors.black,
@@ -62,6 +71,7 @@ class VariationsScreen extends StatelessWidget {
                       ? height * 80
                       : height * 78,
                   child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
                     itemCount: variation.length,
                     itemBuilder: (ctx, index) => GestureDetector(
                       onTap: () {
@@ -75,27 +85,26 @@ class VariationsScreen extends StatelessWidget {
                                       )),
                                   actions: [
                                     CupertinoDialogAction(
-                                      child: TextButton(
-                                        child: Text('Yes'),
                                       
-                                        onPressed: (){
-                                          Navigator.of(context).pushNamed(CheckOut.routeName,arguments:variation[index].id,);
-                                        },
-                                       
-                                      ),
+                                        child: Text('Yes'),
+                                        
+                                      
                                       onPressed: () {
                                         Navigator.of(context).pop();
-                                      },
+                                          Navigator.of(context).pushNamed(
+                                            CheckOut.routeName,
+                                            arguments: <String, int>{
+                                              'varId': variation[index].id,
+                                              'subId': subId,
+                                            },
+                                          );
+                                          
+                                        },
                                     ),
                                     CupertinoDialogAction(
-                                      child:TextButton(
-                                        child: Text('No'),
+                                      child: Text('No'),
+                                        
                                       
-                                        onPressed: (){
-                                          Navigator.of(context).pop();
-                                        },
-                                       
-                                      ),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
@@ -114,9 +123,17 @@ class VariationsScreen extends StatelessWidget {
                                         'Yes!',
                                         style: TextStyle(color: btnColor),
                                       ),
-                                      onPressed: () {
+                                       onPressed: () {
                                         Navigator.of(context).pop();
-                                      },
+                                          Navigator.of(context).pushNamed(
+                                            CheckOut.routeName,
+                                            arguments: <String, int>{
+                                              'varId': variation[index].id,
+                                              'subId': subId,
+                                            },
+                                          );
+                                          
+                                        },
                                     ),
                                     TextButton(
                                       child: Text(
