@@ -65,8 +65,9 @@ class _PlanScreenState extends State<PlanScreen> {
        * show only one subscription on click
        */
 
-      subs = Provider.of<Subscriptions>(context, listen: false)
+      Subscription? data = Provider.of<Subscriptions>(context, listen: false)
           .getSubscriptionById(selectedPlanId);
+          subs = data != null?[data]:[];
 
       bottomBar = Container(
         width: double.infinity,
@@ -85,8 +86,9 @@ class _PlanScreenState extends State<PlanScreen> {
       /**
        * show only one subscription on click
        */
-      subs = Provider.of<Subscriptions>(context, listen: false)
+      Subscription? data = Provider.of<Subscriptions>(context, listen: false)
           .getSubscriptionById(selectedPlanId);
+          subs = data != null?[data]:[];
 
       bottomBar = CustomBottomBar(selectedPlanId: selectedPlanId);
     } else {

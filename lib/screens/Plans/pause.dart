@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:mealprep/widgets/input_feild.dart';
+import 'package:provider/provider.dart';
 
 import '../../constant.dart';
 
@@ -53,6 +55,11 @@ class _PauseState extends State<Pause> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    var data = ModalRoute.of(context)!.settings.arguments as int;
+    Subscription? subscription =
+        Provider.of<Subscriptions>(context, listen: false)
+            .getSubscriptionById(data);
+    print(data);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -119,76 +126,79 @@ class _PauseState extends State<Pause> {
                 ],
               ),
             ),
-            Container(
-              // color: Colors.white,
-              margin: EdgeInsets.only(
-                top: 20,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 16.0),
-                    child: Text(
-                      'Do you want meals this Sunday ?',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'IBM',
-                        // fontWeight: FontWeight.bold,
+            if (subscription != null && subscription.isCutOf)
+              Container(
+                // color: Colors.white,
+                margin: EdgeInsets.only(
+                  top: 20,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(left: 16.0),
+                      child: Text(
+                        'Do you want meals this Sunday ?',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'IBM',
+                          // fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Row(
-                        children: [
-                          Radio(
-                              overlayColor: MaterialStateProperty.all(btnColor),
-                              hoverColor: btnColor,
-                              fillColor: MaterialStateProperty.all(btnColor),
-                              activeColor: btnColor,
-                              focusColor: btnColor,
-                              value: RadioButton.Yes,
-                              groupValue: _chk,
-                              onChanged: (RadioButton? value) {
-                                setState(() {
-                                  print(value);
-                                  _chk = value;
-                                });
-                              }),
-                          Text(
-                            'Yes',
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Radio(
-                              overlayColor: MaterialStateProperty.all(btnColor),
-                              hoverColor: btnColor,
-                              fillColor: MaterialStateProperty.all(btnColor),
-                              activeColor: btnColor,
-                              focusColor: btnColor,
-                              value: RadioButton.No,
-                              groupValue: _chk,
-                              onChanged: (RadioButton? value) {
-                                setState(() {
-                                  _chk = value;
-                                  print(value);
-                                });
-                              }),
-                          Text(
-                            'No',
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                        ],
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ), //radio button
+                    Row(
+                      children: [
+                        Row(
+                          children: [
+                            Radio(
+                                overlayColor:
+                                    MaterialStateProperty.all(btnColor),
+                                hoverColor: btnColor,
+                                fillColor: MaterialStateProperty.all(btnColor),
+                                activeColor: btnColor,
+                                focusColor: btnColor,
+                                value: RadioButton.Yes,
+                                groupValue: _chk,
+                                onChanged: (RadioButton? value) {
+                                  setState(() {
+                                    print(value);
+                                    _chk = value;
+                                  });
+                                }),
+                            Text(
+                              'Yes',
+                              style: Theme.of(context).textTheme.bodyText2,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Radio(
+                                overlayColor:
+                                    MaterialStateProperty.all(btnColor),
+                                hoverColor: btnColor,
+                                fillColor: MaterialStateProperty.all(btnColor),
+                                activeColor: btnColor,
+                                focusColor: btnColor,
+                                value: RadioButton.No,
+                                groupValue: _chk,
+                                onChanged: (RadioButton? value) {
+                                  setState(() {
+                                    _chk = value;
+                                    print(value);
+                                  });
+                                }),
+                            Text(
+                              'No',
+                              style: Theme.of(context).textTheme.bodyText2,
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ), //radio button
             Container(
               margin: EdgeInsets.only(top: 15, left: 10, right: 10),
               child: TextFormField(

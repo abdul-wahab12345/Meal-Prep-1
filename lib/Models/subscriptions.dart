@@ -10,6 +10,7 @@ class Subscription {
   String nextDelivery;
   String status;
   bool isCutOf;
+  bool isCharged;
   List<int> productIds;
 
   Subscription({
@@ -19,6 +20,7 @@ class Subscription {
     required this.nextDelivery,
     required this.status,
     required this.isCutOf,
+    required this.isCharged,
     required this.productIds,
   });
 }
@@ -27,55 +29,22 @@ class Subscriptions with ChangeNotifier {
   int? userId;
   String webUrl;
   Subscriptions({this.userId = 0, required this.webUrl});
-  List<Subscription> _subscriptions = [
-    // Subscription(
-    //   id: 1,
-    //   title: 'Protein + Plan',
-    //   imageUrl:
-    //       'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1-300x300.png',
-    //   nextDelivery: '26/11/2021',
-    //   status: 'Active',
-    //   isCutOf: true,
-    //   productIds: [3],
-    // ),
-    // //2
-    // Subscription(
-    //   id: 2,
-    //   title: 'Lean + Plan',
-    //   imageUrl:
-    //       'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1-300x300.png',
-    //   nextDelivery: '27/11/2021',
-    //   status: 'Paused',
-    //   isCutOf: true,
-    //   productIds: [3],
-    // ),
-    // //3
-    // Subscription(
-    //   id: 3,
-    //   title: 'Balanced Plan',
-    //   imageUrl:
-    //       'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1-300x300.png',
-    //   nextDelivery: '26/11/2021',
-    //   status: 'Inactive',
-    //   isCutOf: true,
-    //   productIds: [3],
-    // ),
-  ];
+  List<Subscription> _subscriptions = [];
 
   List<Subscription> get subscriptions {
     return [..._subscriptions];
   }
 
-  List<Subscription> getSubscriptionById(int id) {
+  Subscription? getSubscriptionById(int id) {
     if (_subscriptions.length <= 0) {
-      return [];
+      return null;
     }
     var index = _subscriptions.indexWhere((element) => element.id == id);
     if (index < 0) {
-      return [];
+      return null;
     }
     var subscription = _subscriptions.firstWhere((element) => element.id == id);
-    return [subscription];
+    return subscription;
   }
 
   Future<void> fetchAndSetSubs() async {
@@ -90,23 +59,17 @@ class Subscriptions with ChangeNotifier {
     final extractedData = json.decode(response.body) as List<dynamic>;
     List<Subscription> newSubs = [];
     extractedData.forEach((sub) {
-      List<int> products = [];
-
-      List<dynamic> pIds = sub['products'];
-      pIds.forEach((element) {
-        products.add(
-          element as int,
-        );
-      });
-
       newSubs.add(Subscription(
         id: sub['ID'],
         title: sub['title'],
         imageUrl: sub['imageUrl'] == null ? '' : sub['imageUrl'],
         nextDelivery: sub['next_delivery'] == null ? '' : sub['next_delivery'],
         status: sub['status'],
-        isCutOf: false,
-        productIds: products,
+        isCutOf: sub['payment_status']['show_options'] as bool,
+        isCharged: sub['payment_status']['charged'] as bool,
+        productIds: (sub['products'] as List<dynamic>).map((e) {
+          return e as int;
+        }).toList() as List<int>,
       ));
     });
 
