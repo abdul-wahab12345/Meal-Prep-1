@@ -96,7 +96,7 @@ class Subscriptions with ChangeNotifier {
 
       final response = await http.post(url, body: data);
       final extractedData = json.decode(response.body);
-      return '';
+      return extractedData;
     }
   }
 

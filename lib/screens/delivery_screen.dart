@@ -13,7 +13,7 @@ class DeliveryScreen extends StatelessWidget {
     var width = MediaQuery.of(context).size.width / 100;
 
     return Center(
-      heightFactor: 1,
+      heightFactor:1,
       child: Container(
         width:
             currentOrientation == Orientation.landscape ? 600 : double.infinity,

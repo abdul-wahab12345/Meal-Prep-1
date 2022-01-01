@@ -110,10 +110,17 @@ class _PlanScreenState extends State<PlanScreen> {
 
     var _appBar = AppBar(
       backgroundColor: Colors.black,
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        child: CircleAvatar(
-          child: Image.asset('assets/images/alphatrait.png'),
+      leading: GestureDetector(
+        onTap: (){
+          setState(() {
+            bottomIndex=1;
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          child: CircleAvatar(
+            child: Image.asset('assets/images/alphatrait.png'),
+          ),
         ),
       ),
       title: Center(child: Text(screenTitles[bottomIndex])),

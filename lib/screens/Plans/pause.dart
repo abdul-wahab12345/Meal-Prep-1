@@ -256,98 +256,156 @@ class _PauseState extends State<Pause> {
                 direction: Axis.horizontal,
                 children: [
                   Flexible(
-                      flex: 1,
-                      fit: FlexFit.tight,
-                      child: saveLoader
-                          ? AdaptiveIndecator()
-                          : CustomButton(
-                              text: "Save Changes",
-                              callback: indefinitltLoader
-                                  ? () {
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: saveLoader
+                        ? AdaptiveIndecator()
+                        : CustomButton(
+                            text: "Save Changes",
+                            callback: indefinitltLoader
+                                ? () {
+                                    setState(() {
+                                      errorText =
+                                          "You already pressed Pause Indefinitely button";
+                                    });
+                                  }
+                                : () async {
+                                    if (_reasonController.text.isEmpty ||
+                                        _dateController.text.isEmpty) {
                                       setState(() {
                                         errorText =
-                                            "You already pressed Pause Indefinitely button";
+                                            'Please enter the date and reason';
                                       });
-                                    }
-                                  : () {
-                                      if (_reasonController.text.isEmpty ||
-                                          _dateController.text.isEmpty) {
-                                        setState(() {
-                                          errorText =
-                                              'Please enter the date and reason';
-                                        });
-                                      } else {
-                                        setState(() {
-                                          errorText = '';
-                                          saveLoader = true;
-                                        });
+                                    } else {
+                                      setState(() {
+                                        errorText = '';
+                                        saveLoader = true;
+                                      });
+
+                                      int? user_id = Provider.of<Auth>(context,
+                                              listen: false)
+                                          .id;
+                                      Map<String, dynamic> data = {
+                                        'user_id': user_id.toString(),
+                                        'type': 'date',
+                                        'id': subscription!.id.toString(),
+                                        'aw_charged': subscription.isCharged
+                                            ? 'true'
+                                            : 'false',
+                                        'reason': _reasonController.text,
+                                        'next_delivery': deliveryDate,
+                                      };
+                                      if (subscription.isCutOf) {
+                                        data.putIfAbsent(
+                                            'want_meal', () => _chk.toString());
                                       }
-                                    })),
+                                      String response =
+                                          await Provider.of<Subscriptions>(
+                                                  context,
+                                                  listen: false)
+                                              .pauseSubscription(data);
+                                      print(data);
+                                      showDialog(
+                                          context: context,
+                                          builder: (ctx) {
+                                            return AdaptiveDiaglog(
+                                                ctx: context,
+                                                title: 'Response',
+                                                content: response,
+                                                btnYes: "Okay",
+                                                yesPressed: () {
+                                                  Provider.of<Subscriptions>(
+                                                          context,
+                                                          listen: false)
+                                                      .emptySubscriptions();
+                                                  Navigator.of(context)
+                                                      .pushReplacementNamed(
+                                                          PlanScreen.routeName,
+                                                          arguments: true);
+                                                });
+                                          });
+                                      setState(
+                                        () {
+                                          saveLoader = false;
+                                        },
+                                      );
+                                    }
+                                  },
+                          ),
+                  ),
                   SizedBox(width: 15),
                   Flexible(
-                      flex: 1,
-                      fit: FlexFit.tight,
-                      child: indefinitltLoader
-                          ? AdaptiveIndecator()
-                          : CustomButton(
-                              text: "Pause Indefinitely",
-                              callback: saveLoader
-                                  ? () {
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: indefinitltLoader
+                        ? AdaptiveIndecator()
+                        : CustomButton(
+                            text: "Pause Indefinitely",
+                            callback: saveLoader
+                                ? () {
+                                    setState(() {
+                                      errorText =
+                                          "You already pressed Save changes button";
+                                    });
+                                  }
+                                : () async {
+                                    if (_reasonController.text.isEmpty) {
                                       setState(() {
-                                        errorText =
-                                            "You already pressed Save changes button";
+                                        errorText = 'Please enter a reason';
+                                      });
+                                    } else {
+                                      setState(() {
+                                        errorText = '';
+                                        indefinitltLoader = true;
+                                      });
+                                      int? user_id = Provider.of<Auth>(context,
+                                              listen: false)
+                                          .id;
+                                      Map<String, dynamic> data = {
+                                        'user_id': user_id.toString(),
+                                        'type': 'indf',
+                                        'id': subscription!.id.toString(),
+                                        'aw_charged': subscription.isCharged
+                                            ? 'true'
+                                            : 'false',
+                                        'reason': _reasonController.text,
+                                      };
+                                      if (subscription.isCutOf) {
+                                        data.putIfAbsent(
+                                            'want_meal', () => _chk.toString());
+                                      }
+                                      String response =
+                                          await Provider.of<Subscriptions>(
+                                                  context,
+                                                  listen: false)
+                                              .pauseSubscription(data);
+                                      print(response);
+                                      showDialog(
+                                          context: context,
+                                          builder: (ctx) {
+                                            return AdaptiveDiaglog(
+                                                ctx: context,
+                                                title: 'Response',
+                                                content: response,
+                                                btnYes: "Okay",
+                                                yesPressed: () {
+                                                  Provider.of<Subscriptions>(
+                                                          context,
+                                                          listen: false)
+                                                      .emptySubscriptions();
+                                                  Navigator.of(context)
+                                                      .pushReplacementNamed(
+                                                          PlanScreen.routeName,
+                                                          arguments: true);
+                                                });
+                                          });
+                                      setState(() {
+                                        indefinitltLoader = false;
                                       });
                                     }
-                                  : () async{
-                                      if (_reasonController.text.isEmpty) {
-                                        setState(() {
-                                          errorText = 'Please enter a reason';
-                                        });
-                                      } else {
-                                        setState(() {
-                                          errorText = '';
-                                          indefinitltLoader = true;
-                                        });
-                                        int? user_id = Provider.of<Auth>(
-                                                context,
-                                                listen: false)
-                                            .id;
-                                        Map<String, dynamic> data = {
-                                          'user_id': user_id.toString(),
-                                          'type': 'indf',
-                                          'id': subscription!.id.toString(),
-                                          'aw_charged': subscription.isCharged
-                                              ? 'true'
-                                              : 'false',
-                                          'reason': _reasonController.text,
-                                        };
-                                        if (subscription.isCutOf) {
-                                          data.putIfAbsent('want_meal',
-                                              () => _chk.toString());
-                                        }
-                                       String response = await Provider.of<Subscriptions>(context,
-                                                listen: false)
-                                            .pauseSubscription(data);
-                                            print(response);
-                                           showDialog(context: context, builder: (ctx){
-                                             return AdaptiveDiaglog(
-                                              ctx: context,
-                                              title: 'Response',
-                                              content: response,
-                                              btnYes: "Okay",
-                                              yesPressed: () {
-                                                 Provider.of<Subscriptions>(context, listen: false).emptySubscriptions();
-                                                Navigator.of(context)
-                                                    .pushReplacementNamed(
-                                                        PlanScreen.routeName,arguments: true);
-                                              });
-                                           });
-                                            setState(() {
-                                            indefinitltLoader = false;
-                                            
-                                          });
-                                      }
-                                    })),
+                                  },
+                          ),
+                  ),
                 ],
               ),
             ),
