@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/constant.dart';
+import 'package:mealprep/screens/Plans/plans_screen.dart';
 import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -58,7 +59,7 @@ class _CheckOutState extends State<CheckOut> {
       actions: [
         GestureDetector(
           onTap: () async {
-            Navigator.of(context).pushReplacementNamed(ProfileScreen.routeName);
+            Navigator.of(context).pushReplacementNamed(PlanScreen.routeName,arguments: 2);
           },
           child: Container(
             padding: EdgeInsets.all(8),

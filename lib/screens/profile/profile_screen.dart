@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
+import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Auth/cites_screen.dart';
 import 'package:mealprep/screens/profile/address.dart';
 import 'package:mealprep/screens/profile/payment.dart';
 import 'package:mealprep/screens/profile/taste.dart';
+import 'package:mealprep/widgets/adaptiveDialog.dart';
+import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:mealprep/widgets/bottom_bar.dart';
 import 'package:mealprep/widgets/input_feild.dart';
 import 'package:provider/provider.dart';
@@ -22,16 +25,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var currentPass = TextEditingController();
   var newPass = TextEditingController();
   var confirmPass = TextEditingController();
+  bool isFirst = true;
 
   var _formKey = GlobalKey<FormState>();
+
+  // User? curr;
 
   int profileTabIndex = 0;
 
   @override
-  
+  void initState() {
+    // TODO: implement initState
+
+    var user = Provider.of<UserData>(context, listen: false).user;
+    if (user == null) {
+      Provider.of<UserData>(context, listen: false).getUserData();
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    var user = Provider.of<UserData>(context).user;
+
     MediaQueryData queryData;
     queryData = MediaQuery.of(context);
     var height = queryData.size.height / 100;
@@ -45,8 +62,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       width = 550 / 100;
     }
 
-   
-
     List<Widget> tabs = [
       UserFields(
           height: height,
@@ -56,101 +71,107 @@ class _ProfileScreenState extends State<ProfileScreen> {
           newPass: newPass,
           confirmPass: confirmPass,
           width: width),
-      PaymentTab(),
+      PaymentTab(height: height),
       AddressTab(),
       TasteTab(),
     ];
 
-    return  SingleChildScrollView(
-        child: Center(
-          child: Container(
-            width: queryData.size.width > 550 ? 550 : double.infinity,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: height * 2,
-                ),
-                Center(
-                  child: Container(
-                    height: height * 13,
-                    width: height * 13,
-                    child: Image.asset(
-                      'assets/images/Image.png',
-                      fit: BoxFit.cover,
+    return user == null
+        ? Center(
+            child: AdaptiveIndecator(),
+          )
+        : SingleChildScrollView(
+            child: Center(
+            child: Container(
+              width: queryData.size.width > 550 ? 550 : double.infinity,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: height * 2,
+                  ),
+                  Center(
+                    child: Container(
+                      height: height * 13,
+                      width: height * 13,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.network(
+                          user.imageUrl,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: height * 2,
-                ),
-                Text(
-                  'Abdul Wahab',
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-                Container(
-                  width: double.infinity,
-                  height: height * 5,
-                  //padding: EdgeInsets.all(10),
-                  margin: EdgeInsets.only(left: 10, right: 10, top: 20),
-                  decoration: BoxDecoration(
-                      color: Color.fromRGBO(38, 43, 55, 1),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TabButton(
-                        onTap: () {
-                          setState(() {
-                            profileTabIndex = 0;
-                          });
-                        },
-                        text: 'Details',
-                        isActive: profileTabIndex == 0,
-                        height: height,
-                      ),
-                      TabButton(
-                        onTap: () {
-                          setState(() {
-                            profileTabIndex = 1;
-                          });
-                        },
-                        text: 'Payments',
-                        isActive: profileTabIndex == 1,
-                        height: height,
-                      ),
-                      TabButton(
-                        onTap: () {
-                          setState(() {
-                            profileTabIndex = 2;
-                          });
-                        },
-                        text: 'Address',
-                        isActive: profileTabIndex == 2,
-                        height: height,
-                      ),
-                      TabButton(
-                        onTap: () {
-                          setState(() {
-                            profileTabIndex = 3;
-                          });
-                        },
-                        text: 'Taste',
-                        isActive: profileTabIndex == 3,
-                        height: height,
-                      ),
-                    ],
+                  SizedBox(
+                    height: height * 2,
                   ),
-                ),
-                tabs[profileTabIndex],
-              ],
+                  Text(
+                    user.name,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: height * 5,
+                    //padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.only(left: 10, right: 10, top: 20),
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(38, 43, 55, 1),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TabButton(
+                          onTap: () {
+                            setState(() {
+                              profileTabIndex = 0;
+                            });
+                          },
+                          text: 'Details',
+                          isActive: profileTabIndex == 0,
+                          height: height,
+                        ),
+                        TabButton(
+                          onTap: () {
+                            setState(() {
+                              profileTabIndex = 1;
+                            });
+                          },
+                          text: 'Payments',
+                          isActive: profileTabIndex == 1,
+                          height: height,
+                        ),
+                        TabButton(
+                          onTap: () {
+                            setState(() {
+                              profileTabIndex = 2;
+                            });
+                          },
+                          text: 'Address',
+                          isActive: profileTabIndex == 2,
+                          height: height,
+                        ),
+                        TabButton(
+                          onTap: () {
+                            setState(() {
+                              profileTabIndex = 3;
+                            });
+                          },
+                          text: 'Taste',
+                          isActive: profileTabIndex == 3,
+                          height: height,
+                        ),
+                      ],
+                    ),
+                  ),
+                  tabs[profileTabIndex],
+                ],
+              ),
             ),
-          ),
-        )
-    );
+          ));
   }
 }
 
-class UserFields extends StatelessWidget {
+class UserFields extends StatefulWidget {
   const UserFields({
     Key? key,
     required this.height,
@@ -172,15 +193,70 @@ class UserFields extends StatelessWidget {
   final double width;
 
   @override
+  State<UserFields> createState() => _UserFieldsState();
+}
+
+class _UserFieldsState extends State<UserFields> {
+  bool isLoading = false;
+  @override
   Widget build(BuildContext context) {
+    var user = Provider.of<UserData>(context).user;
+    if (user != null) {
+      widget.emailController.text = user.email;
+    }
+
+    void changePassword() async {
+      if (widget._formKey.currentState!.validate()) {
+        setState(() {
+          isLoading = true;
+        });
+        var response = await Provider.of<Auth>(context, listen: false)
+            .changePassWord(
+                user!.email, widget.currentPass.text, widget.newPass.text);
+        print(response);
+        if (response['status'] == 'error') {
+          showDialog(
+              context: context,
+              builder: (ctx) => AdaptiveDiaglog(
+                  ctx: ctx,
+                  title: 'An error occurred',
+                  content: response['message'].toString(),
+                  btnYes: 'Okay',
+                  yesPressed: () {
+                    Navigator.of(context).pop();
+                  }));
+        }else{
+          showDialog(
+              context: context,
+              builder: (ctx) => AdaptiveDiaglog(
+                  ctx: ctx,
+                  title: 'Success',
+                  content: 'Password changed',
+                  btnYes: 'Okay',
+                  yesPressed: () {
+                    Navigator.of(context).pop();
+                    setState(() {
+                      widget.currentPass.clear();
+                    widget.newPass.clear();
+                    widget.confirmPass.clear();
+                    });
+                  }));
+        }
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+
     return Container(
-      margin: EdgeInsets.only(left: 20, right: 20, top: height * 4),
+      margin: EdgeInsets.only(left: 20, right: 20, top: widget.height * 4),
       child: Form(
-        key: _formKey,
+        key: widget._formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             InputFeild(
+              readOnly: true,
               hinntText: "abd@gmail.com",
               validatior: (String value) {
                 if (value.isEmpty) {
@@ -191,7 +267,7 @@ class UserFields extends StatelessWidget {
                 }
                 return null;
               },
-              inputController: emailController,
+              inputController: widget.emailController,
             ),
             InputFeild(
               hinntText: "Current Password",
@@ -203,7 +279,7 @@ class UserFields extends StatelessWidget {
                 return null;
               },
               secure: true,
-              inputController: currentPass,
+              inputController: widget.currentPass,
             ),
             InputFeild(
               hinntText: "New Password",
@@ -218,7 +294,7 @@ class UserFields extends StatelessWidget {
 
                 return null;
               },
-              inputController: newPass,
+              inputController: widget.newPass,
             ),
             InputFeild(
               hinntText: "Confirm New Password",
@@ -227,27 +303,25 @@ class UserFields extends StatelessWidget {
                 if (value.isEmpty) {
                   return "Please enter new password!";
                 }
-                if (newPass.text != value) {
+                if (widget.newPass.text != value) {
                   return "Password didn't match";
                 }
                 return null;
               },
-              inputController: confirmPass,
+              inputController: widget.confirmPass,
             ),
-            AuthButton(
-              width: width,
-              height: height,
-              text: 'Save Changes',
-              callback: () {
-                if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('shani'),
+            isLoading
+                ? Container(
+                    margin: EdgeInsets.only(
+                      top: 20,
                     ),
-                  );
-                }
-              },
-            ),
+                    child: AdaptiveIndecator())
+                : AuthButton(
+                    width: widget.width,
+                    height: widget.height,
+                    text: 'Save Changes',
+                    callback: changePassword,
+                  ),
           ],
         ),
       ),

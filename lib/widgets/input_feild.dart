@@ -7,12 +7,14 @@ class InputFeild extends StatefulWidget {
   TextEditingController inputController;
   TextInputType? type;
   bool secure = true;
+  bool readOnly;
 
   InputFeild(
       {required this.hinntText,
       required this.validatior,
       required this.inputController,
       this.type,
+      this.readOnly = false,
       this.secure = false});
 
   @override
@@ -33,6 +35,7 @@ class _InputFeildState extends State<InputFeild> {
       margin: EdgeInsets.only(top: height * 3),
       child: TextFormField(
         obscureText: widget.secure,
+        readOnly: widget.readOnly,
         keyboardType: widget.type,
         controller: widget.inputController,
         validator: (value) {

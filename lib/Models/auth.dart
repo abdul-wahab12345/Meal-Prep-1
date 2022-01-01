@@ -86,4 +86,19 @@ class Auth with ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<Map<String,dynamic>> changePassWord(
+      String userName, String currentPass, String newPass) async {
+    final url = Uri.parse('${websiteUrl}wp-json/meal-prep/v1/change-password');
+
+    final response = await http.post(
+      url,
+      body: {
+        'username': userName,
+        'password': currentPass,
+        'new_password': newPass,
+      },
+    );
+    return json.decode(response.body);
+  }
 }

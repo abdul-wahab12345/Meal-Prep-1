@@ -41,7 +41,7 @@ class _PauseState extends State<Pause> {
       actions: [
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, ProfileScreen.routeName);
+            Navigator.pushNamed(context, PlanScreen.routeName,arguments: 2);
           },
           child: Container(
             padding: EdgeInsets.all(8),

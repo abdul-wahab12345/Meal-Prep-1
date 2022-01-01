@@ -3,6 +3,7 @@ import 'package:mealprep/Models/address.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/products.dart';
 import 'package:mealprep/Models/subscriptions.dart';
+import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/screens/Plans/add_note_screen.dart';
 import 'package:mealprep/screens/Plans/add_plan_screen.dart';
 import 'package:mealprep/screens/Plans/pause.dart';
@@ -41,22 +42,31 @@ class MyApp extends StatelessWidget {
           create: (ctx) => Auth(),
         ),
         ChangeNotifierProxyProvider<Auth, UserMealsData>(
-          create: (_) => UserMealsData(0,'',[]),
+          create: (_) => UserMealsData(0, '', []),
           update: (ctx, auth, previousData) => UserMealsData(
             auth.id as int,
             auth.websiteUrl as String,
-            previousData==null?[]:previousData.userMeals,
-            
+            previousData == null ? [] : previousData.userMeals,
           ),
         ),
         ChangeNotifierProvider(
           create: (ctx) => Products(),
         ),
-        ChangeNotifierProxyProvider<Auth,Subscriptions>(
-          create: (_) => Subscriptions(userId: 0,webUrl: ''),
-          update: (ctx,auth,previousData)=>Subscriptions(userId: auth.id,webUrl: auth.websiteUrl as String,),
+        ChangeNotifierProxyProvider<Auth, Subscriptions>(
+          create: (_) => Subscriptions(userId: 0, webUrl: ''),
+          update: (ctx, auth, previousData) => Subscriptions(
+            userId: auth.id,
+            webUrl: auth.websiteUrl as String,
+          ),
         ),
-         ChangeNotifierProvider(
+        ChangeNotifierProxyProvider<Auth, UserData>(
+          create: (_) => UserData(webUrl: '',userId: 0),
+          update: (ctx, auth, previousData) => UserData(
+            webUrl: auth.websiteUrl as String,
+            userId: auth.id!,
+          ),
+        ),
+        ChangeNotifierProvider(
           create: (ctx) => Addreses(),
         ),
       ],
@@ -90,7 +100,6 @@ class MyApp extends StatelessWidget {
               fontSize: 9,
               letterSpacing: 2,
             ),
-            
           ),
         ),
         routes: {
@@ -102,15 +111,14 @@ class MyApp extends StatelessWidget {
           LoginScreen.routeName: (ctx) => LoginScreen(),
           ForgetScreen.routeName: (ctx) => ForgetScreen(),
           CityScreen.routeName: (ctx) => CityScreen(),
-          PlanScreen.routeName:(ctx)=>PlanScreen(),
-          AddPlan.routeName:(ctx)=>AddPlan(),
-          VariationsScreen.routeName:(ctx)=>VariationsScreen(),
-          CheckOut.routeName:(ctx)=>CheckOut(),
-          AddNote.routeName:(ctx)=>AddNote(),
-          Pause.routeName:(ctx)=>Pause(),
-          DeliveryScreen.routeName:(ctx)=>DeliveryScreen(),
+          PlanScreen.routeName: (ctx) => PlanScreen(),
+          AddPlan.routeName: (ctx) => AddPlan(),
+          VariationsScreen.routeName: (ctx) => VariationsScreen(),
+          CheckOut.routeName: (ctx) => CheckOut(),
+          AddNote.routeName: (ctx) => AddNote(),
+          Pause.routeName: (ctx) => Pause(),
+          DeliveryScreen.routeName: (ctx) => DeliveryScreen(),
         },
-       
       ),
     );
   }

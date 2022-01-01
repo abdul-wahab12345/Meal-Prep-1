@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mealprep/Models/products.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/check_out.dart';
+import 'package:mealprep/screens/Plans/plans_screen.dart';
 import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:mealprep/widgets/adaptiveDialog.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,7 @@ class VariationsScreen extends StatelessWidget {
       actions: [
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, ProfileScreen.routeName);
+            Navigator.pushNamed(context, PlanScreen.routeName,arguments: 2);
           },
           child: Container(
             padding: EdgeInsets.all(8),

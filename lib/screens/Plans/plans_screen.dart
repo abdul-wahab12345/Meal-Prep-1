@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/subscriptions.dart';
+import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/screens/Auth/cites_screen.dart';
 import 'package:mealprep/screens/Plans/add_plan_screen.dart';
 import 'package:mealprep/screens/delivery_screen.dart';
@@ -31,6 +32,7 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   void initState() {
+    
     List<Subscription> subs =
         Provider.of<Subscriptions>(context, listen: false).subscriptions;
     if (subs.isEmpty) {
@@ -47,6 +49,12 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var profileIndex=ModalRoute.of(context)!.settings.arguments;
+    if(profileIndex!=null){
+      setState(() {
+        bottomIndex=profileIndex as int;
+      });
+    }
     List<Subscription> subs = Provider.of<Subscriptions>(context).subscriptions;
     
      

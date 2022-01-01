@@ -1,46 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/constant.dart';
+import 'package:provider/provider.dart';
 
 class PaymentTab extends StatelessWidget {
-  const PaymentTab({Key? key}) : super(key: key);
+  double height;
+   PaymentTab({required this.height});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.only(left: 40, right: 40, top: 40,bottom: 20),
-      padding: EdgeInsets.only(top: 20,bottom:30,left: 10,right: 20),
-      decoration: BoxDecoration(
-          color: aPrimary, borderRadius: BorderRadius.circular(20)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ListTile(
-            title: Text("FName LName"),
-            subtitle:  InkWell(child: Text("Default Card",),splashColor: Colors.blue,focusColor: Colors.red ,onTap: (){
-              print(1234);
-            },),
-            trailing: Container(
-              child: Image.asset(
-                "assets/images/card.png",
-                fit: BoxFit.cover,
+    var user = Provider.of<UserData>(context).user;
+
+    return Column(
+      children: user!.paymentMethod.map((card) {
+        return Container(
+          width: double.infinity,
+          margin: EdgeInsets.only(left: 40, right: 40, top: 20,),
+          padding: EdgeInsets.only(top: 20, bottom: 30, left: 10, right: 20),
+          decoration: BoxDecoration(
+              color: aPrimary, borderRadius: BorderRadius.circular(20)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ListTile(
+                title: Text(card.name),
+                subtitle: InkWell(
+                  child: Text(
+                    card.isDefault?"Default Card":"Make Default",
+                  ),
+                  splashColor: Colors.blue,
+                  focusColor: Colors.red,
+                  onTap: () {
+                    if(!card.isDefault){
+                    print(1234);
+
+                    }
+                  },
+                ),
+                trailing: Container(
+                  child: Image.asset(
+                    "assets/images/card.png",
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
+              SizedBox(
+                height: 30,
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 15, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("**** **** **** ${card.cardNumber}"),
+                    Text(card.date),
+                    Text("***"),
+                  ],
+                ),
+              )
+            ],
           ),
-          SizedBox(height: 30,),
-          Container(
-            margin: EdgeInsets.only(left: 15,right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-              
-              Text("**** **** **** 4242"),
-              Text("MM/YY"),
-              Text("***"),
-            ],),
-          )
-        ],
-      ),
+        );
+      }).toList(),
     );
   }
 }

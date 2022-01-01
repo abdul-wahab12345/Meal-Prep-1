@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mealprep/Models/address.dart';
+
+import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/constant.dart';
 import 'package:provider/provider.dart';
 
@@ -10,10 +11,9 @@ class AddressTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var user=Provider.of<UserData>(context).user;
     
-    Map<String,Address> add=Provider.of<Addreses>(context).address;
-   print(add);
-
+ 
 
   
     return  Center(
@@ -21,9 +21,9 @@ class AddressTab extends StatelessWidget {
             child: Column(
               children: [
                  SizedBox(height: 20,),
-                AddressContainer(title: '🚘 Delivery Address',address:add['Delivery'] as Address),
+                AddressContainer(title: '🚘 Delivery Address',address:user!.shippingAddress),
                 SizedBox(height: 20,),
-                AddressContainer(title: '🚩 Billing Address',address:add['Billing'] as Address),
+                AddressContainer(title: '🚩 Billing Address',address: user.billingAddress,),
               ],
             ),
           )
@@ -35,16 +35,18 @@ class AddressContainer extends StatelessWidget {
   AddressContainer({required this.title,required this.address});
 
   String title;
-  Address address;
+   Address address;
 
   @override
   Widget build(BuildContext context) {
+
+    
     
     final height=MediaQuery.of(context).size.height/100;
     final width=MediaQuery.of(context).size.width/100;
-    print(address.state);
-     print(address.street);
-      print(address.suit);
+    // print(address.state);
+    //  print(address.street);
+    //   print(address.suit);
     return Container(
       padding: EdgeInsets.all(40),
       height: height*23,
@@ -69,7 +71,7 @@ class AddressContainer extends StatelessWidget {
           Spacer(),
           
           Text(
-            address.street,
+            address.ad1,
             style: TextStyle(
               fontFamily: 'IBM',
               fontWeight: FontWeight.w400,
@@ -79,7 +81,7 @@ class AddressContainer extends StatelessWidget {
             ),
           ),
           SizedBox(height: 5,),
-          Text(address.suit,style: TextStyle(
+          Text(address.city,style: TextStyle(
             fontFamily: 'IBM',
               fontWeight: FontWeight.w400,
               fontStyle: FontStyle.normal,
@@ -87,7 +89,7 @@ class AddressContainer extends StatelessWidget {
               letterSpacing: 1.6,
             ),),
             SizedBox(height: 5,),
-          Text(address.state,style: TextStyle(
+          Text('${address.state}, ${address.postalCode}',style: TextStyle(
             fontFamily: 'IBM',
               fontWeight: FontWeight.w400,
               fontStyle: FontStyle.normal,

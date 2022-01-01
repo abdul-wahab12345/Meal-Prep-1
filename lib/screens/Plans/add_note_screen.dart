@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/constant.dart';
+import 'package:mealprep/screens/Plans/plans_screen.dart';
 import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 
@@ -35,7 +36,7 @@ class AddNote extends StatelessWidget {
       actions: [
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, ProfileScreen.routeName);
+            Navigator.pushNamed(context, PlanScreen.routeName,arguments: 2);
           },
           child: Container(
             padding: EdgeInsets.all(8),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/products.dart';
 import 'package:mealprep/constant.dart';
+import 'package:mealprep/screens/Plans/plans_screen.dart';
 import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:mealprep/screens/Plans/variations_plan_screen.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
@@ -52,7 +53,7 @@ class _AddPlanState extends State<AddPlan> {
       actions: [
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, ProfileScreen.routeName);
+            Navigator.pushNamed(context, PlanScreen.routeName,arguments: 2);
           },
           child: Container(
             padding: EdgeInsets.all(8),
