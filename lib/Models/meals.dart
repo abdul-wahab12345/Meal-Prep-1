@@ -147,106 +147,123 @@ class UserMealsData with ChangeNotifier {
   }
 
   Future<void> toggleFavorite(int id) async {
-    Meal meal = _userMeals.firstWhere((element) => element.id == id);
-    if (meal != null) {
-      final url;
-      if (!meal.isFav) {
-        url = Uri.parse(
-            "${webUrl}wp-json/meal-prep/v1/like-meal?user_id=$userId&meal_id=$id");
-        http.get(url);
-      } else {
-        url = Uri.parse(
-            "${webUrl}wp-json/meal-prep/v1/unlike-meal?user_id=$userId&meal_id=$id");
-        http.get(url);
+    try {
+      Meal meal = _userMeals.firstWhere((element) => element.id == id);
+      if (meal != null) {
+        final url;
+        if (!meal.isFav) {
+          url = Uri.parse(
+              "${webUrl}wp-json/meal-prep/v1/like-meal?user_id=$userId&meal_id=$id");
+          http.get(url);
+        } else {
+          url = Uri.parse(
+              "${webUrl}wp-json/meal-prep/v1/unlike-meal?user_id=$userId&meal_id=$id");
+          http.get(url);
+        }
+        print(url);
+
+        meal.isFav = !meal.isFav;
+
+        notifyListeners();
       }
-      print(url);
-
-      meal.isFav = !meal.isFav;
-
-      notifyListeners();
+    } catch (error) {
+      throw error;
     }
   }
 
   Future<bool> dislikeMeal(int id, String sms) async {
-    final url = Uri.parse("${webUrl}wp-json/meal-prep/v1/dislike-meal");
-    await http.post(
-      url,
-      body: {
-        'user_id': userId.toString(),
-        'id': id.toString(),
-        'aw_sms': sms,
-      },
-    );
-    return true;
+    try {
+      final url = Uri.parse("${webUrl}wp-json/meal-prep/v1/dislike-meal");
+      await http.post(
+        url,
+        body: {
+          'user_id': userId.toString(),
+          'id': id.toString(),
+          'aw_sms': sms,
+        },
+      );
+      return true;
+    } catch (error) {
+      throw error;
+    }
   }
 
   Future<void> fetchAndSetMeals() async {
-    var url = Uri.parse('${webUrl}wp-json/meal-prep/v1/user-meals');
+    try {
+      var url = Uri.parse('${webUrl}wp-json/meal-prep/v1/user-meals');
 
-    final response = await http.post(url, body: {'user_id': userId.toString()});
+      final response =
+          await http.post(url, body: {'user_id': userId.toString()});
 
-    // print(response.body);
+       print(response.statusCode);
 
-    List<Meal> newMeals = [];
+       if(response.statusCode!=200){
+         throw 'Something went wrong !';
+       }
 
-    final extractedData = json.decode(response.body) as List<dynamic>;
-    if (extractedData.isEmpty) {
-      return;
+      List<Meal> newMeals = [];
+
+      final extractedData = json.decode(response.body) as List<dynamic>;
+      if (extractedData.isEmpty) {
+        return;
+      }
+
+      extractedData.forEach(
+        (meal) {
+          //print(meal['calories']);
+
+          List<String> badges = [];
+
+          var responseBadges = meal['badges'] as List;
+
+          responseBadges.forEach(
+            (element) {
+              badges.add(element as String);
+            },
+          );
+
+          Map<String, String> calories = {
+            'weight': meal['calories']['weight'].toString(),
+            'type': meal['calories']['type'] as String,
+          };
+
+          Map<String, String> carbohydrates = {
+            'weight': meal['carbohydrates']['weight'].toString(),
+            'type': meal['carbohydrates']['type'] as String,
+          };
+
+          Map<String, String> fat = {
+            'weight': meal['fat']['weight'].toString(),
+            'type': meal['fat']['type'] as String,
+          };
+
+          Map<String, String> protein = {
+            'weight': meal['protein']['weight'].toString(),
+            'type': meal['protein']['type'] as String,
+          };
+
+          newMeals.add(
+            Meal(
+              id: meal['id'],
+              title: meal['title'],
+              subTitle: meal['subTitle'],
+              imageUrl: meal['imageUrl'],
+              calories: calories,
+              carbohydrates: carbohydrates,
+              fat: fat,
+              protein: protein,
+              isFav: meal['isFavorite'],
+              badges: badges,
+              ingredients: meal['ingredients'] as String,
+            ),
+          );
+        },
+      );
+      _userMeals = newMeals;
+
+      notifyListeners();
+    } catch (error) {
+      throw error;
     }
-
-    extractedData.forEach(
-      (meal) {
-        //print(meal['calories']);
-
-        List<String> badges = [];
-
-        var responseBadges = meal['badges'] as List;
-
-        responseBadges.forEach(
-          (element) {
-            badges.add(element as String);
-          },
-        );
-
-        Map<String, String> calories = {
-          'weight': meal['calories']['weight'].toString(),
-          'type': meal['calories']['type'] as String,
-        };
-
-        Map<String, String> carbohydrates = {
-          'weight': meal['carbohydrates']['weight'].toString(),
-          'type': meal['carbohydrates']['type'] as String,
-        };
-
-        Map<String, String> fat = {
-          'weight': meal['fat']['weight'].toString(),
-          'type': meal['fat']['type'] as String,
-        };
-
-        Map<String, String> protein = {
-          'weight': meal['protein']['weight'].toString(),
-          'type': meal['protein']['type'] as String,
-        };
-
-        newMeals.add(
-          Meal(
-            id: meal['id'],
-            title: meal['title'],
-            subTitle: meal['subTitle'],
-            imageUrl: meal['imageUrl'],
-            calories: calories,
-            carbohydrates: carbohydrates,
-            fat: fat,
-            protein: protein,
-            isFav: meal['isFavorite'],
-            badges: badges,
-            ingredients: meal['ingredients'] as String,
-          ),
-        );
-      },
-    );
-    _userMeals = newMeals;
-
-    notifyListeners();
   }
 }

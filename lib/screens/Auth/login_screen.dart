@@ -9,6 +9,7 @@ import 'package:mealprep/screens/Plans/check_out.dart';
 import 'package:mealprep/screens/Auth/forget_screen.dart';
 import 'package:mealprep/screens/Auth/registeration_screen.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
+import 'package:mealprep/widgets/adaptiveDialog.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:mealprep/widgets/input_feild.dart';
 import 'package:mealprep/widgets/text_button.dart';
@@ -89,7 +90,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
               isLoading
                   ? Platform.isIOS
-                      ? CupertinoActivityIndicator(radius: 30,)
+                      ? CupertinoActivityIndicator(
+                          radius: 30,
+                        )
                       : CircularProgressIndicator(
                           color: Colors.white,
                         )
@@ -107,37 +110,24 @@ class _LoginScreenState extends State<LoginScreen> {
                               passwordController.text,
                             );
 
-                            Navigator.of(context).pushReplacementNamed(PlanScreen.routeName);
+                            Navigator.of(context)
+                                .pushReplacementNamed(PlanScreen.routeName);
                           } catch (error) {
                             print(error);
                             await showDialog(
-                                context: context,
-                                builder: (ctx) {
-                                  return Platform.isIOS
-                                      ? CupertinoAlertDialog(
-                                          title: Text('An error has occured!'),
-                                          content: Text(error as String),
-                                          actions: [
-                                            CupertinoDialogAction(
-                                                child: Text("Okay!"),
-                                                onPressed: () {
-                                                  Navigator.of(ctx).pop(true);
-                                                }),
-                                          ],
-                                        )
-                                      : AlertDialog(
-                                          title: Text("An error has occured",style: TextStyle(color: Colors.black,)),
-                                          content: Text(error as String),
-                                          actions: [
-                                            TextButton(
-                                              child: const Text('Okay!'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                });
+                              context: context,
+                              builder: (ctx) {
+                                return AdaptiveDiaglog(
+                                  
+                                    ctx: ctx,
+                                    content: error.toString(),
+                                    title: 'An error has occured!',
+                                    btnYes: 'Okay!',
+                                    yesPressed: () {
+                                      Navigator.of(ctx).pop(true);
+                                    });
+                              },
+                            );
                           } finally {
                             setState(() {
                               isLoading = false;

@@ -6,6 +6,7 @@ import 'package:mealprep/Models/products.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/check_out.dart';
 import 'package:mealprep/screens/profile/profile_screen.dart';
+import 'package:mealprep/widgets/adaptiveDialog.dart';
 import 'package:provider/provider.dart';
 
 class VariationsScreen extends StatelessWidget {
@@ -77,75 +78,91 @@ class VariationsScreen extends StatelessWidget {
                       onTap: () {
                         showDialog(
                           context: ctx,
-                          builder: (ctx) => Platform.isIOS
-                              ? CupertinoAlertDialog(
-                                  content: const Text("Do wana take this deal",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                      )),
-                                  actions: [
-                                    CupertinoDialogAction(
-                                      
-                                        child: Text('Yes'),
-                                        
-                                      
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                          Navigator.of(context).pushNamed(
-                                            CheckOut.routeName,
-                                            arguments: <String, int>{
-                                              'varId': variation[index].id,
-                                              'subId': subId,
-                                            },
-                                          );
-                                          
-                                        },
-                                    ),
-                                    CupertinoDialogAction(
-                                      child: Text('No'),
-                                        
-                                      
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                )
-                              : AlertDialog(
-                                  //title: Text("An error has occured"),
-                                  content: Text("Do wana take this deal",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                      )),
-                                  actions: [
-                                    TextButton(
-                                      child: Text(
-                                        'Yes!',
-                                        style: TextStyle(color: btnColor),
-                                      ),
-                                       onPressed: () {
-                                        Navigator.of(context).pop();
-                                          Navigator.of(context).pushNamed(
-                                            CheckOut.routeName,
-                                            arguments: <String, int>{
-                                              'varId': variation[index].id,
-                                              'subId': subId,
-                                            },
-                                          );
-                                          
-                                        },
-                                    ),
-                                    TextButton(
-                                      child: Text(
-                                        'No!',
-                                        style: TextStyle(color: btnColor),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                ),
+                          builder: (ctx) {
+                            return AdaptiveDiaglog(
+                              ctx: ctx,
+                              title: 'Do wana take this deal',
+                              btnYes: 'Yes',
+                             
+                              btnNO: 'No',
+                              noPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              yesPressed: () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pushNamed(
+                                  CheckOut.routeName,
+                                  arguments: <String, int>{
+                                    'varId': variation[index].id,
+                                    'subId': subId,
+                                  },
+                                );
+                              },
+                            );
+                            // return Platform.isIOS
+                            //     ? CupertinoAlertDialog(
+                            //         content:
+                            //             const Text("Do wana take this deal",
+                            //                 style: TextStyle(
+                            //                   color: Colors.black,
+                            //                 )),
+                            //         actions: [
+                            //           CupertinoDialogAction(
+                            //             child: Text('Yes'),
+                            //             onPressed: () {
+                            //               Navigator.of(context).pop();
+                            //               Navigator.of(context).pushNamed(
+                            //                 CheckOut.routeName,
+                            //                 arguments: <String, int>{
+                            //                   'varId': variation[index].id,
+                            //                   'subId': subId,
+                            //                 },
+                            //               );
+                            //             },
+                            //           ),
+                            //           CupertinoDialogAction(
+                            //             child: Text('No'),
+                            //             onPressed: () {
+                            //               Navigator.of(context).pop();
+                            //             },
+                            //           ),
+                            //         ],
+                            //       )
+                            //     : AlertDialog(
+                            //         //title: Text("An error has occured"),
+                            //         content: Text("Do wana take this deal",
+                            //             style: TextStyle(
+                            //               color: Colors.black,
+                            //             )),
+                            //         actions: [
+                            //           TextButton(
+                            //             child: Text(
+                            //               'Yes!',
+                            //               style: TextStyle(color: btnColor),
+                            //             ),
+                            //             onPressed: () {
+                            //               Navigator.of(context).pop();
+                            //               Navigator.of(context).pushNamed(
+                            //                 CheckOut.routeName,
+                            //                 arguments: <String, int>{
+                            //                   'varId': variation[index].id,
+                            //                   'subId': subId,
+                            //                 },
+                            //               );
+                            //             },
+                            //           ),
+                            //           TextButton(
+                            //             child: Text(
+                            //               'No!',
+                            //               style: TextStyle(color: btnColor),
+                            //             ),
+                            //             onPressed: () {
+                            //               Navigator.of(context).pop();
+                            //             },
+                            //           ),
+                            //         ],
+                            //       );
+                          },
                         );
                       },
                       child: Container(

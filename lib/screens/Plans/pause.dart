@@ -2,18 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/subscriptions.dart';
+import 'package:mealprep/screens/Plans/plans_screen.dart';
 import 'package:mealprep/screens/profile/profile_screen.dart';
+import 'package:mealprep/widgets/adaptiveDialog.dart';
+import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:mealprep/widgets/input_feild.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant.dart';
-
-enum RadioButton {
-  Yes,
-  No,
-}
 
 class Pause extends StatefulWidget {
   const Pause({Key? key}) : super(key: key);
@@ -27,8 +26,11 @@ class _PauseState extends State<Pause> {
   //var _controller = TextEditingController();
   var _dateController = TextEditingController();
   var _reasonController = TextEditingController();
-  RadioButton? _chk = RadioButton.No;
+  String _chk = "No";
   String errorText = '';
+  bool indefinitltLoader = false;
+  bool saveLoader = false;
+  String deliveryDate = '';
   @override
   Widget build(BuildContext context) {
     DateTime _dateTime;
@@ -59,7 +61,6 @@ class _PauseState extends State<Pause> {
     Subscription? subscription =
         Provider.of<Subscriptions>(context, listen: false)
             .getSubscriptionById(data);
-    print(data);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -117,7 +118,8 @@ class _PauseState extends State<Pause> {
 
                             _dateController.text =
                                 DateFormat("M/d/y").format(value);
-                            print(_dateTime.toString());
+                            deliveryDate = DateFormat("y-M-d").format(value);
+                            print(deliveryDate);
                           });
                         });
                       },
@@ -157,12 +159,12 @@ class _PauseState extends State<Pause> {
                                 fillColor: MaterialStateProperty.all(btnColor),
                                 activeColor: btnColor,
                                 focusColor: btnColor,
-                                value: RadioButton.Yes,
+                                value: "Yes",
                                 groupValue: _chk,
-                                onChanged: (RadioButton? value) {
+                                onChanged: (String? value) {
                                   setState(() {
                                     print(value);
-                                    _chk = value;
+                                    _chk = value!;
                                   });
                                 }),
                             Text(
@@ -180,11 +182,11 @@ class _PauseState extends State<Pause> {
                                 fillColor: MaterialStateProperty.all(btnColor),
                                 activeColor: btnColor,
                                 focusColor: btnColor,
-                                value: RadioButton.No,
+                                value: "No",
                                 groupValue: _chk,
-                                onChanged: (RadioButton? value) {
+                                onChanged: (String? value) {
                                   setState(() {
-                                    _chk = value;
+                                    _chk = value!;
                                     print(value);
                                   });
                                 }),
@@ -256,29 +258,96 @@ class _PauseState extends State<Pause> {
                   Flexible(
                       flex: 1,
                       fit: FlexFit.tight,
-                      child: CustomButton(
-                          text: "Save Changes",
-                          callback: () {
-                            if (_reasonController.text.isEmpty ||
-                                _dateController.text.isEmpty) {
-                              setState(() {
-                                errorText = 'Please enter the date and reason';
-                              });
-                            }
-                          })),
+                      child: saveLoader
+                          ? AdaptiveIndecator()
+                          : CustomButton(
+                              text: "Save Changes",
+                              callback: indefinitltLoader
+                                  ? () {
+                                      setState(() {
+                                        errorText =
+                                            "You already pressed Pause Indefinitely button";
+                                      });
+                                    }
+                                  : () {
+                                      if (_reasonController.text.isEmpty ||
+                                          _dateController.text.isEmpty) {
+                                        setState(() {
+                                          errorText =
+                                              'Please enter the date and reason';
+                                        });
+                                      } else {
+                                        setState(() {
+                                          errorText = '';
+                                          saveLoader = true;
+                                        });
+                                      }
+                                    })),
                   SizedBox(width: 15),
                   Flexible(
                       flex: 1,
                       fit: FlexFit.tight,
-                      child: CustomButton(
-                          text: "Pause Indefinitely",
-                          callback: () {
-                            if (_reasonController.text.isEmpty) {
-                              setState(() {
-                                errorText = 'Please enter a reason';
-                              });
-                            }
-                          })),
+                      child: indefinitltLoader
+                          ? AdaptiveIndecator()
+                          : CustomButton(
+                              text: "Pause Indefinitely",
+                              callback: saveLoader
+                                  ? () {
+                                      setState(() {
+                                        errorText =
+                                            "You already pressed Save changes button";
+                                      });
+                                    }
+                                  : () async{
+                                      if (_reasonController.text.isEmpty) {
+                                        setState(() {
+                                          errorText = 'Please enter a reason';
+                                        });
+                                      } else {
+                                        setState(() {
+                                          errorText = '';
+                                          indefinitltLoader = true;
+                                        });
+                                        int? user_id = Provider.of<Auth>(
+                                                context,
+                                                listen: false)
+                                            .id;
+                                        Map<String, dynamic> data = {
+                                          'user_id': user_id.toString(),
+                                          'type': 'indf',
+                                          'id': subscription!.id.toString(),
+                                          'aw_charged': subscription.isCharged
+                                              ? 'true'
+                                              : 'false',
+                                          'reason': _reasonController.text,
+                                        };
+                                        if (subscription.isCutOf) {
+                                          data.putIfAbsent('want_meal',
+                                              () => _chk.toString());
+                                        }
+                                       String response = await Provider.of<Subscriptions>(context,
+                                                listen: false)
+                                            .pauseSubscription(data);
+                                            print(response);
+                                           showDialog(context: context, builder: (ctx){
+                                             return AdaptiveDiaglog(
+                                              ctx: context,
+                                              title: 'Response',
+                                              content: response,
+                                              btnYes: "Okay",
+                                              yesPressed: () {
+                                                 Provider.of<Subscriptions>(context, listen: false).emptySubscriptions();
+                                                Navigator.of(context)
+                                                    .pushReplacementNamed(
+                                                        PlanScreen.routeName,arguments: true);
+                                              });
+                                           });
+                                            setState(() {
+                                            indefinitltLoader = false;
+                                            
+                                          });
+                                      }
+                                    })),
                 ],
               ),
             ),

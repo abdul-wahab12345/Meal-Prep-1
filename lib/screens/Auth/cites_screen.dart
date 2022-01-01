@@ -6,6 +6,7 @@ import 'package:mealprep/Models/auth.dart';
 
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Auth/login_screen.dart';
+import 'package:mealprep/widgets/adaptiveDialog.dart';
 
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:provider/provider.dart';
@@ -105,33 +106,20 @@ class _CityScreenState extends State<CityScreen> {
               callback: () async {
                 if (dropdownValue == "Select a City") {
                   await showDialog(
-                      context: context,
-                      builder: (ctx) {
-                        return Platform.isIOS
-                            ? CupertinoAlertDialog(
-                                // title: Text('An error has occured!'),
-                                content: Text("Please select a city!"),
-                                actions: [
-                                  CupertinoDialogAction(
-                                      child: Text("Okay!"),
-                                      onPressed: () {
-                                        Navigator.of(ctx).pop(true);
-                                      }),
-                                ],
-                              )
-                            : AlertDialog(
-                                 //title: Text("An error has occured"),
-                                content: Text("Please select a city!",style: TextStyle(color: Colors.black,)),
-                                actions: [
-                                  TextButton(
-                                    child:  Text('Okay!',style: TextStyle(color: btnColor),),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                      });
+                    context: context,
+                    builder: (ctx) {
+                      return AdaptiveDiaglog(
+                       
+                        ctx: ctx,
+                        title: 'An error has occured!',
+                        content: 'Please select a city!',
+                        btnYes: 'Okay',
+                        yesPressed: () {
+                          Navigator.of(ctx).pop(true);
+                        },
+                      );
+                    },
+                  );
                 } else {
                   var city = cities.firstWhere(
                       (element) => element['text'] == dropdownValue);

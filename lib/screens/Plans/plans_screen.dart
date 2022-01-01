@@ -34,7 +34,12 @@ class _PlanScreenState extends State<PlanScreen> {
     List<Subscription> subs =
         Provider.of<Subscriptions>(context, listen: false).subscriptions;
     if (subs.isEmpty) {
-      Provider.of<Subscriptions>(context, listen: false).fetchAndSetSubs();
+      isLoading = true;
+      Provider.of<Subscriptions>(context, listen: false).fetchAndSetSubs().then((value){
+        setState(() {
+          isLoading = false;
+        });
+      });
     }
 
     super.initState();
@@ -43,7 +48,8 @@ class _PlanScreenState extends State<PlanScreen> {
   @override
   Widget build(BuildContext context) {
     List<Subscription> subs = Provider.of<Subscriptions>(context).subscriptions;
-
+    
+     
     Map<String, Color> statusColors = {
       'Active': Colors.green,
       "Paused": Colors.yellow,
@@ -67,7 +73,7 @@ class _PlanScreenState extends State<PlanScreen> {
 
       Subscription? data = Provider.of<Subscriptions>(context, listen: false)
           .getSubscriptionById(selectedPlanId);
-          subs = data != null?[data]:[];
+      subs = data != null ? [data] : [];
 
       bottomBar = Container(
         width: double.infinity,
@@ -88,7 +94,7 @@ class _PlanScreenState extends State<PlanScreen> {
        */
       Subscription? data = Provider.of<Subscriptions>(context, listen: false)
           .getSubscriptionById(selectedPlanId);
-          subs = data != null?[data]:[];
+      subs = data != null ? [data] : [];
 
       bottomBar = CustomBottomBar(selectedPlanId: selectedPlanId);
     } else {
@@ -139,7 +145,7 @@ class _PlanScreenState extends State<PlanScreen> {
       ],
     );
 
-    Widget _plansTab = subs.isEmpty
+    Widget _plansTab = isLoading
         ? const AdaptiveIndecator()
         : Center(
             heightFactor: 1,
