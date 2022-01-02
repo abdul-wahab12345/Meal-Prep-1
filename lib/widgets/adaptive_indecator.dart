@@ -3,7 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AdaptiveIndecator extends StatelessWidget {
-  const AdaptiveIndecator({Key? key}) : super(key: key);
+  Color color;
+
+  AdaptiveIndecator({ this.color=Colors.white});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +13,7 @@ class AdaptiveIndecator extends StatelessWidget {
       child: Platform.isIOS
           ? CupertinoActivityIndicator(radius: 20)
           : CircularProgressIndicator(
-              color: Colors.white,
+              color: color,
             ),
     );
   }

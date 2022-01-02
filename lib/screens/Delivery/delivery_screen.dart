@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/constant.dart';
+import 'package:mealprep/screens/Delivery/delivery_note.dart';
 
 class DeliveryScreen extends StatelessWidget {
   static const routeName = '/delivery';
   DeliveryScreen({Key? key}) : super(key: key);
   var _noteController = TextEditingController();
+  bool isLoading=false;
   @override
   Widget build(BuildContext context) {
     Orientation currentOrientation = MediaQuery.of(context).orientation;
@@ -51,7 +53,9 @@ class DeliveryScreen extends StatelessWidget {
                               'Click Here to update your delivery note...',
                               style: Theme.of(context).textTheme.bodyText2,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(DeliveryNote.routeName);
+                            },
                           )
                         ],
                       ),

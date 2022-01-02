@@ -100,5 +100,23 @@ class Subscriptions with ChangeNotifier {
     }
   }
 
-  
+  Future<void> addNote(Map<String, dynamic> data) async {
+    if (data['note_type'] == 'subscription') {
+      //print('my name is khan');
+      final url = Uri.parse('${webUrl}wp-json/meal-prep/v1/add-note');
+
+      final response = await http.post(url, body: data);
+      final extractedData = json.decode(response.body);
+      //print(extractedData);
+      return extractedData;
+    } else {
+      //print('my name is sufyan');
+      final url = Uri.parse('${webUrl}wp-json/meal-prep/v1/add-note');
+
+      final response = await http.post(url, body: data);
+      final extractedData = json.decode(response.body);
+     // print('yeh delivery ka ha $extractedData');
+      return extractedData;
+    }
+  }
 }

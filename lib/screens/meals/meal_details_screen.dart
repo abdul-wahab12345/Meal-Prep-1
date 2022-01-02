@@ -203,9 +203,12 @@ class MealDetailsScreen extends StatelessWidget {
                       height: 160,
                       width: 160,
                       alignment: Alignment.center,
-                      child: Image.network(
-                        meal.imageUrl,
-                        fit: BoxFit.cover,
+                      child: Hero(
+                        tag: meal.id,
+                        child: Image.network(
+                          meal.imageUrl,
+                          fit: BoxFit.cover,
+                        ),
                       )),
                   Container(
                     margin: EdgeInsets.only(right: 40, top: 10),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mealprep/constant.dart';
 
 class AdaptiveDiaglog extends StatelessWidget {
   BuildContext ctx;
@@ -45,15 +46,15 @@ class AdaptiveDiaglog extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.black,
                 )),
-            content: Text(content!),
+            content: Text(content!,style: TextStyle(color: Colors.black),),
             actions: [
               TextButton(
-                child: Text(btnYes),
+                child: Text(btnYes,style: TextStyle(color: aTextButtonColor),),
                 onPressed: yesPressed as Function()?,
               ),
-              if(btnNO=='')
+              if(btnNO!='')
               TextButton(
-                child: Text(btnNO),
+                child: Text(btnNO,style: TextStyle(color: aTextButtonColor),),
                 onPressed: noPressed as Function()?,
               ),
             ],

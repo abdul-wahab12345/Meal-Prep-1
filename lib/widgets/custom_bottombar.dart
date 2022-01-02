@@ -16,8 +16,8 @@ class CustomBottomBar extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      height: 70,
-      margin: EdgeInsets.only(bottom: 15, left: 15, right: 15),
+      height: 75,
+      margin: EdgeInsets.only(bottom: 20, left: 15, right: 15),
       decoration: BoxDecoration(
           color: ashwhite, borderRadius: BorderRadius.circular(25)),
       child: Row(

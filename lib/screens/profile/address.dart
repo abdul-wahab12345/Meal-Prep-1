@@ -48,8 +48,8 @@ class AddressContainer extends StatelessWidget {
     //  print(address.street);
     //   print(address.suit);
     return Container(
-      padding: EdgeInsets.all(40),
-      height: height*23,
+      padding: EdgeInsets.only(top:33,right: 30,left: 30,bottom: 33),
+      //height: height*23,
       width: width*80,
       decoration: BoxDecoration(
         color: aPrimary,
@@ -60,19 +60,19 @@ class AddressContainer extends StatelessWidget {
         children:  [
            Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'IBM',
               fontWeight: FontWeight.w600,
               fontStyle: FontStyle.normal,
               fontSize: 25,
             ),
           ),
-          // SizedBox(height: 40,),
-          Spacer(),
+           SizedBox(height: 30,),
+          //Spacer(),
           
           Text(
             address.ad1,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'IBM',
               fontWeight: FontWeight.w400,
               fontStyle: FontStyle.normal,
@@ -80,16 +80,16 @@ class AddressContainer extends StatelessWidget {
               letterSpacing: 1.6,
             ),
           ),
-          SizedBox(height: 5,),
-          Text(address.city,style: TextStyle(
+          const SizedBox(height: 5,),
+          Text(address.city,style: const TextStyle(
             fontFamily: 'IBM',
               fontWeight: FontWeight.w400,
               fontStyle: FontStyle.normal,
               fontSize: 18,
               letterSpacing: 1.6,
             ),),
-            SizedBox(height: 5,),
-          Text('${address.state}, ${address.postalCode}',style: TextStyle(
+            const SizedBox(height: 5,),
+          Text('${address.state}, ${address.postalCode}',style: const TextStyle(
             fontFamily: 'IBM',
               fontWeight: FontWeight.w400,
               fontStyle: FontStyle.normal,

@@ -9,28 +9,28 @@ import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:provider/provider.dart';
 
-class AddNote extends StatefulWidget {
-  AddNote({Key? key}) : super(key: key);
-  static const routeName = '/add_note';
+class DeliveryNote extends StatefulWidget {
+  DeliveryNote({Key? key}) : super(key: key);
+  static const routeName = '/deliveryNote';
 
   @override
-  State<AddNote> createState() => _AddNoteState();
+  State<DeliveryNote> createState() => _DeliveryNoteState();
 }
 
-class _AddNoteState extends State<AddNote> {
+class _DeliveryNoteState extends State<DeliveryNote> {
   var _formKey = GlobalKey<FormState>();
 
-  var noteContrller = TextEditingController();
+  var _noteController = TextEditingController();
   bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     Orientation currentOrientation = MediaQuery.of(context).orientation;
 
-    var subscriptionId = ModalRoute.of(context)!.settings.arguments as int;
-    Subscription? subscription =
-        Provider.of<Subscriptions>(context, listen: false)
-            .getSubscriptionById(subscriptionId);
+    // var subscriptionId = ModalRoute.of(context)!.settings.arguments as int;
+    // Subscription? subscription =
+    //     Provider.of<Subscriptions>(context, listen: false)
+    //         .getSubscriptionById(subscriptionId);
 
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
@@ -39,7 +39,7 @@ class _AddNoteState extends State<AddNote> {
     }
     var _appBar = AppBar(
       backgroundColor: Colors.black,
-      title: const Text("Add Note"),
+      title: const Text("Add Delivery Note"),
       actions: [
         GestureDetector(
           onTap: () {
@@ -97,7 +97,7 @@ class _AddNoteState extends State<AddNote> {
                             onSaved: (value) {
                               print(value);
                             },
-                            controller: noteContrller,
+                            controller: _noteController,
                             maxLines: 6,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
@@ -116,52 +116,33 @@ class _AddNoteState extends State<AddNote> {
                         ),
                       ),
                       Positioned(
-                        left: (stack_width - 60),
-                        bottom: height * 32,
+                        left: (stack_width - (width * 35)),
+                        bottom: height * 33,
                         child: Container(
-                          height: 120,
-                          width: 120,
-                          child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Hero(
-                                tag: subscription!.id,
-                                child: Image.network(
-                                  subscription.imageUrl,
-                                  fit: BoxFit.cover,
-                                ),
-                              )),
+                          child: Image.asset('assets/images/car.png',
+                              height: height * 10, width: width * 70),
                         ),
                       ), //imageConatiner
                     ],
                   );
                 }),
-                Container(
-                  width: currentOrientation == Orientation.landscape
-                      ? width * 30
-                      : width * 50,
-                  height: currentOrientation == Orientation.landscape
-                      ? height * 15
-                      : height * 8,
-
-                  //alignment: Alignment.bottomLeft,
-                  margin: EdgeInsets.only(top: 10),
-                  child: isLoading
-                      ? Center(child: AdaptiveIndecator())
-                      : CustomButton(
-                          text: 'Save Changes',
-                          callback: () async {
-                            
+                isLoading?Container(margin: EdgeInsets.only(top: 20),child: AdaptiveIndecator()): Center(
+                child: GestureDetector(
+                  onTap: ()  async{
+                            // bool isvalid;
+                            // if () {
+                            //   isvalid = true;
+                            // }
                             if (_formKey.currentState!.validate()) {
                               Map<String, dynamic> data = {
-                                'aw_subscription_id': subscriptionId.toString(),
-                                'note': noteContrller.text,
-                                'note_type': 'subscription',
+                                'aw_subscription_id': '1255',
+                                'note': _noteController.text,
+                                'note_type': 'delivery',
                               };
-                              setState(() {
-                                isLoading=true;
-                              });
-
-                              var response = await Provider.of<Subscriptions>(
+                             setState(() {
+                                isLoading = true;
+                             });
+                              final response = await Provider.of<Subscriptions>(
                                       context,
                                       listen: false)
                                   .addNote(data)
@@ -170,14 +151,86 @@ class _AddNoteState extends State<AddNote> {
                                   isLoading = false;
                                 });
                               });
+                              print(response);
 
                               _formKey.currentState!.save();
                               setState(() {
-                                noteContrller.clear();
+                                _noteController.clear();
                               });
                             }
-                          }),
+                          },
+                  child: Container(
+                    width: currentOrientation == Orientation.landscape
+                        ? width * 30
+                        : width * 50,
+                    height: currentOrientation == Orientation.landscape
+                        ? height * 15
+                        : height * 6,
+                
+                    //alignment: Alignment.bottomLeft,
+                    margin: EdgeInsets.only(top: 30),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      //color: Colors.red,
+                      gradient: LinearGradient(colors: [
+                        gra1,
+                        gra2,
+                      ], begin: Alignment.topLeft),
+                    ),
+                    child: Center(
+                        child: Text(
+                      'Send Delivery Note',
+                      style: Theme.of(context).textTheme.bodyText2,
+                    )),
+                  ),
                 ),
+              ),
+                // Container(
+                //   width: currentOrientation == Orientation.landscape
+                //       ? width * 30
+                //       : width * 50,
+                //   height: currentOrientation == Orientation.landscape
+                //       ? height * 15
+                //       : height * 8,
+
+                //   //alignment: Alignment.bottomLeft,
+                //   margin: EdgeInsets.only(top: 10),
+                //   child: isLoading
+                //       ? AdaptiveIndecator()
+                //       : CustomButton(
+                //           text: 'Save Changes',
+                //           callback: () async {
+                //             bool isvalid;
+                //             if (_formKey.currentState!.validate()) {
+                //               isvalid = true;
+                //             }
+                //             if (isvalid = true) {
+                //               Map<String, dynamic> data = {
+                //                 'aw_subscription_id': '1255',
+                //                 'note': _noteController.text,
+                //                 'note_type': 'delivery',
+                //               };
+                //              setState(() {
+                //                 isLoading = true;
+                //              });
+                //               final response = await Provider.of<Subscriptions>(
+                //                       context,
+                //                       listen: false)
+                //                   .addNote(data)
+                //                   .then((value) {
+                //                 setState(() {
+                //                   isLoading = false;
+                //                 });
+                //               });
+                //               print(response);
+
+                //               _formKey.currentState!.save();
+                //               setState(() {
+                //                 _noteController.clear();
+                //               });
+                //             }
+                //           }),
+                // ),
               ],
             ),
           ),

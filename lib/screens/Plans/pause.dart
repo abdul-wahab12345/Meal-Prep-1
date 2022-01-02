@@ -41,7 +41,7 @@ class _PauseState extends State<Pause> {
       actions: [
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, PlanScreen.routeName,arguments: 2);
+            Navigator.pushNamed(context, PlanScreen.routeName, arguments: 2);
           },
           child: Container(
             padding: EdgeInsets.all(8),
@@ -304,7 +304,7 @@ class _PauseState extends State<Pause> {
                                                   context,
                                                   listen: false)
                                               .pauseSubscription(data);
-                                      print(data);
+                                      // print(data);
                                       showDialog(
                                           context: context,
                                           builder: (ctx) {
@@ -320,8 +320,8 @@ class _PauseState extends State<Pause> {
                                                       .emptySubscriptions();
                                                   Navigator.of(context)
                                                       .pushReplacementNamed(
-                                                          PlanScreen.routeName,
-                                                          arguments: true);
+                                                    PlanScreen.routeName,
+                                                  );
                                                 });
                                           });
                                       setState(
@@ -396,7 +396,7 @@ class _PauseState extends State<Pause> {
                                                   Navigator.of(context)
                                                       .pushReplacementNamed(
                                                           PlanScreen.routeName,
-                                                          arguments: true);
+                                                          );
                                                 });
                                           });
                                       setState(() {

@@ -7,6 +7,7 @@ import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 import 'package:mealprep/screens/profile/profile_screen.dart';
+import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -22,7 +23,7 @@ class _CheckOutState extends State<CheckOut> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
-  bool isLoading = false;
+  bool isLoading = true;
 
   var webUrl;
   @override
@@ -35,6 +36,7 @@ class _CheckOutState extends State<CheckOut> {
 
   @override
   Widget build(BuildContext context) {
+    
     Map<String,int> argsData = ModalRoute.of(context)!.settings.arguments as Map<String,int>;
     int varId=0;
     if(argsData['varId']!=0){
@@ -55,7 +57,7 @@ class _CheckOutState extends State<CheckOut> {
 
     var _appBar = AppBar(
       backgroundColor: aPrimary,
-      title: const Text("Add Plan"),
+      title: const Text("Checkout"),
       actions: [
         GestureDetector(
           onTap: () async {
@@ -96,7 +98,7 @@ class _CheckOutState extends State<CheckOut> {
             ),
             if(isLoading)
             Center(
-              child: CupertinoActivityIndicator(radius: 15,),
+              child: AdaptiveIndecator(color: Colors.black,),
             )
           ],
         ));

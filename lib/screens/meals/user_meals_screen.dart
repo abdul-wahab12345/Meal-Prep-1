@@ -7,7 +7,7 @@ import 'package:mealprep/Models/meal.dart';
 import 'package:mealprep/Models/meals.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
-import 'package:mealprep/screens/meal_details_screen.dart';
+import 'package:mealprep/screens/meals/meal_details_screen.dart';
 import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:provider/provider.dart';
@@ -15,39 +15,15 @@ import 'package:provider/provider.dart';
 class UserMealsScreen extends StatelessWidget {
   const UserMealsScreen({Key? key}) : super(key: key);
 
-//   @override
-//   State<UserMealsScreen> createState() => _UserMealsScreenState();
-// }
 
-// class _UserMealsScreenState extends State<UserMealsScreen> {
-//   bool isFirst = true;
-//   bool isLoading = false;
-
-//   // @override
-//   // void didChangeDependencies() {
-//   //   if (isFirst) {
-//   //     Provider.of<UserMealsData>(context, listen: false).fetchAndSetMeals().catchError((e){
-//   //       print(e);
-//   //     });
-//   //     isFirst = false;
-//   //   }
-
-//   //   // TODO: implement didChangeDependencies
-//   //   super.didChangeDependencies();
-//   // }
 
   @override
   Widget build(BuildContext context) {
-    // List<Meal> userMeals = Provider.of<UserMealsData>(context).userMeals;
+   
 
     var _appBar = AppBar(
       backgroundColor: aPrimary,
-      // leading: Container(
-      //   padding: const EdgeInsets.all(8),
-      //   child: CircleAvatar(
-      //     child: Image.asset('assets/images/alphatrait.png'),
-      //   ),
-      // ),
+      
       title: Text("User Meals"),
       actions: [
         GestureDetector(
@@ -55,7 +31,7 @@ class UserMealsScreen extends StatelessWidget {
             Navigator.pushNamed(context, PlanScreen.routeName,arguments: 2);
           },
           child: Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: CircleAvatar(
               child: Image.asset('assets/images/person.png'),
             ),
@@ -81,7 +57,7 @@ class UserMealsScreen extends StatelessWidget {
               .fetchAndSetMeals(),
           builder: (context, snapShot) {
             if (snapShot.connectionState == ConnectionState.waiting) {
-              return AdaptiveIndecator();
+              return  AdaptiveIndecator();
             }
 
             if (snapShot.hasError) {
@@ -126,9 +102,12 @@ class UserMealsScreen extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 20),
                                 //color: Colors.white,
-                                child: Image.network(
-                                  userMeals[index].imageUrl,
-                                  fit: BoxFit.cover,
+                                child: Hero(
+                                  tag: userMeals[index].id,
+                                  child: Image.network(
+                                    userMeals[index].imageUrl,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ), //ImageConatiner
                             ],
@@ -165,25 +144,28 @@ class ContentContainer extends StatelessWidget {
         horizontal: width * 5,
       ),
       padding: const EdgeInsets.symmetric(
-        vertical: 10,
+        vertical: 22,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Consumer<Meal>(
-            builder: (ctx, meal, _) => IconButton(
-                onPressed: () {
+            builder: (ctx, meal, _) => GestureDetector(
+                onTap: () {
                   meal.toggleFavorite();
                 },
-                icon: meal.isFav
+                child: meal.isFav
                     ? const Icon(
+                      
                         Icons.favorite,
                         color: Colors.red,
+                        size: 30,
                       )
                     : const Icon(
                         Icons.favorite_outline,
                         color: Colors.white,
+                         size: 30,
                       )),
           ),
           const SizedBox(

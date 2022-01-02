@@ -4,8 +4,9 @@ import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/screens/Auth/cites_screen.dart';
 import 'package:mealprep/screens/Plans/add_plan_screen.dart';
-import 'package:mealprep/screens/delivery_screen.dart';
+import 'package:mealprep/screens/Delivery/delivery_screen.dart';
 import 'package:mealprep/screens/profile/profile_screen.dart';
+import 'package:mealprep/widgets/adaptiveDialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:mealprep/widgets/bottom_bar.dart';
 import 'package:mealprep/widgets/custom_bottombar.dart';
@@ -24,6 +25,7 @@ class PlanScreen extends StatefulWidget {
 class _PlanScreenState extends State<PlanScreen> {
   int selectedPlanId = 0;
   int bottomIndex = 1;
+  bool forcedMove = false;
   bool isLoading = false;
 
   final List<String> screenTitles = ['My Delivery', 'My Plans', 'My Profile'];
@@ -32,12 +34,13 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   void initState() {
-    
     List<Subscription> subs =
         Provider.of<Subscriptions>(context, listen: false).subscriptions;
     if (subs.isEmpty) {
       isLoading = true;
-      Provider.of<Subscriptions>(context, listen: false).fetchAndSetSubs().then((value){
+      Provider.of<Subscriptions>(context, listen: false)
+          .fetchAndSetSubs()
+          .then((value) {
         setState(() {
           isLoading = false;
         });
@@ -49,15 +52,15 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var profileIndex=ModalRoute.of(context)!.settings.arguments;
-    if(profileIndex!=null){
+    var profileIndex = ModalRoute.of(context)!.settings.arguments;
+    if (profileIndex != null && !forcedMove) {
       setState(() {
-        bottomIndex=profileIndex as int;
+        bottomIndex = profileIndex as int;
+        forcedMove = true;
       });
     }
     List<Subscription> subs = Provider.of<Subscriptions>(context).subscriptions;
-    
-     
+
     Map<String, Color> statusColors = {
       'Active': Colors.green,
       "Paused": Colors.yellow,
@@ -110,6 +113,7 @@ class _PlanScreenState extends State<PlanScreen> {
         index: bottomIndex,
         onTap: (index) {
           setState(() {
+            forcedMove = true;
             bottomIndex = index;
           });
         },
@@ -119,9 +123,9 @@ class _PlanScreenState extends State<PlanScreen> {
     var _appBar = AppBar(
       backgroundColor: Colors.black,
       leading: GestureDetector(
-        onTap: (){
+        onTap: () {
           setState(() {
-            bottomIndex=1;
+            bottomIndex = 1;
           });
         },
         child: Container(
@@ -136,18 +140,34 @@ class _PlanScreenState extends State<PlanScreen> {
         bottomIndex == 2
             ? IconButton(
                 onPressed: () async {
-                  await Provider.of<Auth>(context, listen: false)
-                      .logout()
-                      .then((value) {
-                    Navigator.of(context)
-                        .pushReplacementNamed(CityScreen.routeName);
-                  });
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AdaptiveDiaglog(
+                      ctx: ctx,
+                      title: 'Logout',
+                      content: 'Are you sure you want to logout',
+                      btnNO: 'No',
+                      noPressed: (){
+                        Navigator.of(context).pop();
+                      },
+                      btnYes: 'Yes',
+                      yesPressed: () async {
+                        await Provider.of<Auth>(context, listen: false)
+                            .logout()
+                            .then((value) {
+                          Navigator.of(context)
+                              .pushReplacementNamed(CityScreen.routeName);
+                        });
+                      },
+                    ),
+                  );
                 },
                 icon: const Icon(Icons.logout))
             : GestureDetector(
                 onTap: () {
                   setState(() {
                     bottomIndex = 2;
+                    _type=Type.Default;
                   });
                 },
                 child: Container(
@@ -161,7 +181,7 @@ class _PlanScreenState extends State<PlanScreen> {
     );
 
     Widget _plansTab = isLoading
-        ? const AdaptiveIndecator()
+        ?  AdaptiveIndecator()
         : Center(
             heightFactor: 1,
             child: Container(
@@ -178,7 +198,7 @@ class _PlanScreenState extends State<PlanScreen> {
                     Container(
                       height: currentOrientation == Orientation.landscape
                           ? height * 70
-                          : height * 78,
+                          : height * 80,
                       child: ListView.builder(
                         itemCount: subs.length,
                         itemBuilder: (ctx, index) => GestureDetector(
@@ -225,10 +245,13 @@ class _PlanScreenState extends State<PlanScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(subs[index].title,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6),
+                                      Container(
+                                        width: width*58,
+                                        child: Text(subs[index].title,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6),
+                                      ),
                                       SizedBox(
                                         height: subs[index].status != "Inactive"
                                             ? 10
@@ -262,8 +285,11 @@ class _PlanScreenState extends State<PlanScreen> {
                                       const EdgeInsets.symmetric(vertical: 20),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
-                                    child: Image.network(subs[index].imageUrl,
-                                        fit: BoxFit.cover),
+                                    child: Hero(
+                                      tag: subs[index].id,
+                                      child: Image.network(subs[index].imageUrl,
+                                          fit: BoxFit.cover),
+                                    ),
                                   ),
                                 ), //imageContainer
                               ],

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mealprep/Models/address.dart';
+
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/products.dart';
 import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/Models/user.dart';
+import 'package:mealprep/screens/Delivery/delivery_note.dart';
 import 'package:mealprep/screens/Plans/add_note_screen.dart';
 import 'package:mealprep/screens/Plans/add_plan_screen.dart';
 import 'package:mealprep/screens/Plans/pause.dart';
@@ -11,15 +12,14 @@ import 'package:mealprep/screens/Plans/check_out.dart';
 import 'package:mealprep/screens/Auth/cites_screen.dart';
 import 'package:mealprep/screens/Auth/forget_screen.dart';
 import 'package:mealprep/screens/Auth/login_screen.dart';
-import 'package:mealprep/screens/delivery_screen.dart';
-import 'package:mealprep/screens/meal_details_screen.dart';
+import 'package:mealprep/screens/Delivery/delivery_screen.dart';
+import 'package:mealprep/screens/meals/meal_details_screen.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
-import 'package:mealprep/screens/profile/address.dart';
-import 'package:mealprep/screens/profile/taste.dart';
+
 import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:mealprep/screens/Auth/registeration_screen.dart';
 import 'package:mealprep/screens/splash_screen.dart';
-import 'package:mealprep/screens/user_meals_screen.dart';
+import 'package:mealprep/screens/meals/user_meals_screen.dart';
 import 'package:mealprep/screens/Plans/variations_plan_screen.dart';
 
 import 'package:provider/provider.dart';
@@ -60,14 +60,11 @@ class MyApp extends StatelessWidget {
           ),
         ),
         ChangeNotifierProxyProvider<Auth, UserData>(
-          create: (_) => UserData(webUrl: '',userId: 0),
+          create: (_) => UserData(webUrl: '', userId: 0),
           update: (ctx, auth, previousData) => UserData(
             webUrl: auth.websiteUrl as String,
             userId: auth.id!,
           ),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => Addreses(),
         ),
       ],
       child: MaterialApp(
@@ -118,6 +115,7 @@ class MyApp extends StatelessWidget {
           AddNote.routeName: (ctx) => AddNote(),
           Pause.routeName: (ctx) => Pause(),
           DeliveryScreen.routeName: (ctx) => DeliveryScreen(),
+          DeliveryNote.routeName: (ctx) => DeliveryNote()
         },
       ),
     );

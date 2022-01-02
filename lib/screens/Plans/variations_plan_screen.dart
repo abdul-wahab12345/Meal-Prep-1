@@ -71,7 +71,7 @@ class VariationsScreen extends StatelessWidget {
                 Container(
                   height: currentOrientation == Orientation.landscape
                       ? height * 80
-                      : height * 78,
+                      : height * 100,
                   child: ListView.builder(
                     physics: BouncingScrollPhysics(),
                     itemCount: variation.length,
@@ -82,7 +82,8 @@ class VariationsScreen extends StatelessWidget {
                           builder: (ctx) {
                             return AdaptiveDiaglog(
                               ctx: ctx,
-                              title: 'Do wana take this deal',
+                              title: 'Checkout',
+                              content: 'Do you want to take this deal',
                               btnYes: 'Yes',
                              
                               btnNO: 'No',
@@ -100,69 +101,7 @@ class VariationsScreen extends StatelessWidget {
                                 );
                               },
                             );
-                            // return Platform.isIOS
-                            //     ? CupertinoAlertDialog(
-                            //         content:
-                            //             const Text("Do wana take this deal",
-                            //                 style: TextStyle(
-                            //                   color: Colors.black,
-                            //                 )),
-                            //         actions: [
-                            //           CupertinoDialogAction(
-                            //             child: Text('Yes'),
-                            //             onPressed: () {
-                            //               Navigator.of(context).pop();
-                            //               Navigator.of(context).pushNamed(
-                            //                 CheckOut.routeName,
-                            //                 arguments: <String, int>{
-                            //                   'varId': variation[index].id,
-                            //                   'subId': subId,
-                            //                 },
-                            //               );
-                            //             },
-                            //           ),
-                            //           CupertinoDialogAction(
-                            //             child: Text('No'),
-                            //             onPressed: () {
-                            //               Navigator.of(context).pop();
-                            //             },
-                            //           ),
-                            //         ],
-                            //       )
-                            //     : AlertDialog(
-                            //         //title: Text("An error has occured"),
-                            //         content: Text("Do wana take this deal",
-                            //             style: TextStyle(
-                            //               color: Colors.black,
-                            //             )),
-                            //         actions: [
-                            //           TextButton(
-                            //             child: Text(
-                            //               'Yes!',
-                            //               style: TextStyle(color: btnColor),
-                            //             ),
-                            //             onPressed: () {
-                            //               Navigator.of(context).pop();
-                            //               Navigator.of(context).pushNamed(
-                            //                 CheckOut.routeName,
-                            //                 arguments: <String, int>{
-                            //                   'varId': variation[index].id,
-                            //                   'subId': subId,
-                            //                 },
-                            //               );
-                            //             },
-                            //           ),
-                            //           TextButton(
-                            //             child: Text(
-                            //               'No!',
-                            //               style: TextStyle(color: btnColor),
-                            //             ),
-                            //             onPressed: () {
-                            //               Navigator.of(context).pop();
-                            //             },
-                            //           ),
-                            //         ],
-                            //       );
+                           
                           },
                         );
                       },
@@ -194,7 +133,7 @@ class VariationsScreen extends StatelessWidget {
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline6),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20,
                                   ),
                                   Text(
@@ -202,14 +141,14 @@ class VariationsScreen extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.bodyText2,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 1.5,
                                   ),
                                   Text(variation[index].deliverDate,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyText2!),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 25,
                                   ),
                                   Text(
