@@ -4,135 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:mealprep/Models/meal.dart';
 
 class UserMealsData with ChangeNotifier {
-  List<Meal> _userMeals = [
-    // Meal(
-    //   id: 1,
-    //   title: 'Beef Roasted Beets',
-    //   subTitle: 'with Coconut-Dill Cream',
-    //   imageUrl:
-    //       'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1.png',
-    //   calories: {
-    //     'weight': '1802',
-    //     'type': 'kcal',
-    //   },
-    //   carbohydrates: {
-    //     'weight': '37g',
-    //     'type': 'Carb',
-    //   },
-    //   fat: {'weight': '114g', 'type': 'Fat'},
-    //   protein: {
-    //     'weight': '112g',
-    //     'type': 'Protein',
-    //   },
-    //   isFav: true,
-    //   badges: ["Gluten Free", "Soy Free", "Dairy Free", "Nut Free"],
-    //   ingredients:
-    //       "With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff.",
-    // ),
-
-    // //2
-
-    // Meal(
-    //   id: 2,
-    //   title: 'Chicken Curried Greens',
-    //   subTitle: 'with Carrot & Kale',
-    //   imageUrl:
-    //       'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1.png',
-    //   calories: {
-    //     'weight': '22g',
-    //     'type': 'kcal',
-    //   },
-    //   carbohydrates: {
-    //     'weight': '42g',
-    //     'type': 'Carb',
-    //   },
-    //   fat: {'weight': '2g', 'type': 'Fat'},
-    //   protein: {
-    //     'weight': '342g',
-    //     'type': 'Protein',
-    //   },
-    //   isFav: false,
-    //   badges: ["Gluten Free", "Soy Free", "Dairy Free", "Nut Free"],
-    //   ingredients:
-    //       "With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff.",
-    // ),
-
-    // //3
-    // Meal(
-    //   id: 3,
-    //   title: 'Turkey Shepherd Pie',
-    //   subTitle: 'with Sweet Potato & Peas',
-    //   imageUrl:
-    //       'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1.png',
-    //   calories: {
-    //     'weight': '32g',
-    //     'type': 'kcal',
-    //   },
-    //   carbohydrates: {
-    //     'weight': '622g',
-    //     'type': 'Carb',
-    //   },
-    //   fat: {'weight': '2g', 'type': 'Fat'},
-    //   protein: {
-    //     'weight': '32g',
-    //     'type': 'Protein',
-    //   },
-    //   isFav: false,
-    //   badges: ["Gluten Free", "Soy Free", "Dairy Free", "Nut Free"],
-    //   ingredients:
-    //       "With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff.",
-    // ),
-    // //4
-    // Meal(
-    //   id: 4,
-    //   title: 'Turkey Shepherd Pie',
-    //   subTitle: 'with Sweet Potato & Peas',
-    //   imageUrl:
-    //       'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1.png',
-    //   calories: {
-    //     'weight': '232g',
-    //     'type': 'kcal',
-    //   },
-    //   carbohydrates: {
-    //     'weight': '12g',
-    //     'type': 'Carb',
-    //   },
-    //   fat: {'weight': '2g', 'type': 'Fat'},
-    //   protein: {
-    //     'weight': '72g',
-    //     'type': 'Protein',
-    //   },
-    //   isFav: false,
-    //   badges: ["Gluten Free", "Soy Free", "Dairy Free", "Nut Free"],
-    //   ingredients:
-    //       "With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff.",
-    // ),
-    // //5
-    // Meal(
-    //   id: 5,
-    //   title: 'Turkey Shepherd Pie',
-    //   subTitle: 'with Sweet Potato & Peas',
-    //   imageUrl:
-    //       'https://u1s.ee6.myftpupload.com/wp-content/uploads/2021/11/Dish-8-1.png',
-    //   calories: {
-    //     'weight': '23g',
-    //     'type': 'kcal',
-    //   },
-    //   carbohydrates: {
-    //     'weight': '122g',
-    //     'type': 'Carb',
-    //   },
-    //   fat: {'weight': '2g', 'type': 'Fat'},
-    //   protein: {
-    //     'weight': '32g',
-    //     'type': 'Protein',
-    //   },
-    //   isFav: false,
-    //   badges: ["Gluten Free", "Soy Free", "Dairy Free", "Nut Free"],
-    //   ingredients:
-    //       "With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff. With some other stuff.",
-    // ),
-  ];
+  List<Meal> _userMeals = [];
   final int userId;
   final String webUrl;
 
@@ -167,7 +39,7 @@ class UserMealsData with ChangeNotifier {
         notifyListeners();
       }
     } catch (error) {
-      throw error;
+      throw 'Something Went Wrong';
     }
   }
 
@@ -184,7 +56,7 @@ class UserMealsData with ChangeNotifier {
       );
       return true;
     } catch (error) {
-      throw error;
+      throw 'Something Went Wrong';
     }
   }
 
@@ -263,7 +135,7 @@ class UserMealsData with ChangeNotifier {
 
       notifyListeners();
     } catch (error) {
-      throw error;
+      throw 'Something Went Wrong';
     }
   }
 }

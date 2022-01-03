@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/constant.dart';
-import 'package:mealprep/screens/Plans/check_out.dart';
+
 import 'package:mealprep/screens/Auth/forget_screen.dart';
 import 'package:mealprep/screens/Auth/registeration_screen.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       backgroundColor: abackground,
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -134,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             });
                           }
                         }
-                        //Navigator.of(context).pushReplacementNamed('home');
+                        
                       },
                     ),
 

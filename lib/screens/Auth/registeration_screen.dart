@@ -1,31 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:mealprep/Models/auth.dart';
 
-import 'package:flutter/material.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Auth/login_screen.dart';
+import 'package:mealprep/widgets/adaptiveDialog.dart';
+import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:mealprep/widgets/input_feild.dart';
 import 'package:mealprep/widgets/text_button.dart';
+import 'package:provider/provider.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   static const routeName = '/register';
   RegisterScreen({Key? key}) : super(key: key);
 
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   var _formKey = GlobalKey<FormState>();
+  var isLoading = false;
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
+  var userNameController = TextEditingController();
+
+  void registerUser() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        await Provider.of<Auth>(context, listen: false).signUp(
+            userNameController.text,
+            emailController.text,
+            passwordController.text);
+
+        setState(() {
+          isLoading = false;
+          emailController.clear();
+          passwordController.clear();
+          userNameController.clear();
+        });
+      } catch (error) {
+        showDialog(
+            context: context,
+            builder: (ctx) => AdaptiveDiaglog(
+                ctx: ctx,
+                title: 'Error Occurred',
+                content: error.toString(),
+                btnYes: 'Okay',
+                yesPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    isLoading = false;
+                    // emailController.clear();
+                    // passwordController.clear();
+                    // userNameController.clear();
+                  });
+                }));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
 
-    var emailController = TextEditingController();
-    var passwordController = TextEditingController();
-    var userNameController = TextEditingController();
-
     return Scaffold(
       backgroundColor: abackground,
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -37,7 +83,7 @@ class RegisterScreen extends StatelessWidget {
               ), //Image Container
 
               Container(
-                margin: EdgeInsets.only(bottom: height * 5, top: height * 5),
+                margin: EdgeInsets.only(bottom: height * 3, top: height * 5),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -85,20 +131,15 @@ class RegisterScreen extends StatelessWidget {
                   ),
                 ),
               ),
+
               //TextFeild Container
 
-              CustomButton(
-                text: 'Register',
-                callback: () {
-                  if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Shani'),
-                      ),
-                    );
-                  }
-                },
-              ),
+              isLoading
+                  ? AdaptiveIndecator()
+                  : CustomButton(
+                      text: 'Register',
+                      callback: registerUser,
+                    ),
 
               Container(
                 margin: EdgeInsets.only(top: height * 7, left: 20, right: 20),

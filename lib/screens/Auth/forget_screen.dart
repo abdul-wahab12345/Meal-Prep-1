@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mealprep/Models/auth.dart';
 
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Auth/login_screen.dart';
+import 'package:mealprep/screens/Auth/verification.dart';
+import 'package:mealprep/widgets/adaptiveDialog.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:mealprep/widgets/input_feild.dart';
 import 'package:mealprep/widgets/text_button.dart';
+import 'package:provider/provider.dart';
 
 class ForgetScreen extends StatelessWidget {
   static const routeName = '/forget';
@@ -23,7 +27,7 @@ class ForgetScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: abackground,
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -39,7 +43,7 @@ class ForgetScreen extends StatelessWidget {
                 child: Container(
                   margin: EdgeInsets.only(bottom: height * 3, top: height * 5),
                   child: InputFeild(
-                    hinntText: 'Email',
+                    hinntText: 'Enter your email',
                     validatior: (String value) {
                       if (value.isEmpty) {
                         return "Please enter your email!";
@@ -57,11 +61,27 @@ class ForgetScreen extends StatelessWidget {
 
               CustomButton(
                 text: 'Reset Password',
-                callback: () {
+                callback: () async {
                   if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Processing Data')),
-                    );
+                    await Provider.of<Auth>(context, listen: false)
+                        .resetPassword(emailController.text)
+                        .catchError((error) {
+                      showDialog(
+                          context: context,
+                          builder: (ctx) => AdaptiveDiaglog(
+                              ctx: ctx,
+                              title: 'An error occurred',
+                              content: error.toString(),
+                              btnYes: 'Okay',
+                              yesPressed: () {
+                                Navigator.of(context).pop();
+                              }));
+                    });
+                    Navigator.of(context)
+                        .pushNamed(VerificationScreen.routeName, arguments: {
+                      'email': emailController.text,
+                      'code': '123456',
+                    });
                   }
                 },
               ),

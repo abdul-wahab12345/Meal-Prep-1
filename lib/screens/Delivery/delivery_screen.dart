@@ -19,7 +19,7 @@ class DeliveryScreen extends StatelessWidget {
       child: Container(
         width:
             currentOrientation == Orientation.landscape ? 600 : double.infinity,
-        margin: EdgeInsets.only(left: 20, right: 20),
+        margin: const EdgeInsets.only(left: 20, right: 20),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +73,7 @@ class DeliveryScreen extends StatelessWidget {
               }),
               Center(
                 child: Container(
-                  margin: EdgeInsets.only(top: 30),
+                  margin: const EdgeInsets.only(top: 30),
                   child: Text(
                     'Next Delivery: Today around 2 pm',
                     style: Theme.of(context).textTheme.bodyText2,

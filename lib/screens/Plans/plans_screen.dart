@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/subscriptions.dart';
-import 'package:mealprep/Models/user.dart';
+
 import 'package:mealprep/screens/Auth/cites_screen.dart';
 import 'package:mealprep/screens/Plans/add_plan_screen.dart';
 import 'package:mealprep/screens/Delivery/delivery_screen.dart';
@@ -44,6 +44,20 @@ class _PlanScreenState extends State<PlanScreen> {
         setState(() {
           isLoading = false;
         });
+      }).catchError((error) {
+        showDialog(
+            context: context,
+            builder: (ctx) => AdaptiveDiaglog(
+                ctx: ctx,
+                title: 'Error occurred',
+                content: error.toString(),
+                btnYes: 'Yes',
+                yesPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    isLoading=false;
+                  });
+                }));
       });
     }
 
@@ -147,7 +161,7 @@ class _PlanScreenState extends State<PlanScreen> {
                       title: 'Logout',
                       content: 'Are you sure you want to logout',
                       btnNO: 'No',
-                      noPressed: (){
+                      noPressed: () {
                         Navigator.of(context).pop();
                       },
                       btnYes: 'Yes',
@@ -167,7 +181,7 @@ class _PlanScreenState extends State<PlanScreen> {
                 onTap: () {
                   setState(() {
                     bottomIndex = 2;
-                    _type=Type.Default;
+                    _type = Type.Default;
                   });
                 },
                 child: Container(
@@ -181,7 +195,7 @@ class _PlanScreenState extends State<PlanScreen> {
     );
 
     Widget _plansTab = isLoading
-        ?  AdaptiveIndecator()
+        ? AdaptiveIndecator()
         : Center(
             heightFactor: 1,
             child: Container(
@@ -246,7 +260,7 @@ class _PlanScreenState extends State<PlanScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
-                                        width: width*58,
+                                        width: width * 58,
                                         child: Text(subs[index].title,
                                             style: Theme.of(context)
                                                 .textTheme

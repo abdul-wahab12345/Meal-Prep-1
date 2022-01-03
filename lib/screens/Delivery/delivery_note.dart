@@ -1,12 +1,14 @@
-import 'dart:convert';
+
 
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/constant.dart';
+import 'package:mealprep/screens/Delivery/delivery_screen.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
-import 'package:mealprep/screens/profile/profile_screen.dart';
+
+import 'package:mealprep/widgets/adaptiveDialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
-import 'package:mealprep/widgets/auth_button.dart';
+
 import 'package:provider/provider.dart';
 
 class DeliveryNote extends StatefulWidget {
@@ -27,10 +29,6 @@ class _DeliveryNoteState extends State<DeliveryNote> {
   Widget build(BuildContext context) {
     Orientation currentOrientation = MediaQuery.of(context).orientation;
 
-    // var subscriptionId = ModalRoute.of(context)!.settings.arguments as int;
-    // Subscription? subscription =
-    //     Provider.of<Subscriptions>(context, listen: false)
-    //         .getSubscriptionById(subscriptionId);
 
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
@@ -46,7 +44,7 @@ class _DeliveryNoteState extends State<DeliveryNote> {
             Navigator.pushNamed(context, PlanScreen.routeName, arguments: 2);
           },
           child: Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: CircleAvatar(
               child: Image.asset('assets/images/person.png'),
             ),
@@ -63,11 +61,11 @@ class _DeliveryNoteState extends State<DeliveryNote> {
           width: currentOrientation == Orientation.landscape
               ? 600
               : double.infinity,
-          //height: currentOrientation==Orientation.landscape?200:,
-          margin: EdgeInsets.only(left: 20, right: 20),
+          
+          margin: const EdgeInsets.only(left: 20, right: 20),
           child: SingleChildScrollView(
             child: Column(
-              //mainAxisAlignment: MainAxisAlignment.start,
+            
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 LayoutBuilder(builder: (context, constraint) {
@@ -76,7 +74,7 @@ class _DeliveryNoteState extends State<DeliveryNote> {
 
                   return Stack(
                     children: [
-                      //margin: EdgeInsets.only(top: 200),
+                    
                       Container(
                         margin: EdgeInsets.only(top: height * 20),
                         decoration: BoxDecoration(
@@ -126,9 +124,13 @@ class _DeliveryNoteState extends State<DeliveryNote> {
                     ],
                   );
                 }),
-                isLoading?Container(margin: EdgeInsets.only(top: 20),child: AdaptiveIndecator()): Center(
-                child: GestureDetector(
-                  onTap: ()  async{
+                isLoading
+                    ? Container(
+                        margin: const EdgeInsets.only(top: 20),
+                        child: AdaptiveIndecator())
+                    : Center(
+                        child: GestureDetector(
+                          onTap: () async {
                             // bool isvalid;
                             // if () {
                             //   isvalid = true;
@@ -139,9 +141,9 @@ class _DeliveryNoteState extends State<DeliveryNote> {
                                 'note': _noteController.text,
                                 'note_type': 'delivery',
                               };
-                             setState(() {
+                              setState(() {
                                 isLoading = true;
-                             });
+                              });
                               final response = await Provider.of<Subscriptions>(
                                       context,
                                       listen: false)
@@ -150,8 +152,19 @@ class _DeliveryNoteState extends State<DeliveryNote> {
                                 setState(() {
                                   isLoading = false;
                                 });
+                                showDialog(
+                                    context: context,
+                                    builder: (ctx) => AdaptiveDiaglog(
+                                        ctx: ctx,
+                                        title: 'Note',
+                                        content: 'Your note has been updated',
+                                        btnYes: 'Okay',
+                                        yesPressed: () {
+                                          Navigator.of(context).pushNamed(
+                                              DeliveryScreen.routeName);
+                                        }));
                               });
-                              print(response);
+                              // print(response);
 
                               _formKey.currentState!.save();
                               setState(() {
@@ -159,78 +172,32 @@ class _DeliveryNoteState extends State<DeliveryNote> {
                               });
                             }
                           },
-                  child: Container(
-                    width: currentOrientation == Orientation.landscape
-                        ? width * 30
-                        : width * 50,
-                    height: currentOrientation == Orientation.landscape
-                        ? height * 15
-                        : height * 6,
-                
-                    //alignment: Alignment.bottomLeft,
-                    margin: EdgeInsets.only(top: 30),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      //color: Colors.red,
-                      gradient: LinearGradient(colors: [
-                        gra1,
-                        gra2,
-                      ], begin: Alignment.topLeft),
-                    ),
-                    child: Center(
-                        child: Text(
-                      'Send Delivery Note',
-                      style: Theme.of(context).textTheme.bodyText2,
-                    )),
-                  ),
-                ),
-              ),
-                // Container(
-                //   width: currentOrientation == Orientation.landscape
-                //       ? width * 30
-                //       : width * 50,
-                //   height: currentOrientation == Orientation.landscape
-                //       ? height * 15
-                //       : height * 8,
+                          child: Container(
+                            width: currentOrientation == Orientation.landscape
+                                ? width * 30
+                                : width * 50,
+                            height: currentOrientation == Orientation.landscape
+                                ? height * 15
+                                : height * 6,
 
-                //   //alignment: Alignment.bottomLeft,
-                //   margin: EdgeInsets.only(top: 10),
-                //   child: isLoading
-                //       ? AdaptiveIndecator()
-                //       : CustomButton(
-                //           text: 'Save Changes',
-                //           callback: () async {
-                //             bool isvalid;
-                //             if (_formKey.currentState!.validate()) {
-                //               isvalid = true;
-                //             }
-                //             if (isvalid = true) {
-                //               Map<String, dynamic> data = {
-                //                 'aw_subscription_id': '1255',
-                //                 'note': _noteController.text,
-                //                 'note_type': 'delivery',
-                //               };
-                //              setState(() {
-                //                 isLoading = true;
-                //              });
-                //               final response = await Provider.of<Subscriptions>(
-                //                       context,
-                //                       listen: false)
-                //                   .addNote(data)
-                //                   .then((value) {
-                //                 setState(() {
-                //                   isLoading = false;
-                //                 });
-                //               });
-                //               print(response);
-
-                //               _formKey.currentState!.save();
-                //               setState(() {
-                //                 _noteController.clear();
-                //               });
-                //             }
-                //           }),
-                // ),
+                            //alignment: Alignment.bottomLeft,
+                            margin: const EdgeInsets.only(top: 30),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              //color: Colors.red,
+                              gradient: LinearGradient(colors: [
+                                gra1,
+                                gra2,
+                              ], begin: Alignment.topLeft),
+                            ),
+                            child: Center(
+                                child: Text(
+                              'Send Delivery Note',
+                              style: Theme.of(context).textTheme.bodyText2,
+                            )),
+                          ),
+                        ),
+                      ),
               ],
             ),
           ),

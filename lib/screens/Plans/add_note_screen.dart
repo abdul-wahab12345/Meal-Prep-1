@@ -1,10 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
-import 'package:mealprep/screens/profile/profile_screen.dart';
+
+import 'package:mealprep/widgets/adaptiveDialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +45,7 @@ class _AddNoteState extends State<AddNote> {
             Navigator.pushNamed(context, PlanScreen.routeName, arguments: 2);
           },
           child: Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: CircleAvatar(
               child: Image.asset('assets/images/person.png'),
             ),
@@ -64,7 +63,7 @@ class _AddNoteState extends State<AddNote> {
               ? 600
               : double.infinity,
           //height: currentOrientation==Orientation.landscape?200:,
-          margin: EdgeInsets.only(left: 20, right: 20),
+          margin: const EdgeInsets.only(left: 20, right: 20),
           child: SingleChildScrollView(
             child: Column(
               //mainAxisAlignment: MainAxisAlignment.start,
@@ -144,13 +143,12 @@ class _AddNoteState extends State<AddNote> {
                       : height * 8,
 
                   //alignment: Alignment.bottomLeft,
-                  margin: EdgeInsets.only(top: 10),
+                  margin: const EdgeInsets.only(top: 10),
                   child: isLoading
                       ? Center(child: AdaptiveIndecator())
                       : CustomButton(
                           text: 'Save Changes',
                           callback: () async {
-                            
                             if (_formKey.currentState!.validate()) {
                               Map<String, dynamic> data = {
                                 'aw_subscription_id': subscriptionId.toString(),
@@ -158,7 +156,7 @@ class _AddNoteState extends State<AddNote> {
                                 'note_type': 'subscription',
                               };
                               setState(() {
-                                isLoading=true;
+                                isLoading = true;
                               });
 
                               var response = await Provider.of<Subscriptions>(
@@ -169,6 +167,31 @@ class _AddNoteState extends State<AddNote> {
                                 setState(() {
                                   isLoading = false;
                                 });
+                                showDialog(
+                                    context: context,
+                                    builder: (ctx) => AdaptiveDiaglog(
+                                        ctx: ctx,
+                                        title: 'Note',
+                                        content: 'Your note has been updated',
+                                        btnYes: 'Okay',
+                                        yesPressed: () {
+                                          Navigator.of(context)
+                                              .pushNamed(PlanScreen.routeName);
+                                        }));
+                              }).catchError((error) {
+                                showDialog(
+                                    context: context,
+                                    builder: (ctx) => AdaptiveDiaglog(
+                                        ctx: ctx,
+                                        title: 'Error occurred',
+                                        content: error.toString(),
+                                        btnYes: 'Okay',
+                                        yesPressed: () {
+                                          Navigator.of(context).pop();
+                                          setState(() {
+                                            isLoading = false;
+                                          });
+                                        }));
                               });
 
                               _formKey.currentState!.save();

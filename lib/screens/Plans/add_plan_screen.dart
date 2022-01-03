@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mealprep/Models/products.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
-import 'package:mealprep/screens/profile/profile_screen.dart';
+
 import 'package:mealprep/screens/Plans/variations_plan_screen.dart';
+import 'package:mealprep/widgets/adaptiveDialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:provider/provider.dart';
 
@@ -17,10 +18,25 @@ class AddPlan extends StatefulWidget {
 
 class _AddPlanState extends State<AddPlan> {
   List<Product> prod = [];
+ 
   @override
   void initState() {
     Future.delayed(Duration.zero).then((value) {
-      Provider.of<Products>(context, listen: false).fetchAndSetProducts();
+      Provider.of<Products>(context, listen: false).fetchAndSetProducts().catchError((error){
+        showDialog(
+            context: context,
+            builder: (ctx) => AdaptiveDiaglog(
+                ctx: ctx,
+                title: 'Error occurred',
+                content: error.toString(),
+                btnYes: 'Okay',
+                yesPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    //isLoading=false;
+                  });
+                }));
+      });
     });
 
     // TODO: implement initState
@@ -56,7 +72,7 @@ class _AddPlanState extends State<AddPlan> {
             Navigator.pushNamed(context, PlanScreen.routeName,arguments: 2);
           },
           child: Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: CircleAvatar(
               child: Image.asset('assets/images/person.png'),
             ),
@@ -126,7 +142,7 @@ class _AddPlanState extends State<AddPlan> {
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline6),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 20,
                                           ),
                                           Text(
@@ -135,14 +151,14 @@ class _AddPlanState extends State<AddPlan> {
                                                 .textTheme
                                                 .bodyText2,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 1.5,
                                           ),
                                           Text(prod[index].deliveryDate,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyText2!),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 25,
                                           ),
                                           Text(

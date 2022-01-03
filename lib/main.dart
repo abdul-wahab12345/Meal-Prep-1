@@ -4,6 +4,7 @@ import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/products.dart';
 import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/Models/user.dart';
+import 'package:mealprep/screens/Auth/verification.dart';
 import 'package:mealprep/screens/Delivery/delivery_note.dart';
 import 'package:mealprep/screens/Plans/add_note_screen.dart';
 import 'package:mealprep/screens/Plans/add_plan_screen.dart';
@@ -115,7 +116,8 @@ class MyApp extends StatelessWidget {
           AddNote.routeName: (ctx) => AddNote(),
           Pause.routeName: (ctx) => Pause(),
           DeliveryScreen.routeName: (ctx) => DeliveryScreen(),
-          DeliveryNote.routeName: (ctx) => DeliveryNote()
+          DeliveryNote.routeName: (ctx) => DeliveryNote(),
+          VerificationScreen.routeName:(ctx)=>VerificationScreen(),
         },
       ),
     );

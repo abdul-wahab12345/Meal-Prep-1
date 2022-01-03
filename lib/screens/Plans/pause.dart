@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
-import 'package:mealprep/screens/profile/profile_screen.dart';
+
 import 'package:mealprep/widgets/adaptiveDialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:mealprep/widgets/auth_button.dart';
@@ -26,7 +25,7 @@ class _PauseState extends State<Pause> {
   //var _controller = TextEditingController();
   var _dateController = TextEditingController();
   var _reasonController = TextEditingController();
-  String _chk = "No";
+  String _chk = "no";
   String errorText = '';
   bool indefinitltLoader = false;
   bool saveLoader = false;
@@ -128,79 +127,79 @@ class _PauseState extends State<Pause> {
                 ],
               ),
             ),
-            if (subscription != null && subscription.isCutOf)
-              Container(
-                // color: Colors.white,
-                margin: EdgeInsets.only(
-                  top: 20,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 16.0),
-                      child: Text(
-                        'Do you want meals this Sunday ?',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: 'IBM',
-                          // fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Row(
-                          children: [
-                            Radio(
-                                overlayColor:
-                                    MaterialStateProperty.all(btnColor),
-                                hoverColor: btnColor,
-                                fillColor: MaterialStateProperty.all(btnColor),
-                                activeColor: btnColor,
-                                focusColor: btnColor,
-                                value: "Yes",
-                                groupValue: _chk,
-                                onChanged: (String? value) {
-                                  setState(() {
-                                    print(value);
-                                    _chk = value!;
-                                  });
-                                }),
-                            Text(
-                              'Yes',
-                              style: Theme.of(context).textTheme.bodyText2,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Radio(
-                                overlayColor:
-                                    MaterialStateProperty.all(btnColor),
-                                hoverColor: btnColor,
-                                fillColor: MaterialStateProperty.all(btnColor),
-                                activeColor: btnColor,
-                                focusColor: btnColor,
-                                value: "No",
-                                groupValue: _chk,
-                                onChanged: (String? value) {
-                                  setState(() {
-                                    _chk = value!;
-                                    print(value);
-                                  });
-                                }),
-                            Text(
-                              'No',
-                              style: Theme.of(context).textTheme.bodyText2,
-                            ),
-                          ],
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ), //radio button
+            // if (subscription != null && subscription.isCutOf)
+            //   Container(
+            //     // color: Colors.white,
+            //     margin: EdgeInsets.only(
+            //       top: 20,
+            //     ),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         const Padding(
+            //           padding: EdgeInsets.only(left: 16.0),
+            //           child: Text(
+            //             'Do you want meals this Sunday ?',
+            //             style: TextStyle(
+            //               fontSize: 14,
+            //               fontFamily: 'IBM',
+            //               // fontWeight: FontWeight.bold,
+            //             ),
+            //           ),
+            //         ),
+            //         Row(
+            //           children: [
+            //             Row(
+            //               children: [
+            //                 Radio(
+            //                     overlayColor:
+            //                         MaterialStateProperty.all(btnColor),
+            //                     hoverColor: btnColor,
+            //                     fillColor: MaterialStateProperty.all(btnColor),
+            //                     activeColor: btnColor,
+            //                     focusColor: btnColor,
+            //                     value: "Yes",
+            //                     groupValue: _chk,
+            //                     onChanged: (String? value) {
+            //                       setState(() {
+            //                         print(value);
+            //                         _chk = value!;
+            //                       });
+            //                     }),
+            //                 Text(
+            //                   'Yes',
+            //                   style: Theme.of(context).textTheme.bodyText2,
+            //                 ),
+            //               ],
+            //             ),
+            //             Row(
+            //               children: [
+            //                 Radio(
+            //                     overlayColor:
+            //                         MaterialStateProperty.all(btnColor),
+            //                     hoverColor: btnColor,
+            //                     fillColor: MaterialStateProperty.all(btnColor),
+            //                     activeColor: btnColor,
+            //                     focusColor: btnColor,
+            //                     value: "no",
+            //                     groupValue: _chk,
+            //                     onChanged: (String? value) {
+            //                       setState(() {
+            //                         _chk = value!;
+            //                         print(value);
+            //                       });
+            //                     }),
+            //                 Text(
+            //                   'No',
+            //                   style: Theme.of(context).textTheme.bodyText2,
+            //                 ),
+            //               ],
+            //             ),
+            //           ],
+            //         )
+            //       ],
+            //     ),
+            //   ), //radio button
             Container(
               margin: EdgeInsets.only(top: 15, left: 10, right: 10),
               child: TextFormField(
@@ -303,7 +302,22 @@ class _PauseState extends State<Pause> {
                                           await Provider.of<Subscriptions>(
                                                   context,
                                                   listen: false)
-                                              .pauseSubscription(data);
+                                              .pauseSubscription(data)
+                                              .catchError((error) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (ctx) => AdaptiveDiaglog(
+                                                ctx: ctx,
+                                                title: 'Error occurred',
+                                                content: error.toString(),
+                                                btnYes: 'Yes',
+                                                yesPressed: () {
+                                                  Navigator.of(context).pop();
+                                                  setState(() {
+                                                    //isLoading=false;
+                                                  });
+                                                }));
+                                      });
                                       // print(data);
                                       showDialog(
                                           context: context,
@@ -378,7 +392,22 @@ class _PauseState extends State<Pause> {
                                           await Provider.of<Subscriptions>(
                                                   context,
                                                   listen: false)
-                                              .pauseSubscription(data);
+                                              .pauseSubscription(data)
+                                              .catchError((error) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (ctx) => AdaptiveDiaglog(
+                                                ctx: ctx,
+                                                title: 'Error occurred',
+                                                content: error.toString(),
+                                                btnYes: 'Okay',
+                                                yesPressed: () {
+                                                  Navigator.of(context).pop();
+                                                  setState(() {
+                                                    //isLoading=false;
+                                                  });
+                                                }));
+                                      });
                                       print(response);
                                       showDialog(
                                           context: context,
@@ -395,8 +424,8 @@ class _PauseState extends State<Pause> {
                                                       .emptySubscriptions();
                                                   Navigator.of(context)
                                                       .pushReplacementNamed(
-                                                          PlanScreen.routeName,
-                                                          );
+                                                    PlanScreen.routeName,
+                                                  );
                                                 });
                                           });
                                       setState(() {

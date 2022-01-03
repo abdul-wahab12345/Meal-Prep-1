@@ -77,7 +77,7 @@ class _InputFeildState extends State<InputFeild> {
             errorStyle: Theme.of(context)
                 .textTheme
                 .caption!
-                .copyWith(color: Colors.red, fontSize: 12)),
+                .copyWith(color: Colors.red, fontSize: 11)),
       ),
     );
   }

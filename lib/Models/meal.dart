@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class Meal with ChangeNotifier {
+
   int id;
   String title;
   String subTitle;
@@ -32,21 +33,24 @@ class Meal with ChangeNotifier {
     required this.ingredients,
   });
 
-  void toggleFavorite() {
-
-final url;
+  void toggleFavorite(int userId,String webUrl) {
+    try {
+      final url;
       if (!isFav) {
         url = Uri.parse(
-            "https://u1s.ee6.myftpupload.com/wp-json/meal-prep/v1/like-meal?user_id=7&meal_id=$id");
+            "${webUrl}wp-json/meal-prep/v1/like-meal?user_id=$userId&meal_id=$id");
         http.get(url);
       } else {
         url = Uri.parse(
-            "https://u1s.ee6.myftpupload.com/wp-json/meal-prep/v1/unlike-meal?user_id=7&meal_id=$id");
+            "${webUrl}wp-json/meal-prep/v1/unlike-meal?user_id=$userId&meal_id=$id");
         http.get(url);
       }
       print(url);
 
-    isFav = !isFav;
-    notifyListeners();
+      isFav = !isFav;
+      notifyListeners();
+    } catch (error) {
+      throw 'Something went wrong';
+    }
   }
 }

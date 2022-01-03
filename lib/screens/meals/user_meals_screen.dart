@@ -1,34 +1,28 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mealprep/Models/auth.dart';
 
 import 'package:mealprep/Models/meal.dart';
 import 'package:mealprep/Models/meals.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 import 'package:mealprep/screens/meals/meal_details_screen.dart';
-import 'package:mealprep/screens/profile/profile_screen.dart';
+import 'package:mealprep/widgets/adaptiveDialog.dart';
+
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:provider/provider.dart';
 
 class UserMealsScreen extends StatelessWidget {
   const UserMealsScreen({Key? key}) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
-   
-
     var _appBar = AppBar(
       backgroundColor: aPrimary,
-      
-      title: Text("User Meals"),
+      title: const Text("User Meals"),
       actions: [
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, PlanScreen.routeName,arguments: 2);
+            Navigator.pushNamed(context, PlanScreen.routeName, arguments: 2);
           },
           child: Container(
             padding: const EdgeInsets.all(8),
@@ -54,10 +48,22 @@ class UserMealsScreen extends StatelessWidget {
       backgroundColor: abackground,
       body: FutureBuilder(
           future: Provider.of<UserMealsData>(context, listen: false)
-              .fetchAndSetMeals(),
+              .fetchAndSetMeals()
+              .catchError((error) {
+            showDialog(
+                context: context,
+                builder: (ctx) => AdaptiveDiaglog(
+                    ctx: ctx,
+                    title: 'Error Occurred',
+                    content: error.toString(),
+                    btnYes: 'Okay',
+                    yesPressed: () {
+                      Navigator.of(context).pop();
+                    }));
+          }),
           builder: (context, snapShot) {
             if (snapShot.connectionState == ConnectionState.waiting) {
-              return  AdaptiveIndecator();
+              return AdaptiveIndecator();
             }
 
             if (snapShot.hasError) {
@@ -129,6 +135,9 @@ class ContentContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int userId = Provider.of<Auth>(context, listen: false).id as int;
+    String webUrl =
+        Provider.of<Auth>(context, listen: false).websiteUrl.toString();
     Meal meal = Provider.of<Meal>(context, listen: false);
 
     MediaQueryData queryData = MediaQuery.of(context);
@@ -153,11 +162,23 @@ class ContentContainer extends StatelessWidget {
           Consumer<Meal>(
             builder: (ctx, meal, _) => GestureDetector(
                 onTap: () {
-                  meal.toggleFavorite();
+                  try {
+                    meal.toggleFavorite(userId, webUrl);
+                  } catch (error) {
+                    showDialog(
+                        context: context,
+                        builder: (ctx) => AdaptiveDiaglog(
+                            ctx: ctx,
+                            title: 'Error Occurred',
+                            content: error.toString(),
+                            btnYes: 'Okay',
+                            yesPressed: () {
+                              Navigator.of(context).pop();
+                            }));
+                  }
                 },
                 child: meal.isFav
                     ? const Icon(
-                      
                         Icons.favorite,
                         color: Colors.red,
                         size: 30,
@@ -165,7 +186,7 @@ class ContentContainer extends StatelessWidget {
                     : const Icon(
                         Icons.favorite_outline,
                         color: Colors.white,
-                         size: 30,
+                        size: 30,
                       )),
           ),
           const SizedBox(

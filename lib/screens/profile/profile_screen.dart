@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/user.dart';
-import 'package:mealprep/constant.dart';
-import 'package:mealprep/screens/Auth/cites_screen.dart';
+
 import 'package:mealprep/screens/profile/address.dart';
 import 'package:mealprep/screens/profile/payment.dart';
 import 'package:mealprep/screens/profile/taste.dart';
 import 'package:mealprep/widgets/adaptiveDialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
-import 'package:mealprep/widgets/bottom_bar.dart';
+
 import 'package:mealprep/widgets/input_feild.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +38,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     var user = Provider.of<UserData>(context, listen: false).user;
     if (user == null) {
-      Provider.of<UserData>(context, listen: false).getUserData();
+      Provider.of<UserData>(context, listen: false)
+          .getUserData()
+          .catchError((error) {
+        showDialog(
+            context: context,
+            builder: (ctx) => AdaptiveDiaglog(
+                ctx: ctx,
+                title: 'An Error Occurred',
+                content: error.toString(),
+                btnYes: 'Okay',
+                yesPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    //to stop loading
+                  });
+                }));
+      });
     }
 
     super.initState();
@@ -225,7 +240,7 @@ class _UserFieldsState extends State<UserFields> {
                   yesPressed: () {
                     Navigator.of(context).pop();
                   }));
-        }else{
+        } else {
           showDialog(
               context: context,
               builder: (ctx) => AdaptiveDiaglog(
@@ -237,8 +252,8 @@ class _UserFieldsState extends State<UserFields> {
                     Navigator.of(context).pop();
                     setState(() {
                       widget.currentPass.clear();
-                    widget.newPass.clear();
-                    widget.confirmPass.clear();
+                      widget.newPass.clear();
+                      widget.confirmPass.clear();
                     });
                   }));
         }

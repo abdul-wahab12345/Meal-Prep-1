@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mealprep/Models/meal.dart';
+
 import 'package:mealprep/Models/meals.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
-import 'package:mealprep/screens/profile/profile_screen.dart';
+import 'package:mealprep/widgets/adaptiveDialog.dart';
+
 import 'package:mealprep/widgets/auth_button.dart';
 
 import 'package:provider/provider.dart';
@@ -35,15 +36,8 @@ class MealDetailsScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      // Center(
-                      //   child: Container(
-                      //     height: height * 20,
-                      //     width: 224,
-                      //     child: Image.network(imageUrl),
-                      //   ),
-                      // ),
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         // margin: EdgeInsets.only(top: height * 2),
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -62,15 +56,14 @@ class MealDetailsScreen extends StatelessWidget {
                             },
                             maxLines: 6,
                             decoration: InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                  //borderRadius: BorderRadius.circular(20),
-                                  borderSide: const BorderSide(
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
                                     color: Colors.transparent,
                                   ),
                                 ),
-                                enabledBorder: OutlineInputBorder(
+                                enabledBorder: const OutlineInputBorder(
                                   // borderRadius: BorderRadius.circular(20),
-                                  borderSide: const BorderSide(
+                                  borderSide: BorderSide(
                                     color: Colors.transparent,
                                   ),
                                 ),
@@ -88,8 +81,10 @@ class MealDetailsScreen extends StatelessWidget {
                                     .textTheme
                                     .caption!
                                     .copyWith(color: Colors.red, fontSize: 12),
-                                hintStyle: Theme.of(context).textTheme.headline6,
-                                hintText: "What don’t you like about this meal?"),
+                                hintStyle:
+                                    Theme.of(context).textTheme.headline6,
+                                hintText:
+                                    "What don’t you like about this meal?"),
                           ),
                         ),
                       ),
@@ -103,8 +98,18 @@ class MealDetailsScreen extends StatelessWidget {
                             Provider.of<UserMealsData>(context, listen: false)
                                 .dislikeMeal(meal.id, feedbackController.text)
                                 .then((value) {
-                                  feedbackController.text = '';
+                              feedbackController.text = '';
                               Navigator.of(ctx).pop();
+                            }).catchError((error) {
+                              showDialog(
+                                  context: context,
+                                  builder: (ctx) => AdaptiveDiaglog(
+                                      ctx: ctx,
+                                      title: 'Error Occurred',
+                                      btnYes: 'Okay',
+                                      yesPressed: () {
+                                        Navigator.of(context).pop();
+                                      }));
                             });
                           }
                         },
@@ -122,14 +127,14 @@ class MealDetailsScreen extends StatelessWidget {
 
     var _appBar = AppBar(
       backgroundColor: aPrimary,
-      title: Text("Meal"),
+      title: const Text("Meal"),
       actions: [
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, PlanScreen.routeName,arguments: 2);
+            Navigator.pushNamed(context, PlanScreen.routeName, arguments: 2);
           },
           child: Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: CircleAvatar(
               child: Image.asset('assets/images/person.png'),
             ),
@@ -142,7 +147,7 @@ class MealDetailsScreen extends StatelessWidget {
       backgroundColor: abackground,
       body: Container(
         width: double.infinity,
-        margin: EdgeInsets.only(
+        margin: const EdgeInsets.only(
           left: 10,
           right: 10,
           top: 15,
@@ -164,7 +169,7 @@ class MealDetailsScreen extends StatelessWidget {
                         // print()
                         showModal(meal.imageUrl);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.thumb_down_alt_outlined,
                         color: Colors.white,
                         size: 30,
@@ -172,15 +177,26 @@ class MealDetailsScreen extends StatelessWidget {
                   IconButton(
                     onPressed: () {
                       Provider.of<UserMealsData>(context, listen: false)
-                          .toggleFavorite(mealId);
+                          .toggleFavorite(mealId)
+                          .catchError((error) {
+                        showDialog(
+                            context: context,
+                            builder: (ctx) => AdaptiveDiaglog(
+                                ctx: ctx,
+                                title: 'An Error Occurred',
+                                btnYes: 'Okay',
+                                yesPressed: () {
+                                  Navigator.of(context).pop();
+                                }));
+                      });
                     },
                     icon: meal.isFav
-                        ? Icon(
+                        ? const Icon(
                             Icons.favorite,
                             color: Colors.red,
                             size: 30,
                           )
-                        : Icon(
+                        : const Icon(
                             Icons.favorite_outline,
                             color: Colors.white,
                             size: 30,
@@ -190,7 +206,7 @@ class MealDetailsScreen extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 10),
+              margin: const EdgeInsets.only(top: 10),
               decoration: BoxDecoration(
                 color: aPrimary,
                 borderRadius: BorderRadius.circular(12),
@@ -215,24 +231,24 @@ class MealDetailsScreen extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Text(meal.calories['weight'] as String,
                             style: textTheme.headline5!
                                 .copyWith(color: Colors.green)),
                         Text(meal.calories['type'] as String,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors.green,
                                 fontSize: 8,
                                 fontWeight: FontWeight.w600)),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Text(meal.carbohydrates['weight'] as String,
                             style: textTheme.headline5),
                         Text(meal.carbohydrates['type'] as String,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 8,
                                 fontWeight: FontWeight.w600)),
@@ -240,27 +256,27 @@ class MealDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(right: 30, top: 10),
+                    margin: const EdgeInsets.only(right: 30, top: 10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Text(meal.protein['weight'] as String,
                             style: textTheme.headline5),
                         Text(meal.protein['type'] as String,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 8,
                                 fontWeight: FontWeight.w600)),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Text(meal.fat['weight'] as String,
                             style: textTheme.headline5),
                         Text(meal.fat['type'] as String,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 8,
                                 fontWeight: FontWeight.w600)),
@@ -270,7 +286,7 @@ class MealDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             SingleChildScrollView(
@@ -278,11 +294,11 @@ class MealDetailsScreen extends StatelessWidget {
               child: Row(
                 children: meal.badges
                     .map((e) => Container(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 5, horizontal: 6),
-                          margin: EdgeInsets.only(right: 12),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 6),
+                          margin: const EdgeInsets.only(right: 12),
                           decoration: BoxDecoration(
-                              color: Color.fromRGBO(10, 169, 216, 1),
+                              color: const Color.fromRGBO(10, 169, 216, 1),
                               borderRadius: BorderRadius.circular(20)),
                           child: Text(
                             e,
@@ -292,14 +308,14 @@ class MealDetailsScreen extends StatelessWidget {
                     .toList(),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 25,
             ),
             Text(
               "Ingredients",
               style: textTheme.headline6,
             ),
-            SizedBox(
+            const SizedBox(
               height: 6,
             ),
             Text(
