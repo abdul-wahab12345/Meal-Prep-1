@@ -18,6 +18,7 @@ class VerificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var data =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        print(data['code']);
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
     return Scaffold(
@@ -84,7 +85,10 @@ class VerificationScreen extends StatelessWidget {
                       child: CustomButton(
                         text: 'Verify Code',
                         callback: () {
-                          if (_formKey.currentState!.validate()) {}
+                          if (_formKey.currentState!.validate()) {
+                              Navigator.of(context)
+                            .pushReplacementNamed(ForgetScreen.routeName);
+                          }
                         },
                       ),
                     ),

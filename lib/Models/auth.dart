@@ -143,19 +143,21 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<void> resetPassword(String email) async {
+  Future<Map<String,dynamic>> resetPassword(String email) async {
     try {
-      final url = Uri.parse('${websiteUrl}wp-json/meal-prep/v1/');
+      final url = Uri.parse('${websiteUrl}wp-json/meal-prep/v1/forget-password');
       final response = await http.post(
         url,
         body: {
           'email': email,
         },
       );
+      print(response.body);
+      return json.decode(response.body) as Map<String,dynamic>;
     } catch (error) {
-      throw 'Something went wrong';
+      throw error.toString();
     }
-    notifyListeners();
+
   }
 
   Future<void> verifyPassword(String code)async{
@@ -170,7 +172,7 @@ class Auth with ChangeNotifier {
     } catch (error) {
       throw 'Something went wrong';
     }
-  notifyListeners();
+    
   }
 
 
