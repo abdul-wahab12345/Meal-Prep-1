@@ -5,7 +5,7 @@ import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 
-import 'package:mealprep/widgets/adaptiveDialog.dart';
+import 'package:mealprep/widgets/adaptivedialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:mealprep/widgets/input_feild.dart';
@@ -22,10 +22,10 @@ class Pause extends StatefulWidget {
 }
 
 class _PauseState extends State<Pause> {
-  //var _controller = TextEditingController();
-  var _dateController = TextEditingController();
-  var _reasonController = TextEditingController();
-  String _chk = "no";
+  
+  final _dateController = TextEditingController();
+  final _reasonController = TextEditingController();
+  
   String errorText = '';
   bool indefinitltLoader = false;
   bool saveLoader = false;
@@ -36,14 +36,14 @@ class _PauseState extends State<Pause> {
 
     var _appBar = AppBar(
       backgroundColor: aPrimary,
-      title: Text("Pause"),
+      title: const Text("Pause"),
       actions: [
         GestureDetector(
           onTap: () {
             Navigator.pushNamed(context, PlanScreen.routeName, arguments: 2);
           },
           child: Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: CircleAvatar(
               child: Image.asset('assets/images/person.png'),
             ),
@@ -127,79 +127,7 @@ class _PauseState extends State<Pause> {
                 ],
               ),
             ),
-            // if (subscription != null && subscription.isCutOf)
-            //   Container(
-            //     // color: Colors.white,
-            //     margin: EdgeInsets.only(
-            //       top: 20,
-            //     ),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         const Padding(
-            //           padding: EdgeInsets.only(left: 16.0),
-            //           child: Text(
-            //             'Do you want meals this Sunday ?',
-            //             style: TextStyle(
-            //               fontSize: 14,
-            //               fontFamily: 'IBM',
-            //               // fontWeight: FontWeight.bold,
-            //             ),
-            //           ),
-            //         ),
-            //         Row(
-            //           children: [
-            //             Row(
-            //               children: [
-            //                 Radio(
-            //                     overlayColor:
-            //                         MaterialStateProperty.all(btnColor),
-            //                     hoverColor: btnColor,
-            //                     fillColor: MaterialStateProperty.all(btnColor),
-            //                     activeColor: btnColor,
-            //                     focusColor: btnColor,
-            //                     value: "Yes",
-            //                     groupValue: _chk,
-            //                     onChanged: (String? value) {
-            //                       setState(() {
-            //                         print(value);
-            //                         _chk = value!;
-            //                       });
-            //                     }),
-            //                 Text(
-            //                   'Yes',
-            //                   style: Theme.of(context).textTheme.bodyText2,
-            //                 ),
-            //               ],
-            //             ),
-            //             Row(
-            //               children: [
-            //                 Radio(
-            //                     overlayColor:
-            //                         MaterialStateProperty.all(btnColor),
-            //                     hoverColor: btnColor,
-            //                     fillColor: MaterialStateProperty.all(btnColor),
-            //                     activeColor: btnColor,
-            //                     focusColor: btnColor,
-            //                     value: "no",
-            //                     groupValue: _chk,
-            //                     onChanged: (String? value) {
-            //                       setState(() {
-            //                         _chk = value!;
-            //                         print(value);
-            //                       });
-            //                     }),
-            //                 Text(
-            //                   'No',
-            //                   style: Theme.of(context).textTheme.bodyText2,
-            //                 ),
-            //               ],
-            //             ),
-            //           ],
-            //         )
-            //       ],
-            //     ),
-            //   ), //radio button
+           
             Container(
               margin: EdgeInsets.only(top: 15, left: 10, right: 10),
               child: TextFormField(
@@ -294,10 +222,7 @@ class _PauseState extends State<Pause> {
                                         'reason': _reasonController.text,
                                         'next_delivery': deliveryDate,
                                       };
-                                      // if (subscription.isCutOf) {
-                                      //   data.putIfAbsent(
-                                      //       'want_meal', () => _chk.toString());
-                                      // }
+                                    
                                       String response =
                                           await Provider.of<Subscriptions>(
                                                   context,
@@ -347,7 +272,7 @@ class _PauseState extends State<Pause> {
                                   },
                           ),
                   ),
-                  SizedBox(width: 15),
+                  const SizedBox(width: 15),
                   Flexible(
                     flex: 1,
                     fit: FlexFit.tight,
@@ -384,10 +309,7 @@ class _PauseState extends State<Pause> {
                                             : 'false',
                                         'reason': _reasonController.text,
                                       };
-                                      // if (subscription.isCutOf) {
-                                      //   data.putIfAbsent(
-                                      //       'want_meal', () => _chk.toString());
-                                      // }
+                                   
                                       String response =
                                           await Provider.of<Subscriptions>(
                                                   context,

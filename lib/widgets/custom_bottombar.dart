@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mealprep/Models/meals.dart';
+import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/add_note_screen.dart';
 import 'package:mealprep/screens/Plans/add_plan_screen.dart';
 import 'package:mealprep/screens/Plans/pause.dart';
+import 'package:mealprep/screens/meals/user_meals_screen.dart';
+import 'package:provider/provider.dart';
+
 class CustomBottomBar extends StatelessWidget {
   const CustomBottomBar({
     Key? key,
@@ -15,9 +20,9 @@ class CustomBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       height: 75,
-      margin: EdgeInsets.only(bottom: 20, left: 15, right: 15),
+      margin: const EdgeInsets.only(bottom: 20, left: 15, right: 15),
       decoration: BoxDecoration(
           color: ashwhite, borderRadius: BorderRadius.circular(25)),
       child: Row(
@@ -50,8 +55,13 @@ class CustomBottomBar extends StatelessWidget {
           BottomNavItem(
             text: "Meals",
             onTap: () {
-              Navigator.of(context)
-                  .pushNamed('home', arguments: selectedPlanId);
+              Subscription? subscription =
+                  Provider.of<Subscriptions>(context, listen: false)
+                      .getSubscriptionById(selectedPlanId);
+              Provider.of<UserMealsData>(context, listen: false).subscription =
+                  subscription;
+              Navigator.of(context).pushNamed(UserMealsScreen.routeName,
+                  arguments: selectedPlanId);
             },
             icon: Icons.restaurant,
           ),

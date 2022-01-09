@@ -43,10 +43,10 @@ class AdaptiveDiaglog extends StatelessWidget {
           )
         : AlertDialog(
             title: Text(title,
-                style: TextStyle(
+                style:const TextStyle(
                   color: Colors.black,
                 )),
-            content: Text(content!,style: TextStyle(color: Colors.black),),
+            content: Text(content!,style:const TextStyle(color: Colors.black),),
             actions: [
               TextButton(
                 child: Text(btnYes,style: TextStyle(color: aTextButtonColor),),

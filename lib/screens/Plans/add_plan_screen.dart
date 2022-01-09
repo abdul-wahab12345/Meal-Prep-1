@@ -4,7 +4,7 @@ import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 
 import 'package:mealprep/screens/Plans/variations_plan_screen.dart';
-import 'package:mealprep/widgets/adaptiveDialog.dart';
+import 'package:mealprep/widgets/adaptivedialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:provider/provider.dart';
 
@@ -176,7 +176,7 @@ class _AddPlanState extends State<AddPlan> {
                                         width: 120,
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 20),
-                                        margin: EdgeInsets.only(right: 15),
+                                        margin: const EdgeInsets.only(right: 15),
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(20),

@@ -5,7 +5,7 @@ import 'package:mealprep/screens/Delivery/delivery_note.dart';
 class DeliveryScreen extends StatelessWidget {
   static const routeName = '/delivery';
   DeliveryScreen({Key? key}) : super(key: key);
-  var _noteController = TextEditingController();
+  
   bool isLoading=false;
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,7 @@ class DeliveryScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               LayoutBuilder(builder: (context, constraint) {
-                var stack_height = constraint.maxHeight;
-                var stack_width = constraint.maxWidth / 2;
+                var stackWidth = constraint.maxWidth / 2;
               
                 return Stack(
                   children: [
@@ -61,12 +60,10 @@ class DeliveryScreen extends StatelessWidget {
                       ),
                     ),
                     Positioned(
-                      left: (stack_width - (width * 35)),
+                      left: (stackWidth - (width * 35)),
                       bottom: height * 33,
-                      child: Container(
-                        child: Image.asset('assets/images/car.png',
-                            height: height * 10, width: width * 70),
-                      ),
+                      child: Image.asset('assets/images/car.png',
+                          height: height * 10, width: width * 70),
                     ), //imageConatiner
                   ],
                 );
@@ -89,11 +86,11 @@ class DeliveryScreen extends StatelessWidget {
                       ? height * 15
                       : height * 6,
 
-                  //alignment: Alignment.bottomLeft,
-                  margin: EdgeInsets.only(top: 20),
+                
+                  margin: const EdgeInsets.only(top: 20),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    //color: Colors.red,
+                    
                     gradient: LinearGradient(colors: [
                       gra1,
                       gra2,

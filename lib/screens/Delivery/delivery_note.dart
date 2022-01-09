@@ -6,7 +6,7 @@ import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Delivery/delivery_screen.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 
-import 'package:mealprep/widgets/adaptiveDialog.dart';
+import 'package:mealprep/widgets/adaptivedialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 
 import 'package:provider/provider.dart';
@@ -20,9 +20,9 @@ class DeliveryNote extends StatefulWidget {
 }
 
 class _DeliveryNoteState extends State<DeliveryNote> {
-  var _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
-  var _noteController = TextEditingController();
+  final _noteController = TextEditingController();
   bool isLoading = false;
 
   @override
@@ -131,10 +131,7 @@ class _DeliveryNoteState extends State<DeliveryNote> {
                     : Center(
                         child: GestureDetector(
                           onTap: () async {
-                            // bool isvalid;
-                            // if () {
-                            //   isvalid = true;
-                            // }
+                           
                             if (_formKey.currentState!.validate()) {
                               Map<String, dynamic> data = {
                                 'aw_subscription_id': '1255',

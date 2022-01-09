@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mealprep/Models/meals.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
-import 'package:mealprep/widgets/adaptiveDialog.dart';
+import 'package:mealprep/widgets/adaptivedialog.dart';
 
 import 'package:mealprep/widgets/auth_button.dart';
 
@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 class MealDetailsScreen extends StatelessWidget {
   static const routeName = 'meal-details';
   MealDetailsScreen({Key? key}) : super(key: key);
-  var _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +227,7 @@ class MealDetailsScreen extends StatelessWidget {
                         ),
                       )),
                   Container(
-                    margin: EdgeInsets.only(right: 40, top: 10),
+                    margin: const EdgeInsets.only(right: 40, top: 10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [

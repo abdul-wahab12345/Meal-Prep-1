@@ -3,7 +3,7 @@ import 'package:mealprep/Models/auth.dart';
 
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Auth/login_screen.dart';
-import 'package:mealprep/widgets/adaptiveDialog.dart';
+import 'package:mealprep/widgets/adaptivedialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:mealprep/widgets/input_feild.dart';
@@ -19,7 +19,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  var _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   var isLoading = false;
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
@@ -42,6 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           passwordController.clear();
           userNameController.clear();
         });
+        
       } catch (error) {
         showDialog(
             context: context,
@@ -54,9 +55,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Navigator.of(context).pop();
                   setState(() {
                     isLoading = false;
-                    // emailController.clear();
-                    // passwordController.clear();
-                    // userNameController.clear();
                   });
                 }));
       }

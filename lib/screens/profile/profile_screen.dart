@@ -5,7 +5,7 @@ import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/screens/profile/address.dart';
 import 'package:mealprep/screens/profile/payment.dart';
 import 'package:mealprep/screens/profile/taste.dart';
-import 'package:mealprep/widgets/adaptiveDialog.dart';
+import 'package:mealprep/widgets/adaptivedialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 
 import 'package:mealprep/widgets/input_feild.dart';
@@ -26,7 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var confirmPass = TextEditingController();
   bool isFirst = true;
 
-  var _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   // User? curr;
 
@@ -128,9 +128,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     width: double.infinity,
                     height: height * 5,
                     //padding: EdgeInsets.all(10),
-                    margin: EdgeInsets.only(left: 10, right: 10, top: 20),
+                    margin:const EdgeInsets.only(left: 10, right: 10, top: 20),
                     decoration: BoxDecoration(
-                        color: Color.fromRGBO(38, 43, 55, 1),
+                        color:const Color.fromRGBO(38, 43, 55, 1),
                         borderRadius: BorderRadius.circular(20)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -327,7 +327,7 @@ class _UserFieldsState extends State<UserFields> {
             ),
             isLoading
                 ? Container(
-                    margin: EdgeInsets.only(
+                    margin:const EdgeInsets.only(
                       top: 20,
                     ),
                     child: AdaptiveIndecator())
@@ -374,7 +374,7 @@ class AuthButton extends StatelessWidget {
         ),
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(
-            Color.fromRGBO(142, 77, 255, 1),
+           const Color.fromRGBO(142, 77, 255, 1),
           ),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(

@@ -64,7 +64,7 @@ class _CheckOutState extends State<CheckOut> {
                 .pushReplacementNamed(PlanScreen.routeName, arguments: 2);
           },
           child: Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: CircleAvatar(
               child: Image.asset('assets/images/person.png'),
             ),

@@ -6,7 +6,7 @@ import 'package:mealprep/screens/Auth/cites_screen.dart';
 import 'package:mealprep/screens/Plans/add_plan_screen.dart';
 import 'package:mealprep/screens/Delivery/delivery_screen.dart';
 import 'package:mealprep/screens/profile/profile_screen.dart';
-import 'package:mealprep/widgets/adaptiveDialog.dart';
+import 'package:mealprep/widgets/adaptivedialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:mealprep/widgets/bottom_bar.dart';
 import 'package:mealprep/widgets/custom_bottombar.dart';
@@ -164,7 +164,7 @@ class _PlanScreenState extends State<PlanScreen> {
       bottomBar = Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-        height: 70,
+        height: 75,
         margin: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
         decoration: BoxDecoration(
             color: ashwhite, borderRadius: BorderRadius.circular(25)),
@@ -188,7 +188,7 @@ class _PlanScreenState extends State<PlanScreen> {
       bottomBar = Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-        height: 70,
+        height: 75,
         margin: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
         decoration: BoxDecoration(
             color: ashwhite, borderRadius: BorderRadius.circular(25)),

@@ -20,9 +20,9 @@ class AddressTab extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                 SizedBox(height: 20,),
+                const  SizedBox(height: 20,),
                 AddressContainer(title: '🚘 Delivery Address',address:user!.shippingAddress),
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
                 AddressContainer(title: '🚩 Billing Address',address: user.billingAddress,),
               ],
             ),
@@ -44,11 +44,9 @@ class AddressContainer extends StatelessWidget {
     
     final height=MediaQuery.of(context).size.height/100;
     final width=MediaQuery.of(context).size.width/100;
-    // print(address.state);
-    //  print(address.street);
-    //   print(address.suit);
+   
     return Container(
-      padding: EdgeInsets.only(top:33,right: 30,left: 30,bottom: 33),
+      padding: const EdgeInsets.only(top:33,right: 30,left: 30,bottom: 33),
       //height: height*23,
       width: width*80,
       decoration: BoxDecoration(
@@ -64,10 +62,10 @@ class AddressContainer extends StatelessWidget {
               fontFamily: 'IBM',
               fontWeight: FontWeight.w600,
               fontStyle: FontStyle.normal,
-              fontSize: 25,
+              fontSize: 20,
             ),
           ),
-           SizedBox(height: 30,),
+           SizedBox(height: 20,),
           //Spacer(),
           
           Text(
@@ -76,7 +74,7 @@ class AddressContainer extends StatelessWidget {
               fontFamily: 'IBM',
               fontWeight: FontWeight.w400,
               fontStyle: FontStyle.normal,
-              fontSize: 18,
+              fontSize: 16,
               letterSpacing: 1.6,
             ),
           ),

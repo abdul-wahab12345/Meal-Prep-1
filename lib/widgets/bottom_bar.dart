@@ -11,12 +11,12 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar> {
   List<BottomNavigationBarItem> items = [
-    BottomNavigationBarItem(
+   const BottomNavigationBarItem(
       icon: Icon(Icons.delivery_dining),
       label: "Delivery",
     ),
-    BottomNavigationBarItem(icon: Icon(Icons.next_plan_sharp), label: "Plans"),
-    BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profile"),
+   const BottomNavigationBarItem(icon: Icon(Icons.next_plan_sharp), label: "Plans"),
+   const BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profile"),
   ];
 
   @override
@@ -24,10 +24,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
       child: BottomNavigationBar(
-        backgroundColor: Color.fromRGBO(38, 43, 55, 1),
+        backgroundColor:const Color.fromRGBO(38, 43, 55, 1),
         iconSize: 27,
         unselectedItemColor: Colors.white,
-        selectedItemColor: Color.fromRGBO(142, 77, 255, 1),
+        selectedItemColor:const Color.fromRGBO(142, 77, 255, 1),
         items: items,
         currentIndex: widget.index,
         onTap: (index) {

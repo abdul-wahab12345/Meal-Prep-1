@@ -12,7 +12,7 @@ class VerificationScreen extends StatelessWidget {
 
   static const routeName = '/verification';
 
-  var _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   var codeController = TextEditingController();
   @override
   Widget build(BuildContext context) {

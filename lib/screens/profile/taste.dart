@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/constant.dart';
+import 'package:mealprep/widgets/auth_button.dart';
 import 'package:mealprep/widgets/input_feild.dart';
 
 class TasteTab extends StatelessWidget {
@@ -10,22 +11,41 @@ class TasteTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+    var height = queryData.size.height / 100;
+    var width = queryData.size.width / 100;
     return Center(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         TasteContainer(
           controller: _Alergcontroller,
           title: '⛔ Allergens',
+          labelText: 'shani',
         ),
-        SizedBox(
+        const SizedBox(
           height: 18,
         ),
         TasteContainer(
           controller: _disLikeController,
           title: '🤢 Dislikes',
+          labelText: 'Dislikes',
+        ),
+        Container(
+          padding: EdgeInsets.only(top: 18),
+           width: width * 50,
+      height: height * 8,
+          child: CustomButton(
+            text: 'Save Changes',
+            callback: () {
+               print(_disLikeController.text);
+               print(_Alergcontroller.text);
+            },
+          ),
         ),
       ],
     ));
@@ -36,11 +56,13 @@ class TasteContainer extends StatefulWidget {
   TasteContainer({
     required this.controller,
     required this.title,
+    required this.labelText,
   });
 
   final TextEditingController controller;
 
   String title;
+  String labelText;
 
   @override
   State<TasteContainer> createState() => _TasteContainerState();
@@ -56,76 +78,60 @@ class _TasteContainerState extends State<TasteContainer> {
     var width = MediaQuery.of(context).size.width / 100;
 
     return Container(
-      padding: EdgeInsets.all(30),
-      height: currentOrientation == Orientation.landscape
-          ? height * 60
-          : height * 23,
+      padding: const EdgeInsets.only(top: 30, left: 30, right: 30, bottom: 50),
+     
       width:
           currentOrientation == Orientation.landscape ? width * 50 : width * 80,
       decoration: BoxDecoration(
         color: aPrimary,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                widget.title,
-                style: TextStyle(
-                  fontFamily: 'IBM',
-                  fontWeight: FontWeight.w600,
-                  fontStyle: FontStyle.normal,
-                  fontSize: 25,
-                ),
+      child: Column(
+        children: [
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              widget.title,
+              style: const TextStyle(
+                fontFamily: 'IBM',
+                fontWeight: FontWeight.w600,
+                fontStyle: FontStyle.normal,
+                fontSize: 20,
               ),
-            ), //titleContainer
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: TextField(
-                controller: widget.controller,
-                onSubmitted: (v) {
-                  setState(() {
-                    labels.add(v);
-                    widget.controller.clear();
-                    print(labels);
-                  });
-                },
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
-                      width: 2,
-                      color: Colors.white,
-                    ),
+            ),
+          ), //titleContainer
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: TextField(
+              controller: widget.controller,
+              onSubmitted: (v) {
+                setState(() {
+                  labels.add(v);
+                  widget.controller.clear();
+                  print(labels);
+                });
+              },
+              decoration: InputDecoration(
+                labelStyle: Theme.of(context).textTheme.bodyText2,
+                label: Text('Enter ${widget.labelText} '),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(
+                    width: 2,
+                    color: Colors.white,
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
-                      width: 2,
-                      color: Colors.white,
-                    ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(
+                    width: 2,
+                    color: Colors.white,
                   ),
                 ),
               ),
             ),
-            //Row(children: [...labels.map((e) => Chip(label: Text(e),),),],)
-            Container(
-              height: 50,
-              child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
-                  itemCount: labels.length,
-                  itemBuilder: (ctx, index) => Chip(
-                        label: Text(
-                          labels[index],
-                        ),
-                      )),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

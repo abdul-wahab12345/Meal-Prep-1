@@ -3,7 +3,7 @@ import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 
-import 'package:mealprep/widgets/adaptiveDialog.dart';
+import 'package:mealprep/widgets/adaptivedialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:provider/provider.dart';
@@ -67,7 +67,8 @@ class _AddNoteState extends State<AddNote> {
           child: SingleChildScrollView(
             child: Column(
               //mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 LayoutBuilder(builder: (context, constraint) {
                   var stack_height = constraint.maxHeight;
@@ -146,60 +147,66 @@ class _AddNoteState extends State<AddNote> {
                   margin: const EdgeInsets.only(top: 10),
                   child: isLoading
                       ? Center(child: AdaptiveIndecator())
-                      : CustomButton(
-                          text: 'Save Changes',
-                          callback: () async {
-                            if (_formKey.currentState!.validate()) {
-                              Map<String, dynamic> data = {
-                                'aw_subscription_id': subscriptionId.toString(),
-                                'note': noteContrller.text,
-                                'note_type': 'subscription',
-                              };
-                              setState(() {
-                                isLoading = true;
-                              });
-
-                              var response = await Provider.of<Subscriptions>(
-                                      context,
-                                      listen: false)
-                                  .addNote(data)
-                                  .then((value) {
+                      : Container(
+                       // alignment: Alignment.c,
+                        padding: const EdgeInsets.only(top:16),
+                        height: height*6,
+                        width: width*50,
+                        child: CustomButton(
+                            text: 'Save Changes',
+                            callback: () async {
+                              if (_formKey.currentState!.validate()) {
+                                Map<String, dynamic> data = {
+                                  'aw_subscription_id': subscriptionId.toString(),
+                                  'note': noteContrller.text,
+                                  'note_type': 'subscription',
+                                };
                                 setState(() {
-                                  isLoading = false;
+                                  isLoading = true;
                                 });
-                                showDialog(
-                                    context: context,
-                                    builder: (ctx) => AdaptiveDiaglog(
-                                        ctx: ctx,
-                                        title: 'Note',
-                                        content: 'Your note has been updated',
-                                        btnYes: 'Okay',
-                                        yesPressed: () {
-                                          Navigator.of(context)
-                                              .pushNamed(PlanScreen.routeName);
-                                        }));
-                              }).catchError((error) {
-                                showDialog(
-                                    context: context,
-                                    builder: (ctx) => AdaptiveDiaglog(
-                                        ctx: ctx,
-                                        title: 'Error occurred',
-                                        content: error.toString(),
-                                        btnYes: 'Okay',
-                                        yesPressed: () {
-                                          Navigator.of(context).pop();
-                                          setState(() {
-                                            isLoading = false;
-                                          });
-                                        }));
-                              });
 
-                              _formKey.currentState!.save();
-                              setState(() {
-                                noteContrller.clear();
-                              });
-                            }
-                          }),
+                                var response = await Provider.of<Subscriptions>(
+                                        context,
+                                        listen: false)
+                                    .addNote(data)
+                                    .then((value) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  showDialog(
+                                      context: context,
+                                      builder: (ctx) => AdaptiveDiaglog(
+                                          ctx: ctx,
+                                          title: 'Note',
+                                          content: 'Your note has been updated',
+                                          btnYes: 'Okay',
+                                          yesPressed: () {
+                                            Navigator.of(context)
+                                                .pushNamed(PlanScreen.routeName);
+                                          }));
+                                }).catchError((error) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (ctx) => AdaptiveDiaglog(
+                                          ctx: ctx,
+                                          title: 'Error occurred',
+                                          content: error.toString(),
+                                          btnYes: 'Okay',
+                                          yesPressed: () {
+                                            Navigator.of(context).pop();
+                                            setState(() {
+                                              isLoading = false;
+                                            });
+                                          }));
+                                });
+
+                                _formKey.currentState!.save();
+                                setState(() {
+                                  noteContrller.clear();
+                                });
+                              }
+                            }),
+                      ),
                 ),
               ],
             ),

@@ -1,13 +1,11 @@
-import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/products.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/check_out.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
-import 'package:mealprep/screens/profile/profile_screen.dart';
-import 'package:mealprep/widgets/adaptiveDialog.dart';
+
+import 'package:mealprep/widgets/adaptivedialog.dart';
 import 'package:provider/provider.dart';
 
 class VariationsScreen extends StatelessWidget {

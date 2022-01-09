@@ -3,19 +3,67 @@ import 'package:mealprep/Models/auth.dart';
 
 import 'package:mealprep/Models/meal.dart';
 import 'package:mealprep/Models/meals.dart';
+import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 import 'package:mealprep/screens/meals/meal_details_screen.dart';
-import 'package:mealprep/widgets/adaptiveDialog.dart';
+import 'package:mealprep/widgets/adaptivedialog.dart';
 
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 import 'package:provider/provider.dart';
 
-class UserMealsScreen extends StatelessWidget {
+class UserMealsScreen extends StatefulWidget {
   const UserMealsScreen({Key? key}) : super(key: key);
+  static const routeName = 'userMeals';
+
+  @override
+  State<UserMealsScreen> createState() => _UserMealsScreenState();
+}
+
+class _UserMealsScreenState extends State<UserMealsScreen> {
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    List<Meal> meals =
+        Provider.of<UserMealsData>(context, listen: false).userMeals;
+    if (meals.isEmpty) {
+      isLoading = true;
+      Provider.of<UserMealsData>(context, listen: false)
+          .fetchAndSetMeals()
+          .then((value) {
+        setState(() {
+          isLoading = false;
+        });
+      }).catchError((error) {
+        showDialog(
+            context: context,
+            builder: (ctx) => AdaptiveDiaglog(
+                ctx: ctx,
+                title: 'Error occurred',
+                content: error.toString(),
+                btnYes: 'Yes',
+                yesPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    isLoading = false;
+                  });
+                }));
+      });
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    var subId = ModalRoute.of(context)!.settings.arguments as int;
+    Subscription? sub = Provider.of<Subscriptions>(context, listen: false)
+        .getSubscriptionById(subId);
+    List<Meal> userMeals =
+        Provider.of<UserMealsData>(context).userMeals;
+        print(userMeals);
+    print('yeh ha id $subId');
     var _appBar = AppBar(
       backgroundColor: aPrimary,
       title: const Text("User Meals"),
@@ -35,7 +83,6 @@ class UserMealsScreen extends StatelessWidget {
     );
 
     MediaQueryData queryData = MediaQuery.of(context);
-    var height = queryData.size.height / 100;
     var width = queryData.size.width / 100;
     Orientation currentOrientation = MediaQuery.of(context).orientation;
 
@@ -44,89 +91,58 @@ class UserMealsScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: _appBar,
-      backgroundColor: abackground,
-      body: FutureBuilder(
-          future: Provider.of<UserMealsData>(context, listen: false)
-              .fetchAndSetMeals()
-              .catchError((error) {
-            showDialog(
-                context: context,
-                builder: (ctx) => AdaptiveDiaglog(
-                    ctx: ctx,
-                    title: 'Error Occurred',
-                    content: error.toString(),
-                    btnYes: 'Okay',
-                    yesPressed: () {
-                      Navigator.of(context).pop();
-                    }));
-          }),
-          builder: (context, snapShot) {
-            if (snapShot.connectionState == ConnectionState.waiting) {
-              return AdaptiveIndecator();
-            }
-
-            if (snapShot.hasError) {
-              return Center(child: Text(snapShot.error.toString()));
-            } else {
-              return Consumer<UserMealsData>(
-                builder: (ctx, userMealsData, child) {
-                  List<Meal> userMeals = userMealsData.userMeals;
-                  return Container(
-                    width: currentOrientation == Orientation.landscape
-                        ? 550
-                        : double.infinity,
-                    margin: EdgeInsets.symmetric(
-                        horizontal: width * 2, vertical: 10),
-                    child: ListView.builder(
-                      itemCount: userMeals.length,
-                      itemBuilder: (ctx, index) => GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, MealDetailsScreen.routeName,
-                              arguments: userMeals[index].id);
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                            top: 20,
-                          ),
-                          decoration: BoxDecoration(
-                            color: aPrimary,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ChangeNotifierProvider.value(
-                                value: userMeals[index],
-                                child: ContentContainer(),
-                              ), //Content Container
-                              Container(
-                                height: 180,
-                                width: width * 35,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 20),
-                                //color: Colors.white,
-                                child: Hero(
-                                  tag: userMeals[index].id,
-                                  child: Image.network(
-                                    userMeals[index].imageUrl,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ), //ImageConatiner
-                            ],
-                          ),
-                        ),
+        appBar: _appBar,
+        backgroundColor: abackground,
+        body: userMeals.isEmpty
+            ? AdaptiveIndecator()
+            : Container(
+                width: currentOrientation == Orientation.landscape
+                    ? 550
+                    : double.infinity,
+                margin:
+                    EdgeInsets.symmetric(horizontal: width * 2, vertical: 10),
+                child: ListView.builder(
+                  itemCount: userMeals.length,
+                  itemBuilder: (ctx, index) => GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, MealDetailsScreen.routeName,
+                          arguments: userMeals[index].id);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        top: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        color: aPrimary,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ChangeNotifierProvider.value(
+                            value: userMeals[index],
+                            child: ContentContainer(),
+                          ), //Content Container
+                          Container(
+                            height: 180,
+                            width: width * 35,
+                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            //color: Colors.white,
+                            child: Hero(
+                              tag: userMeals[index].id,
+                              child: Image.network(
+                                userMeals[index].imageUrl,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ), //ImageConatiner
+                        ],
                       ),
                     ),
-                  );
-                },
-              );
-            }
-          }),
-    );
+                  ),
+                ),
+              ));
   }
 }
 
@@ -222,11 +238,17 @@ class ContentContainer extends StatelessWidget {
                     children: [
                       Text(
                         meal.calories['weight'] as String,
-                        style: Theme.of(context).textTheme.bodyText2,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText2!
+                            .copyWith(color: Colors.green),
                       ),
                       Text(
                         meal.calories['type'] as String,
-                        style: Theme.of(context).textTheme.caption,
+                        style: Theme.of(context)
+                            .textTheme
+                            .caption!
+                            .copyWith(color: Colors.green),
                       ),
                     ],
                   ),

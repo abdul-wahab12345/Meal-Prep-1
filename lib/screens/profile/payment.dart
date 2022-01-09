@@ -3,10 +3,15 @@ import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/constant.dart';
 import 'package:provider/provider.dart';
 
-class PaymentTab extends StatelessWidget {
+class PaymentTab extends StatefulWidget {
   double height;
   PaymentTab({required this.height});
 
+  @override
+  State<PaymentTab> createState() => _PaymentTabState();
+}
+
+class _PaymentTabState extends State<PaymentTab> {
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<UserData>(context).user;
@@ -15,12 +20,12 @@ class PaymentTab extends StatelessWidget {
       children: user!.paymentMethod.map((card) {
         return Container(
           width: double.infinity,
-          margin: EdgeInsets.only(
+          margin: const EdgeInsets.only(
             left: 40,
             right: 40,
             top: 20,
           ),
-          padding: EdgeInsets.only(top: 20, bottom: 30, left: 10, right: 20),
+          padding: const EdgeInsets.only(top: 20, bottom: 30, left: 10, right: 20),
           decoration: BoxDecoration(
               color: aPrimary, borderRadius: BorderRadius.circular(20)),
           child: Column(
@@ -38,7 +43,9 @@ class PaymentTab extends StatelessWidget {
                   focusColor: Colors.red,
                   onTap: () {
                     if (!card.isDefault) {
-                      print(1234);
+                      setState(() {
+                        card.isDefault=!card.isDefault;
+                      });
                     }
                   },
                 ),
@@ -49,11 +56,11 @@ class PaymentTab extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+             const SizedBox(
                 height: 30,
               ),
               Container(
-                margin: EdgeInsets.only(left: 15, right: 20),
+                margin:const EdgeInsets.only(left: 15, right: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

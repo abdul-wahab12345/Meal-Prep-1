@@ -11,7 +11,7 @@ class AdaptiveIndecator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Platform.isIOS
-          ? CupertinoActivityIndicator(radius: 20)
+          ?const CupertinoActivityIndicator(radius: 20)
           : CircularProgressIndicator(
               color: color,
             ),

@@ -9,7 +9,7 @@ import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Auth/forget_screen.dart';
 import 'package:mealprep/screens/Auth/registeration_screen.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
-import 'package:mealprep/widgets/adaptiveDialog.dart';
+import 'package:mealprep/widgets/adaptivedialog.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:mealprep/widgets/input_feild.dart';
 import 'package:mealprep/widgets/text_button.dart';
@@ -27,7 +27,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
 
-  var _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   var userNameController = TextEditingController();
 
@@ -90,10 +90,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
               isLoading
                   ? Platform.isIOS
-                      ? CupertinoActivityIndicator(
+                      ? const CupertinoActivityIndicator(
                           radius: 30,
                         )
-                      : CircularProgressIndicator(
+                      : const CircularProgressIndicator(
                           color: Colors.white,
                         )
                   : CustomButton(

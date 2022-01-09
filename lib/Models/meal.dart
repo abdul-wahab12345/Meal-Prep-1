@@ -7,6 +7,7 @@ class Meal with ChangeNotifier {
   String title;
   String subTitle;
   String imageUrl;
+  int productId;
   Map<String, String> calories;
   Map<String, String> carbohydrates;
 
@@ -26,6 +27,7 @@ class Meal with ChangeNotifier {
     required this.imageUrl,
     required this.calories,
     required this.carbohydrates,
+    required this.productId,
     required this.fat,
     required this.protein,
     required this.isFav,

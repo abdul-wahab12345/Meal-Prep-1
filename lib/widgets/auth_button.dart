@@ -21,7 +21,7 @@ class CustomButton extends StatelessWidget {
    var height= MediaQuery.of(context).size.width/100;
    var width= MediaQuery.of(context).size.height/100;
     return Container(
-      margin:const EdgeInsets.only(top: 27),
+      
       width: width*30,
       height:height*12,
       decoration: BoxDecoration(
@@ -33,7 +33,7 @@ class CustomButton extends StatelessWidget {
         style: ButtonStyle(
           
           backgroundColor: MaterialStateProperty.all<Color>(
-            Color.fromRGBO(142, 77, 255, 1),
+           const Color.fromRGBO(142, 77, 255, 1),
             
           ),
           shape:

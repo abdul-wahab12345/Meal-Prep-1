@@ -2,15 +2,35 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:mealprep/Models/meal.dart';
+import 'package:mealprep/Models/subscriptions.dart';
 
 class UserMealsData with ChangeNotifier {
   List<Meal> _userMeals = [];
   final int userId;
   final String webUrl;
+  Subscription? subscription;
 
   UserMealsData(this.userId, this.webUrl, this._userMeals);
 
   List<Meal> get userMeals {
+    List<Meal> filteredMeals = [];
+    if (subscription != null && _userMeals.isNotEmpty) {
+      var prodIds = subscription!.productIds;
+      if (prodIds.isEmpty) {
+        return [];
+      }
+      print(prodIds);
+      print(123);
+      for (var i = 0; i < _userMeals.length; i++) {
+        for (var j = 0; j < prodIds.length; j++) {
+          if (_userMeals[i].productId == prodIds[j]) {
+            filteredMeals.add(_userMeals[i]);
+          }
+        }
+      }
+      return filteredMeals;
+    }
+
     return [..._userMeals];
   }
 
@@ -67,11 +87,11 @@ class UserMealsData with ChangeNotifier {
       final response =
           await http.post(url, body: {'user_id': userId.toString()});
 
-       print(response.statusCode);
+      print(response.statusCode);
 
-       if(response.statusCode!=200){
-         throw 'Something went wrong !';
-       }
+      if (response.statusCode != 200) {
+        throw 'Something went wrong !';
+      }
 
       List<Meal> newMeals = [];
 
@@ -117,6 +137,7 @@ class UserMealsData with ChangeNotifier {
           newMeals.add(
             Meal(
               id: meal['id'],
+              productId: meal['product_id'],
               title: meal['title'],
               subTitle: meal['subTitle'],
               imageUrl: meal['imageUrl'],
@@ -137,5 +158,26 @@ class UserMealsData with ChangeNotifier {
     } catch (error) {
       throw 'Something Went Wrong';
     }
+  }
+
+  List<Meal>? findMealsBySub(Subscription sub) {
+    if (_userMeals.isEmpty) {
+      return null;
+    }
+    List<Meal> filteredMeals = [];
+    print(_userMeals);
+    var prodIds = sub.productIds;
+
+    for (var i = 0; i < userMeals.length; i++) {
+      var index = prodIds.firstWhere((element) => element == userMeals[i].id);
+      print(index);
+      if (index > 0) {
+        filteredMeals.add(userMeals[i]);
+      }
+    }
+
+    print(filteredMeals);
+
+    return filteredMeals;
   }
 }
