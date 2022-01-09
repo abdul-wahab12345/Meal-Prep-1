@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mealprep/constant.dart';
 
 class Subscription {
   int id;
@@ -103,6 +104,30 @@ class Subscriptions with ChangeNotifier {
       }
     } catch (error) {
       throw 'Something Went Wrong';
+    }
+  }
+
+  
+
+  Future<String> reactvateSubscription(int id, Type type) async {
+    try {
+      final url;
+      if (type == Type.UnPause) {
+        url = Uri.parse('${webUrl}wp-json/meal-prep/v1/un-pause-subscription');
+      } else {
+        url = Uri.parse('${webUrl}wp-json/meal-prep/v1/reactivate-subscription');
+      }
+
+      final response = await http.post(url, body: {
+        'id': id.toString(),
+        'user_id': userId.toString(),
+      });
+      print(response.body);
+      final extractedData = json.decode(response.body);
+      print(extractedData);
+      return extractedData;
+    } catch (error) {
+      throw error;
     }
   }
 

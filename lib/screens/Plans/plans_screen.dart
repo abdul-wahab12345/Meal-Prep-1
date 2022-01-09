@@ -55,13 +55,74 @@ class _PlanScreenState extends State<PlanScreen> {
                 yesPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                    isLoading=false;
+                    isLoading = false;
                   });
                 }));
       });
     }
 
     super.initState();
+  }
+
+  bool reactivateLoading = false;
+
+  void reactivateSubscription() {
+    setState(() {
+      reactivateLoading = true;
+    });
+    print(selectedPlanId);
+    try {
+      Provider.of<Subscriptions>(context, listen: false)
+          .reactvateSubscription(selectedPlanId, _type)
+          .then((value) {
+        showDialog(
+            context: context,
+            builder: (ctx) {
+              return AdaptiveDiaglog(
+                  ctx: ctx,
+                  title: 'Response',
+                  content: value,
+                  btnYes: "Okay",
+                  yesPressed: () {
+                    setState(() {
+                      selectedPlanId = 0;
+                      reactivateLoading = false;
+                      isLoading = true;
+                      _type = Type.Default;
+                    });
+                    Navigator.pop(context);
+                    Provider.of<Subscriptions>(context, listen: false)
+                        .emptySubscriptions();
+                    Provider.of<Subscriptions>(context, listen: false)
+                        .fetchAndSetSubs()
+                        .then((value) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                    });
+                  });
+            });
+      }).catchError((error) {
+        print(error);
+        setState(() {
+          selectedPlanId = 0;
+          reactivateLoading = false;
+          isLoading = true;
+          _type = Type.Default;
+        });
+       // Navigator.pop(context);
+        Provider.of<Subscriptions>(context, listen: false).emptySubscriptions();
+        Provider.of<Subscriptions>(context, listen: false)
+            .fetchAndSetSubs()
+            .then((value) {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      });
+    } catch (error) {
+      print(error);
+    }
   }
 
   @override
@@ -107,11 +168,37 @@ class _PlanScreenState extends State<PlanScreen> {
         margin: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
         decoration: BoxDecoration(
             color: ashwhite, borderRadius: BorderRadius.circular(25)),
-        child: BottomNavItem(
-          text: "Reactivate",
-          onTap: () {},
-          icon: Icons.play_arrow_outlined,
-        ),
+        child: reactivateLoading
+            ? AdaptiveIndecator()
+            : BottomNavItem(
+                text: "Reactivate",
+                onTap: reactivateSubscription,
+                icon: Icons.play_arrow_outlined,
+              ),
+      );
+    } else if (_type == Type.UnPause) {
+      /**
+       * show only one subscription on click
+       */
+
+      Subscription? data = Provider.of<Subscriptions>(context, listen: false)
+          .getSubscriptionById(selectedPlanId);
+      subs = data != null ? [data] : [];
+
+      bottomBar = Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        height: 70,
+        margin: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
+        decoration: BoxDecoration(
+            color: ashwhite, borderRadius: BorderRadius.circular(25)),
+        child: reactivateLoading
+            ? AdaptiveIndecator()
+            : BottomNavItem(
+                text: "Reactivate",
+                onTap: reactivateSubscription,
+                icon: Icons.play_arrow_outlined,
+              ),
       );
     } else if (Type.Pause == _type) {
       /**
@@ -217,6 +304,7 @@ class _PlanScreenState extends State<PlanScreen> {
                         itemCount: subs.length,
                         itemBuilder: (ctx, index) => GestureDetector(
                           onTap: () {
+                            print(subs[index].isCharged);
                             setState(() {
                               if (selectedPlanId == subs[index].id) {
                                 _type = Type.Default;
@@ -227,6 +315,8 @@ class _PlanScreenState extends State<PlanScreen> {
 
                               if (subs[index].status == "Inactive") {
                                 _type = Type.Reactive;
+                              } else if (subs[index].status == "Paused") {
+                                _type = Type.UnPause;
                               } else if (subs[index].status == "Active") {
                                 _type = Type.Pause;
                               } else {

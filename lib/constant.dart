@@ -14,5 +14,6 @@ Color labelPurple = Color.fromRGBO(124, 77, 255, 1);
 enum Type{
   Default,
   Reactive,
-  Pause
+  Pause,
+  UnPause
 }

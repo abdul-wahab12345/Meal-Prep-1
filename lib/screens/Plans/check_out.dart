@@ -1,9 +1,8 @@
 import 'dart:async';
 
-
-
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
+import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 
@@ -36,15 +35,15 @@ class _CheckOutState extends State<CheckOut> {
 
   @override
   Widget build(BuildContext context) {
-    
-    Map<String,int> argsData = ModalRoute.of(context)!.settings.arguments as Map<String,int>;
-    int varId=0;
-    if(argsData['varId']!=0){
-      varId=argsData['varId'] as int ;
+    Map<String, int> argsData =
+        ModalRoute.of(context)!.settings.arguments as Map<String, int>;
+    int varId = 0;
+    if (argsData['varId'] != 0) {
+      varId = argsData['varId'] as int;
     }
-    int subId=0;
-    if(argsData['subId']!=0){
-      subId=argsData['subId'] as int;
+    int subId = 0;
+    if (argsData['subId'] != 0) {
+      subId = argsData['subId'] as int;
     }
     print(varId);
     print(subId);
@@ -61,7 +60,8 @@ class _CheckOutState extends State<CheckOut> {
       actions: [
         GestureDetector(
           onTap: () async {
-            Navigator.of(context).pushReplacementNamed(PlanScreen.routeName,arguments: 2);
+            Navigator.of(context)
+                .pushReplacementNamed(PlanScreen.routeName, arguments: 2);
           },
           child: Container(
             padding: EdgeInsets.all(8),
@@ -91,15 +91,24 @@ class _CheckOutState extends State<CheckOut> {
                   isLoading = false;
                 });
                 print(value);
+
+                if (value.contains("thank-you")) {
+                  Provider.of<Subscriptions>(context, listen: false)
+                      .emptySubscriptions();
+                  Navigator.of(context)
+                      .pushReplacementNamed(PlanScreen.routeName);
+                }
               }, //aw_user_id=7&aw_secure_hash=a1572204518cdff08453a7ab6026885f7
               initialUrl: webUrl +
-                  "?add-to-cart=1000&aw_user_id=${userId}&aw_secure_hash=${aw_hash}&subId=${subId}",
+                  "checkout?aw_add_to_cart=$varId&aw_variation_id=$varId&aw_user_id=${userId}&aw_secure_hash=${aw_hash}&planId=${subId}",
               javascriptMode: JavascriptMode.unrestricted,
             ),
-            if(isLoading)
-            Center(
-              child: AdaptiveIndecator(color: Colors.black,),
-            )
+            if (isLoading)
+              Center(
+                child: AdaptiveIndecator(
+                  color: Colors.black,
+                ),
+              )
           ],
         ));
   }

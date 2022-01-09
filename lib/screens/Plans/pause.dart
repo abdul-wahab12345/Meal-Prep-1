@@ -294,10 +294,10 @@ class _PauseState extends State<Pause> {
                                         'reason': _reasonController.text,
                                         'next_delivery': deliveryDate,
                                       };
-                                      if (subscription.isCutOf) {
-                                        data.putIfAbsent(
-                                            'want_meal', () => _chk.toString());
-                                      }
+                                      // if (subscription.isCutOf) {
+                                      //   data.putIfAbsent(
+                                      //       'want_meal', () => _chk.toString());
+                                      // }
                                       String response =
                                           await Provider.of<Subscriptions>(
                                                   context,
@@ -384,10 +384,10 @@ class _PauseState extends State<Pause> {
                                             : 'false',
                                         'reason': _reasonController.text,
                                       };
-                                      if (subscription.isCutOf) {
-                                        data.putIfAbsent(
-                                            'want_meal', () => _chk.toString());
-                                      }
+                                      // if (subscription.isCutOf) {
+                                      //   data.putIfAbsent(
+                                      //       'want_meal', () => _chk.toString());
+                                      // }
                                       String response =
                                           await Provider.of<Subscriptions>(
                                                   context,
