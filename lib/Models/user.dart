@@ -105,6 +105,11 @@ class UserData with ChangeNotifier {
       //issa uper address get hu raha ha
 
       //now of to getting payment details
+      print(extractedData['payment_methods']);
+
+  var payment = extractedData['payment_methods'] as List<dynamic>;
+
+    if(payment.isNotEmpty){
       var pay = extractedData['payment_methods'] as Map<String, dynamic>;
 
       pay.forEach((key, value) {
@@ -122,6 +127,8 @@ class UserData with ChangeNotifier {
         });
       });
 
+    }
+
       currentUser = User(
         name: extractedData['name'],
         imageUrl: extractedData['image'],
@@ -134,11 +141,11 @@ class UserData with ChangeNotifier {
       //print(currentUser.paymentMethod[6].cardNumber);
       // print(user!.name);
       user = currentUser;
-      print(user!.paymentMethod[1].name);
+      //print(user!.paymentMethod[1].name);
 
       notifyListeners();
     } catch (error) {
-      throw 'Something Went Wrong';
+      throw error.toString();
     }
   }
 }

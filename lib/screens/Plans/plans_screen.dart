@@ -28,7 +28,11 @@ class _PlanScreenState extends State<PlanScreen> {
   bool forcedMove = false;
   bool isLoading = false;
 
-  final List<String> screenTitles = ['My Delivery', 'My Plans', 'My Profile'];
+  final List<String> screenTitles = [
+    'My Delivery',
+    'My Plans',
+    'My Profile',
+  ];
 
   Type _type = Type.Default;
 
@@ -38,27 +42,35 @@ class _PlanScreenState extends State<PlanScreen> {
         Provider.of<Subscriptions>(context, listen: false).subscriptions;
     if (subs.isEmpty) {
       isLoading = true;
-      Provider.of<Subscriptions>(context, listen: false)
-          .fetchAndSetSubs()
-          .then((value) {
-        setState(() {
-          isLoading = false;
-        });
-      }).catchError((error) {
-        showDialog(
+      Provider.of<Subscriptions>(context, listen: false).fetchAndSetSubs().then(
+        (value) {
+          setState(
+            () {
+              isLoading = false;
+            },
+          );
+        },
+      ).catchError(
+        (error) {
+          showDialog(
             context: context,
             builder: (ctx) => AdaptiveDiaglog(
-                ctx: ctx,
-                title: 'Error occurred',
-                content: error.toString(),
-                btnYes: 'Yes',
-                yesPressed: () {
-                  Navigator.of(context).pop();
-                  setState(() {
+              ctx: ctx,
+              title: 'Error occurred',
+              content: error.toString(),
+              btnYes: 'Okay',
+              yesPressed: () {
+                Navigator.of(context).pop();
+                setState(
+                  () {
                     isLoading = false;
-                  });
-                }));
-      });
+                  },
+                );
+              },
+            ),
+          );
+        },
+      );
     }
 
     super.initState();
@@ -79,28 +91,29 @@ class _PlanScreenState extends State<PlanScreen> {
             context: context,
             builder: (ctx) {
               return AdaptiveDiaglog(
-                  ctx: ctx,
-                  title: 'Response',
-                  content: value,
-                  btnYes: "Okay",
-                  yesPressed: () {
+                ctx: ctx,
+                title: 'Response',
+                content: value,
+                btnYes: "Okay",
+                yesPressed: () {
+                  setState(() {
+                    selectedPlanId = 0;
+                    reactivateLoading = false;
+                    isLoading = true;
+                    _type = Type.Default;
+                  });
+                  Navigator.pop(context);
+                  Provider.of<Subscriptions>(context, listen: false)
+                      .emptySubscriptions();
+                  Provider.of<Subscriptions>(context, listen: false)
+                      .fetchAndSetSubs()
+                      .then((value) {
                     setState(() {
-                      selectedPlanId = 0;
-                      reactivateLoading = false;
-                      isLoading = true;
-                      _type = Type.Default;
-                    });
-                    Navigator.pop(context);
-                    Provider.of<Subscriptions>(context, listen: false)
-                        .emptySubscriptions();
-                    Provider.of<Subscriptions>(context, listen: false)
-                        .fetchAndSetSubs()
-                        .then((value) {
-                      setState(() {
-                        isLoading = false;
-                      });
+                      isLoading = false;
                     });
                   });
+                },
+              );
             });
       }).catchError((error) {
         print(error);
@@ -110,7 +123,7 @@ class _PlanScreenState extends State<PlanScreen> {
           isLoading = true;
           _type = Type.Default;
         });
-       // Navigator.pop(context);
+        // Navigator.pop(context);
         Provider.of<Subscriptions>(context, listen: false).emptySubscriptions();
         Provider.of<Subscriptions>(context, listen: false)
             .fetchAndSetSubs()
