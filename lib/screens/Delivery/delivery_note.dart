@@ -96,6 +96,10 @@ class _DeliveryNoteState extends State<DeliveryNote> {
                               print(value);
                             },
                             controller: _noteController,
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (_){
+                              FocusScope.of(context).unfocus();
+                            },
                             maxLines: 6,
                             decoration: const InputDecoration(
                               border: InputBorder.none,

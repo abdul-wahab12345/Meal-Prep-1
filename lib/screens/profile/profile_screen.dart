@@ -128,9 +128,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     width: double.infinity,
                     height: height * 5,
                     //padding: EdgeInsets.all(10),
-                    margin:const EdgeInsets.only(left: 10, right: 10, top: 20),
+                    margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
                     decoration: BoxDecoration(
-                        color:const Color.fromRGBO(38, 43, 55, 1),
+                        color: const Color.fromRGBO(38, 43, 55, 1),
                         borderRadius: BorderRadius.circular(20)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -212,7 +212,11 @@ class UserFields extends StatefulWidget {
 }
 
 class _UserFieldsState extends State<UserFields> {
+  final _currentPassFocusNode =FocusNode();
+  final _newPassFocusNode =FocusNode();
+  final _confirmPassFocusNode =FocusNode();
   bool isLoading = false;
+ 
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<UserData>(context).user;
@@ -221,6 +225,7 @@ class _UserFieldsState extends State<UserFields> {
     }
 
     void changePassword() async {
+      FocusScope.of(context).unfocus();
       if (widget._formKey.currentState!.validate()) {
         setState(() {
           isLoading = true;
@@ -273,15 +278,7 @@ class _UserFieldsState extends State<UserFields> {
             InputFeild(
               readOnly: true,
               hinntText: "abd@gmail.com",
-              validatior: (String value) {
-                if (value.isEmpty) {
-                  return "Please enter your email!";
-                }
-                if (!value.contains('@') || !value.contains('.com')) {
-                  return "Enter a valid email address";
-                }
-                return null;
-              },
+              validatior: () {},
               inputController: widget.emailController,
             ),
             InputFeild(
@@ -295,6 +292,11 @@ class _UserFieldsState extends State<UserFields> {
               },
               secure: true,
               inputController: widget.currentPass,
+              textInputAction: TextInputAction.next,
+              focusNode: _currentPassFocusNode,
+              submitted: (_){
+                FocusScope.of(context).requestFocus(_newPassFocusNode);
+              },
             ),
             InputFeild(
               hinntText: "New Password",
@@ -310,6 +312,11 @@ class _UserFieldsState extends State<UserFields> {
                 return null;
               },
               inputController: widget.newPass,
+              textInputAction: TextInputAction.next,
+              focusNode: _newPassFocusNode,
+              submitted: (_){
+                print('shani');
+              },
             ),
             InputFeild(
               hinntText: "Confirm New Password",
@@ -324,10 +331,15 @@ class _UserFieldsState extends State<UserFields> {
                 return null;
               },
               inputController: widget.confirmPass,
+              textInputAction: TextInputAction.done,
+              focusNode: _confirmPassFocusNode,
+              submitted: (_){
+                FocusScope.of(context).unfocus();
+              },
             ),
             isLoading
                 ? Container(
-                    margin:const EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                       top: 20,
                     ),
                     child: AdaptiveIndecator())
@@ -374,7 +386,7 @@ class AuthButton extends StatelessWidget {
         ),
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(
-           const Color.fromRGBO(142, 77, 255, 1),
+            const Color.fromRGBO(142, 77, 255, 1),
           ),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(

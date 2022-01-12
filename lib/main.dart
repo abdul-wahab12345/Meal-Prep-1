@@ -4,8 +4,10 @@ import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/products.dart';
 import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/Models/user.dart';
+import 'package:mealprep/screens/Auth/change_password.dart';
 import 'package:mealprep/screens/Auth/verification.dart';
 import 'package:mealprep/screens/Delivery/delivery_note.dart';
+import 'package:mealprep/screens/Error%20Screens/maintainance.dart';
 import 'package:mealprep/screens/Plans/add_note_screen.dart';
 import 'package:mealprep/screens/Plans/add_plan_screen.dart';
 import 'package:mealprep/screens/Plans/pause.dart';
@@ -26,6 +28,7 @@ import 'package:mealprep/screens/Plans/variations_plan_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'Models/meals.dart';
+import 'screens/Error Screens/update.dart';
 
 void main() {
   runApp(const MyApp());
@@ -100,8 +103,9 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+       // home:MaintainanceScreen(),
         routes: {
-          '/': (ctx) => const SplashScreen(),
+          '/': (ctx) => SplashScreen(),
           UserMealsScreen.routeName: (ctx) => const UserMealsScreen(),
           MealDetailsScreen.routeName: (ctx) => MealDetailsScreen(),
           ProfileScreen.routeName: (ctx) => const ProfileScreen(),
@@ -118,6 +122,7 @@ class MyApp extends StatelessWidget {
           DeliveryScreen.routeName: (ctx) => DeliveryScreen(),
           DeliveryNote.routeName: (ctx) => DeliveryNote(),
           VerificationScreen.routeName:(ctx)=>VerificationScreen(),
+          ChangePasswordScreen.routeName:(ctx)=>ChangePasswordScreen(),
         },
       ),
     );

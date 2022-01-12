@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mealprep/screens/Auth/change_password.dart';
 import 'package:mealprep/screens/Auth/forget_screen.dart';
 
 import 'package:mealprep/widgets/auth_button.dart';
@@ -7,18 +8,35 @@ import 'package:mealprep/widgets/text_button.dart';
 
 import '../../constant.dart';
 
-class VerificationScreen extends StatelessWidget {
+class VerificationScreen extends StatefulWidget {
   VerificationScreen({Key? key}) : super(key: key);
 
   static const routeName = '/verification';
 
+  @override
+  State<VerificationScreen> createState() => _VerificationScreenState();
+}
+
+class _VerificationScreenState extends State<VerificationScreen> {
   final _formKey = GlobalKey<FormState>();
+
+  final _codeFocusNode=FocusNode();
+
   var codeController = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _codeFocusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var data =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
         print(data['code']);
+
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
     return Scaffold(
@@ -65,6 +83,9 @@ class VerificationScreen extends StatelessWidget {
                       return null;
                     },
                     inputController: codeController,
+                    focusNode: _codeFocusNode,
+                    textInputAction: TextInputAction.done,
+                    submitted: (_){},
                   ),
                 ),
               ),
@@ -87,7 +108,7 @@ class VerificationScreen extends StatelessWidget {
                         callback: () {
                           if (_formKey.currentState!.validate()) {
                               Navigator.of(context)
-                            .pushReplacementNamed(ForgetScreen.routeName);
+                            .pushReplacementNamed(ChangePasswordScreen.routeName,arguments:data['email'].toString() );
                           }
                         },
                       ),
@@ -104,6 +125,7 @@ class VerificationScreen extends StatelessWidget {
                     AtextButton(
                       text: 'Back',
                       callBack: () {
+                        FocusScope.of(context).unfocus();
                         Navigator.of(context)
                             .pushReplacementNamed(ForgetScreen.routeName);
                       },

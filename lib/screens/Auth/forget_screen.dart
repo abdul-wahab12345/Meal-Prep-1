@@ -25,8 +25,10 @@ class _ForgetScreenState extends State<ForgetScreen> {
   bool isLoading = false;
 
   var emailController = TextEditingController();
+  final _emailFocusNode = FocusNode();
 
   void resetPassword() async {
+    FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
@@ -64,6 +66,13 @@ class _ForgetScreenState extends State<ForgetScreen> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _emailFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
@@ -98,6 +107,11 @@ class _ForgetScreenState extends State<ForgetScreen> {
                       return null;
                     },
                     inputController: emailController,
+                    textInputAction: TextInputAction.done,
+                    focusNode: _emailFocusNode,
+                    submitted: (_) {
+                          FocusScope.of(context).unfocus();
+                        },
                   ),
                 ),
               ),

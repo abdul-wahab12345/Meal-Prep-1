@@ -19,6 +19,9 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final _usernameFocusNode = FocusNode();
+  final _emailFocusNode = FocusNode();
+  final _passFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   var isLoading = false;
   var emailController = TextEditingController();
@@ -26,6 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var userNameController = TextEditingController();
 
   void registerUser() async {
+    FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
@@ -42,7 +46,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
           passwordController.clear();
           userNameController.clear();
         });
-        
+        showDialog(
+          context: context,
+          builder: (ctx) => AdaptiveDiaglog(
+            ctx: ctx,
+            title: 'User Created',
+            content: 'Try login with new email and PassWord',
+            btnYes: 'Okay',
+            yesPressed: () {
+              Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+            },
+          ),
+        );
       } catch (error) {
         showDialog(
             context: context,
@@ -59,6 +74,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 }));
       }
     }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _emailFocusNode.dispose();
+    _usernameFocusNode.dispose();
+    _passFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -96,6 +120,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return null;
                         },
                         inputController: userNameController,
+                        textInputAction: TextInputAction.next,
+                        focusNode: _usernameFocusNode,
+                        submitted: (_) {
+                          FocusScope.of(context).requestFocus(_emailFocusNode);
+                        },
                       ),
                       InputFeild(
                         hinntText: 'Email',
@@ -110,6 +139,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return null;
                         },
                         inputController: emailController,
+                        textInputAction: TextInputAction.next,
+                        focusNode: _emailFocusNode,
+                        submitted: (_) {
+                          FocusScope.of(context).requestFocus(_passFocusNode);
+                        },
                       ),
                       InputFeild(
                         hinntText: 'Password',
@@ -124,6 +158,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return null;
                         },
                         inputController: passwordController,
+                        textInputAction: TextInputAction.done,
+                        focusNode: _passFocusNode,
+                        submitted: (_) {
+                          FocusScope.of(context).unfocus();
+                        },
                       ),
                     ],
                   ),

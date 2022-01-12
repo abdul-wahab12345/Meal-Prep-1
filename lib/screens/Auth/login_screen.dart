@@ -28,10 +28,57 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
 
   final _formKey = GlobalKey<FormState>();
+  final _emailFocusNode = FocusNode();
+  final _passFocusNode = FocusNode();
 
   var userNameController = TextEditingController();
 
   var passwordController = TextEditingController();
+
+  Future<void> tryLogin() async {
+    FocusScope.of(context).unfocus();
+    if (_formKey.currentState!.validate()) {
+      
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        await Provider.of<Auth>(context, listen: false).userLogin(
+          userNameController.text,
+          passwordController.text,
+        );
+
+        Navigator.of(context).pushReplacementNamed(PlanScreen.routeName);
+      } catch (error) {
+        print(error);
+        await showDialog(
+          context: context,
+          builder: (ctx) {
+            return AdaptiveDiaglog(
+                ctx: ctx,
+                content: error.toString(),
+                title: 'An error has occured!',
+                btnYes: 'Okay!',
+                yesPressed: () {
+                  Navigator.of(ctx).pop(true);
+                });
+          },
+        );
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _emailFocusNode.dispose();
+    _passFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +117,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           return null;
                         },
                         inputController: userNameController,
+                        textInputAction: TextInputAction.next,
+                        focusNode: _emailFocusNode,
+                        submitted: (_) {
+                          FocusScope.of(context).requestFocus(_passFocusNode);
+                        },
                       ),
                       InputFeild(
                         hinntText: 'Password',
@@ -81,6 +133,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         secure: true,
                         inputController: passwordController,
+                        textInputAction: TextInputAction.done,
+                        focusNode: _passFocusNode,
+                        submitted: (_) {
+                          FocusScope.of(context).unfocus();
+                        },
                       ),
                     ],
                   ),
@@ -98,44 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         )
                   : CustomButton(
                       text: 'Login',
-                      callback: () async {
-                        if (_formKey.currentState!.validate()) {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          try {
-                            await Provider.of<Auth>(context, listen: false)
-                                .userLogin(
-                              userNameController.text,
-                              passwordController.text,
-                            );
-
-                            Navigator.of(context)
-                                .pushReplacementNamed(PlanScreen.routeName);
-                          } catch (error) {
-                            print(error);
-                            await showDialog(
-                              context: context,
-                              builder: (ctx) {
-                                return AdaptiveDiaglog(
-                                  
-                                    ctx: ctx,
-                                    content: error.toString(),
-                                    title: 'An error has occured!',
-                                    btnYes: 'Okay!',
-                                    yesPressed: () {
-                                      Navigator.of(ctx).pop(true);
-                                    });
-                              },
-                            );
-                          } finally {
-                            setState(() {
-                              isLoading = false;
-                            });
-                          }
-                        }
-                        
-                      },
+                      callback: tryLogin,
                     ),
 
               Container(

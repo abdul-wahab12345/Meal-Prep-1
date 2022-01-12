@@ -89,6 +89,10 @@ class _AddNoteState extends State<AddNote> {
                         child: Form(
                           key: _formKey,
                           child: TextFormField(
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (_){
+                              FocusScope.of(context).unfocus();
+                            },
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Please add a note then press button!';

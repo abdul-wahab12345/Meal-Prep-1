@@ -4,8 +4,11 @@ class InputFeild extends StatefulWidget {
   String hinntText;
 
   Function validatior;
+  void Function(String)? submitted;
   TextEditingController inputController;
   TextInputType? type;
+  TextInputAction? textInputAction;
+  FocusNode? focusNode;
   bool secure = true;
   bool readOnly;
 
@@ -14,6 +17,9 @@ class InputFeild extends StatefulWidget {
       required this.validatior,
       required this.inputController,
       this.type,
+      this.focusNode,
+      this.submitted,
+      this.textInputAction,
       this.readOnly = false,
       this.secure = false});
 
@@ -34,6 +40,9 @@ class _InputFeildState extends State<InputFeild> {
       height: isError ? height * 9 : height *7,
       margin: EdgeInsets.only(top: height * 3),
       child: TextFormField(
+        onFieldSubmitted: widget.submitted,
+        focusNode: widget.focusNode,
+        textInputAction: widget.textInputAction,
         obscureText: widget.secure,
         readOnly: widget.readOnly,
         keyboardType: widget.type,
@@ -55,7 +64,7 @@ class _InputFeildState extends State<InputFeild> {
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
             fillColor: Colors.white,
-            contentPadding: EdgeInsets.all(18),
+            contentPadding: const EdgeInsets.all(18),
             hintStyle: const TextStyle(color: Colors.white, fontSize: 14),
             hintText: widget.hinntText,
             focusedBorder: OutlineInputBorder(
