@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/screens/Auth/login_screen.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
+import 'package:mealprep/widgets/adaptivedialog.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:mealprep/widgets/input_feild.dart';
 import 'package:mealprep/widgets/text_button.dart';
 import 'package:provider/provider.dart';
 
-
 import '../../constant.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
-  static const routeName='/changePass';
-   ChangePasswordScreen({ Key? key }) : super(key: key);
+  static const routeName = '/changePass';
+  ChangePasswordScreen({Key? key}) : super(key: key);
 
   @override
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
@@ -20,24 +20,57 @@ class ChangePasswordScreen extends StatefulWidget {
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  var isLoading = false;
+  bool isLoading = false;
   var newpassController = TextEditingController();
   var confirmpassController = TextEditingController();
+  Map<String, dynamic> data = {};
 
-  // void changePassword(String email,String newPass,String){
-  //   if(_formKey.currentState!.validate()){
-  //      Provider.of<Auth>(context,listen: false).changePassWord(email, currentPass, newPass)
-  //   }
-  // }
-  
+  void tryChangePass() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      await Provider.of<Auth>(context, listen: false)
+          .forgetChangePassword(
+              data['email'], data['code'], newpassController.text)
+          .catchError((error) {
+        setState(() {
+          isLoading = false;
+        });
+        showDialog(
+            context: context,
+            builder: (ctx) => AdaptiveDiaglog(
+                ctx: ctx,
+                title: 'An Error Occurred',
+                content: error.toString(),
+                btnYes: 'Okay',
+                yesPressed: () {
+                  Navigator.of(context).pop();
+                }));
+      });
+      setState(() {
+        isLoading = false;
+      });
+      showDialog(
+          context: context,
+          builder: (ctx) => AdaptiveDiaglog(
+              ctx: ctx,
+              title: "Password Changed",
+              content: 'Your password has been changed',
+              btnYes: ('Okay'),
+              yesPressed: () {
+                Navigator.of(context)
+                    .pushReplacementNamed(LoginScreen.routeName);
+              }));
+    }
+  }
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
 
-     var email =
-        ModalRoute.of(context)!.settings.arguments as String;
-        
+    data = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
     return Scaffold(
       backgroundColor: abackground,
@@ -60,12 +93,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   child: Column(
                     children: [
                       InputFeild(
+                        secure: true,
                         hinntText: 'New password',
                         validatior: (String value) {
                           if (value.isEmpty) {
                             return "Enter new password";
                           }
-                          if(value.length<=6){
+                          if (value.length <= 6) {
                             return 'Must have 6 characters';
                           }
 
@@ -74,12 +108,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         inputController: newpassController,
                       ),
                       InputFeild(
+                        secure: true,
                         hinntText: 'Confirm Password',
                         validatior: (String value) {
                           if (value.isEmpty) {
                             return "Enter password again";
                           }
-                          if (confirmpassController.text !=newpassController.text) {
+                          if (confirmpassController.text !=
+                              newpassController.text) {
                             return "Password did not match";
                           }
 
@@ -87,7 +123,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         },
                         inputController: confirmpassController,
                       ),
-                    
                     ],
                   ),
                 ),
@@ -99,7 +134,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   ? AdaptiveIndecator()
                   : CustomButton(
                       text: 'Change Password',
-                      callback: (){},
+                      callback: tryChangePass,
                     ),
 
               Container(
@@ -108,7 +143,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     AtextButton(
-                      text: 'Login',
+                      text: 'Go to Login',
                       callBack: () {
                         Navigator.of(context)
                             .pushReplacementNamed(LoginScreen.routeName);

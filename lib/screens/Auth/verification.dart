@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/screens/Auth/change_password.dart';
+
 import 'package:mealprep/screens/Auth/forget_screen.dart';
+import 'package:mealprep/widgets/adaptive_indecator.dart';
+import 'package:mealprep/widgets/adaptivedialog.dart';
 
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:mealprep/widgets/input_feild.dart';
 import 'package:mealprep/widgets/text_button.dart';
+import 'package:provider/provider.dart';
 
 import '../../constant.dart';
 
@@ -20,22 +25,96 @@ class VerificationScreen extends StatefulWidget {
 class _VerificationScreenState extends State<VerificationScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final _codeFocusNode=FocusNode();
+  final _codeFocusNode = FocusNode();
+  bool isLoading = false;
+  bool isResend = false;
 
-  var codeController = TextEditingController();
+  final codeController = TextEditingController();
+  String email = '';
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    codeController.dispose();
     _codeFocusNode.dispose();
     super.dispose();
   }
 
+  void reSendCode() async {
+    FocusScope.of(context).unfocus();
+
+    setState(() {
+      isResend = true;
+    });
+    try {
+      await Provider.of<Auth>(context, listen: false).resetPassword(email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Email Sent'),
+        ),
+      );
+
+      setState(() {
+        isResend = false;
+      });
+    } catch (error) {
+      setState(() {
+        isResend = false;
+      });
+      showDialog(
+          context: context,
+          builder: (ctx) => AdaptiveDiaglog(
+              ctx: ctx,
+              title: 'An error occurred',
+              content: error.toString(),
+              btnYes: 'Okay',
+              yesPressed: () {
+                Navigator.of(context).pop();
+              }));
+    }
+  }
+
+  void tryVerify() async {
+    if (_formKey.currentState!.validate()) {
+      setState(
+        () {
+          isLoading = true;
+        },
+      );
+      try {
+        await Provider.of<Auth>(context, listen: false).verifyPassword(
+          codeController.text,
+          email,
+        );
+        setState(() {
+          isLoading = false;
+        });
+
+        Navigator.of(context)
+            .pushReplacementNamed(ChangePasswordScreen.routeName, arguments: {
+          'email': email,
+          'code': codeController.text,
+        });
+      } catch (error) {
+        setState(() {
+          isLoading = false;
+        });
+        showDialog(
+            context: context,
+            builder: (ctx) => AdaptiveDiaglog(
+                ctx: ctx,
+                title: 'An Error Occurred',
+                content: error.toString(),
+                btnYes: 'Okay',
+                yesPressed: () {
+                  Navigator.of(context).pop();
+                }));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    var data =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-        print(data['code']);
+    email = ModalRoute.of(context)!.settings.arguments.toString();
 
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
@@ -77,15 +156,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       if (value.length > 6) {
                         return "Code contain only 6 charachters";
                       }
-                      if (data['code'].toString() != codeController.text) {
-                        return 'Invalid code';
-                      } 
+
                       return null;
                     },
                     inputController: codeController,
                     focusNode: _codeFocusNode,
                     textInputAction: TextInputAction.done,
-                    submitted: (_){},
+                    submitted: (_) {},
                   ),
                 ),
               ),
@@ -97,21 +174,20 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    AtextButton(
-                      text: 'Resend code',
-                      callBack: () {},
-                    ),
+                    isResend
+                        ? AdaptiveIndecator()
+                        : AtextButton(
+                            text: 'Resend code',
+                            callBack: reSendCode,
+                          ),
                     Container(
                       width: width * 40,
-                      child: CustomButton(
-                        text: 'Verify Code',
-                        callback: () {
-                          if (_formKey.currentState!.validate()) {
-                              Navigator.of(context)
-                            .pushReplacementNamed(ChangePasswordScreen.routeName,arguments:data['email'].toString() );
-                          }
-                        },
-                      ),
+                      child: isLoading
+                          ? AdaptiveIndecator()
+                          : CustomButton(
+                              text: 'Verify Code',
+                              callback: tryVerify,
+                            ),
                     ),
                   ],
                 ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -31,9 +32,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailFocusNode = FocusNode();
   final _passFocusNode = FocusNode();
 
-  var userNameController = TextEditingController();
+ // String modalData='';
 
-  var passwordController = TextEditingController();
+  final userNameController = TextEditingController();
+  
+
+  final passwordController = TextEditingController();
 
   Future<void> tryLogin() async {
     FocusScope.of(context).unfocus();
@@ -82,8 +86,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // if(modalData==''){
+    //    userNameController.text=modalData;
+       
+    // }
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
+
+    // modalData=ModalRoute.of(context)!.settings.arguments as String;
 
     return Scaffold(
       appBar: AppBar(

@@ -20,31 +20,25 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> signUp(String userName,String email,String password)async{
+  Future<void> signUp(String userName, String email, String password) async {
     print(websiteUrl);
-    try{
-      final url =
-          Uri.parse('${websiteUrl}wp-json/meal-prep/v1/signup');
-          
+    try {
+      final url = Uri.parse('${websiteUrl}wp-json/meal-prep/v1/signup');
 
       final response = await http.post(
         url,
         body: {
-          'user_name':userName,
+          'user_name': userName,
           'email': email,
           'password': password,
-          
         },
       );
-      
-      var extractedResponse=json.decode(response.body);
-      if(extractedResponse['status']=='error'){
+
+      var extractedResponse = json.decode(response.body);
+      if (extractedResponse['status'] == 'error') {
         throw extractedResponse['sms'].toString();
-
-        
       }
-
-    }catch(error){
+    } catch (error) {
       throw error.toString();
     }
     notifyListeners();
@@ -104,7 +98,7 @@ class Auth with ChangeNotifier {
       id = extractedUserData['userId'];
       name = extractedUserData['name'];
       aw_hash = extractedUserData['hash'];
-      print(aw_hash);
+      
       notifyListeners();
 
       return true;
@@ -143,9 +137,10 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<Map<String,dynamic>> resetPassword(String email) async {
+  Future<void> resetPassword(String email) async {
     try {
-      final url = Uri.parse('${websiteUrl}wp-json/meal-prep/v1/forget-password');
+      final url =
+          Uri.parse('${websiteUrl}wp-json/meal-prep/v1/forget-password');
       final response = await http.post(
         url,
         body: {
@@ -153,27 +148,59 @@ class Auth with ChangeNotifier {
         },
       );
       print(response.body);
-      return json.decode(response.body) as Map<String,dynamic>;
+      var extractedResponse = json.decode(response.body);
+      if (extractedResponse['status'] == 'error') {
+        throw extractedResponse['sms'].toString();
+      }
     } catch (error) {
       throw error.toString();
     }
-
   }
 
-  Future<void> verifyPassword(String code)async{
-     try {
-      final url = Uri.parse('${websiteUrl}wp-json/meal-prep/v1/');
+  Future<void> verifyPassword(String code, String email) async {
+  
+    try {
+      final url = Uri.parse('${websiteUrl}wp-json/meal-prep/v1/verify-code');
       final response = await http.post(
         url,
         body: {
-          'code': code,
+          'code': code.toString(),
+          'email': email.toString(),
         },
       );
+
+      print(response.body);
+      var extractedResponse = json.decode(response.body);
+      if (extractedResponse['status'] == 'error') {
+        throw extractedResponse['sms'].toString();
+      }
     } catch (error) {
-      throw 'Something went wrong';
+      throw error.toString();
     }
-    
   }
 
+  Future<void> forgetChangePassword(
+      String email, String code, String newPass) async {
+    try {
+      final url =
+          Uri.parse('${websiteUrl}wp-json/meal-prep/v1/forget-change-password');
+      final response = await http.post(
+        url,
+        body: {
+          'code': code.toString(),
+          'email': email.toString(),
+          'new_password': newPass.toString(),
+        },
+      );
 
+      print(response.body);
+      
+      var extractedResponse = json.decode(response.body);
+      if (extractedResponse['status'] == 'error') {
+        throw extractedResponse['sms'].toString();
+      }
+    } catch (error) {
+      throw error.toString();
+    }
+  }
 }

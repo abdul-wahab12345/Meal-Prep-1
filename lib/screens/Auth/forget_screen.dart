@@ -23,29 +23,27 @@ class ForgetScreen extends StatefulWidget {
 class _ForgetScreenState extends State<ForgetScreen> {
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
+  String email = '';
 
-  var emailController = TextEditingController();
+  final emailController = TextEditingController();
   final _emailFocusNode = FocusNode();
 
   void resetPassword() async {
+    
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
       });
       try {
-        Map<String, dynamic> data =
+       
             await Provider.of<Auth>(context, listen: false)
                 .resetPassword(emailController.text);
+
+        Navigator.of(context).pushNamed(VerificationScreen.routeName,
+            arguments: emailController.text);
         setState(() {
           isLoading = false;
-          emailController.clear();
-        });
-        print(data);
-        Navigator.of(context)
-            .pushNamed(VerificationScreen.routeName, arguments: {
-          'email': emailController.text,
-          'code': data['code'].toString(),
         });
       } catch (error) {
         setState(() {
@@ -68,7 +66,7 @@ class _ForgetScreenState extends State<ForgetScreen> {
   @override
   void dispose() {
     // TODO: implement dispose
-    _emailFocusNode.dispose();
+    // _emailFocusNode.dispose();
     super.dispose();
   }
 
@@ -109,9 +107,12 @@ class _ForgetScreenState extends State<ForgetScreen> {
                     inputController: emailController,
                     textInputAction: TextInputAction.done,
                     focusNode: _emailFocusNode,
+                    saved: (value) {
+                      email = value!;
+                    },
                     submitted: (_) {
-                          FocusScope.of(context).unfocus();
-                        },
+                      FocusScope.of(context).unfocus();
+                    },
                   ),
                 ),
               ),

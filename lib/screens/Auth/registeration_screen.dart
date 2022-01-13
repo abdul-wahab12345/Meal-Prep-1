@@ -54,7 +54,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             content: 'Try login with new email and PassWord',
             btnYes: 'Okay',
             yesPressed: () {
-              Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+              Navigator.of(context).pushReplacementNamed(LoginScreen.routeName,
+              );
             },
           ),
         );
