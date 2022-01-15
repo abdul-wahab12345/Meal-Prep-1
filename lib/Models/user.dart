@@ -107,7 +107,7 @@ class UserData with ChangeNotifier {
       //now of to getting payment details
       print(extractedData['payment_methods']);
 
-  var payment = extractedData['payment_methods'] as List<dynamic>;
+  var payment = extractedData['payment_methods'];
 
     if(payment.isNotEmpty){
       var pay = extractedData['payment_methods'] as Map<String, dynamic>;

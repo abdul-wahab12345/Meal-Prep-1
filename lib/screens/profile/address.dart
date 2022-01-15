@@ -10,6 +10,7 @@ class AddressTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<UserData>(context).user;
+    print(user);
 
     return Center(
         child: SingleChildScrollView(
@@ -18,8 +19,14 @@ class AddressTab extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
+          if (user!.billingAddress.ad1.isEmpty)
+            Center(
+                child: Text(
+              "No billing address found",
+              style: Theme.of(context).textTheme.bodyText2,
+            ),),
           AddressContainer(
-              title: '🚘 Delivery Address', address: user!.shippingAddress),
+              title: '🚘 Delivery Address', address: user.shippingAddress),
           const SizedBox(
             height: 20,
           ),

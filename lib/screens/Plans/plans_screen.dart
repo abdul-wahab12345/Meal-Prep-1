@@ -13,7 +13,7 @@ import 'package:mealprep/widgets/custom_bottombar.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant.dart';
-
+ 
 class PlanScreen extends StatefulWidget {
   static const routeName = '/plans_screen';
   const PlanScreen({Key? key}) : super(key: key);
@@ -130,6 +130,7 @@ class _PlanScreenState extends State<PlanScreen> {
             .then((value) {
           setState(() {
             isLoading = false;
+            
           });
         });
       });
@@ -296,130 +297,140 @@ class _PlanScreenState extends State<PlanScreen> {
 
     Widget _plansTab = isLoading
         ? AdaptiveIndecator()
-        : Center(
-            heightFactor: 1,
-            child: Container(
-              width: currentOrientation == Orientation.landscape
-                  ? 550
-                  : double.infinity,
-              margin: const EdgeInsets.symmetric(
-                horizontal: 15,
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: currentOrientation == Orientation.landscape
-                          ? height * 70
-                          : height * 80,
-                      child: ListView.builder(
-                        itemCount: subs.length,
-                        itemBuilder: (ctx, index) => GestureDetector(
-                          onTap: () {
-                            print(subs[index].isCharged);
-                            setState(() {
-                              if (selectedPlanId == subs[index].id) {
-                                _type = Type.Default;
-                                selectedPlanId = 0;
-                                return;
-                              }
-                              selectedPlanId = subs[index].id;
+        : subs.isEmpty
+            ? Center(
+                child: Text(
+                  "You don't have any subscription!",
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+              )
+            : Center(
+                heightFactor: 1,
+                child: Container(
+                  width: currentOrientation == Orientation.landscape
+                      ? 550
+                      : double.infinity,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: currentOrientation == Orientation.landscape
+                              ? height * 70
+                              : height * 80,
+                          child: ListView.builder(
+                            itemCount: subs.length,
+                            itemBuilder: (ctx, index) => GestureDetector(
+                              onTap: () {
+                                print(subs[index].isCharged);
+                                setState(() {
+                                  if (selectedPlanId == subs[index].id) {
+                                    _type = Type.Default;
+                                    selectedPlanId = 0;
+                                    return;
+                                  }
+                                  selectedPlanId = subs[index].id;
 
-                              if (subs[index].status == "Inactive") {
-                                _type = Type.Reactive;
-                              } else if (subs[index].status == "Paused") {
-                                _type = Type.UnPause;
-                              } else if (subs[index].status == "Active") {
-                                _type = Type.Pause;
-                              } else {
-                                _type = Type.Default;
-                              }
-                            });
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(
-                              top: 17,
-                            ),
-                            decoration: BoxDecoration(
-                              color: aPrimary,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(
-                                    left: width * 5,
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 19,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width: width * 58,
-                                        child: Text(subs[index].title,
+                                  if (subs[index].status == "Inactive") {
+                                    _type = Type.Reactive;
+                                  } else if (subs[index].status == "Paused") {
+                                    _type = Type.UnPause;
+                                  } else if (subs[index].status == "Active") {
+                                    _type = Type.Pause;
+                                  } else {
+                                    _type = Type.Default;
+                                  }
+                                });
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                  top: 17,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: aPrimary,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                        left: width * 5,
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 19,
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: width * 58,
+                                            child: Text(subs[index].title,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6),
+                                          ),
+                                          SizedBox(
+                                            height:
+                                                subs[index].status != "Inactive"
+                                                    ? 10
+                                                    : 60,
+                                          ),
+                                          if (subs[index].status != "Inactive")
+                                            ConditionalInfo(subs[index]),
+                                          Text(
+                                            subs[index].status,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline6),
+                                                .bodyText2!
+                                                .copyWith(
+                                                    color: statusColors[
+                                                        subs[index].status]),
+                                          ),
+                                        ],
                                       ),
-                                      SizedBox(
-                                        height: subs[index].status != "Inactive"
-                                            ? 10
-                                            : 60,
+                                    ), //ContentConatiner
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          20,
+                                        ),
                                       ),
-                                      if (subs[index].status != "Inactive")
-                                        ConditionalInfo(subs[index]),
-                                      Text(
-                                        subs[index].status,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText2!
-                                            .copyWith(
-                                                color: statusColors[
-                                                    subs[index].status]),
+                                      width: 100,
+                                      margin: const EdgeInsets.only(
+                                        right: 15,
                                       ),
-                                    ],
-                                  ),
-                                ), //ContentConatiner
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                      20,
-                                    ),
-                                  ),
-                                  width: 100,
-                                  margin: const EdgeInsets.only(
-                                    right: 15,
-                                  ),
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 20),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Hero(
-                                      tag: subs[index].id,
-                                      child: Image.network(subs[index].imageUrl,
-                                          fit: BoxFit.cover),
-                                    ),
-                                  ),
-                                ), //imageContainer
-                              ],
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 20),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: Hero(
+                                          tag: subs[index].id,
+                                          child: Image.network(
+                                              subs[index].imageUrl,
+                                              fit: BoxFit.cover),
+                                        ),
+                                      ),
+                                    ), //imageContainer
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ), //Listview end
-                  ],
+                        ), //Listview end
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          );
+              );
 
     List<Widget> pages = [
       DeliveryScreen(),

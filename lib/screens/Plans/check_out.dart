@@ -100,7 +100,7 @@ class _CheckOutState extends State<CheckOut> {
                 }
               }, //aw_user_id=7&aw_secure_hash=a1572204518cdff08453a7ab6026885f7
               initialUrl: webUrl +
-                  "checkout?aw_add_to_cart=$varId&aw_variation_id=$varId&aw_user_id=${userId}&aw_secure_hash=${aw_hash}&planId=${subId}",
+                  "cart?aw_add_to_cart=$varId&aw_variation_id=$varId&aw_user_id=${userId}&aw_secure_hash=${aw_hash}&planId=${subId}",
               javascriptMode: JavascriptMode.unrestricted,
             ),
             if (isLoading)

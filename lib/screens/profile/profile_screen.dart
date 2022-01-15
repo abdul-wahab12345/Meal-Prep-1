@@ -30,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // User? curr;
 
+
   int profileTabIndex = 0;
 
   @override
@@ -63,6 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<UserData>(context).user;
+    //print(user!.billingAddress.ad1);
 
     MediaQueryData queryData;
     queryData = MediaQuery.of(context);
