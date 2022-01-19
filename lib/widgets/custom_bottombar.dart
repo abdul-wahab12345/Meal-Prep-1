@@ -18,16 +18,20 @@ class CustomBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Subscription? subscription =
+                  Provider.of<Subscriptions>(context, listen: false)
+                      .getSubscriptionById(selectedPlanId);
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      padding: const EdgeInsets.symmetric( vertical: 15),
       height: 75,
       margin: const EdgeInsets.only(bottom: 20, left: 15, right: 15),
       decoration: BoxDecoration(
           color: ashwhite, borderRadius: BorderRadius.circular(25)),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          if(subscription!.endDate == "0")
           BottomNavItem(
             text: "Pause",
             onTap: () {
@@ -36,6 +40,7 @@ class CustomBottomBar extends StatelessWidget {
             },
             icon: Icons.pause_outlined,
           ),
+          if(subscription.isCutOf)
           BottomNavItem(
             text: "Switch",
             onTap: () {
@@ -55,9 +60,7 @@ class CustomBottomBar extends StatelessWidget {
           BottomNavItem(
             text: "Meals",
             onTap: () {
-              Subscription? subscription =
-                  Provider.of<Subscriptions>(context, listen: false)
-                      .getSubscriptionById(selectedPlanId);
+              
               Provider.of<UserMealsData>(context, listen: false).subscription =
                   subscription;
               Navigator.of(context).pushNamed(UserMealsScreen.routeName,

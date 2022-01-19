@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Auth/cites_screen.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -22,12 +25,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (isFirst) {
       isFirst = false;
+
       var isLoggedIn =
           await Provider.of<Auth>(context, listen: false).tryAutoLogin();
 
       if (isLoggedIn) {
-        Future.delayed(Duration(seconds: 3)).then((value) =>
-            Navigator.of(context).pushReplacementNamed(PlanScreen.routeName));
+        bool data =
+            await Provider.of<Auth>(context, listen: false).verifyToken();
+        if (data) {
+          Navigator.of(context).pushReplacementNamed(PlanScreen.routeName);
+        } else {
+          Provider.of<Auth>(context,listen: false).logout();
+          Navigator.of(context).pushReplacementNamed(CityScreen.routeName);
+        }
       } else {
         Navigator.of(context).pushReplacementNamed(CityScreen.routeName);
       }

@@ -18,6 +18,7 @@ import 'package:mealprep/screens/Auth/login_screen.dart';
 import 'package:mealprep/screens/Delivery/delivery_screen.dart';
 import 'package:mealprep/screens/meals/meal_details_screen.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
+import 'package:mealprep/screens/profile/add-payment.dart';
 
 import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:mealprep/screens/Auth/registeration_screen.dart';
@@ -103,7 +104,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-       // home:MaintainanceScreen(),
+        // home:MaintainanceScreen(),
         routes: {
           '/': (ctx) => SplashScreen(),
           UserMealsScreen.routeName: (ctx) => const UserMealsScreen(),
@@ -121,8 +122,9 @@ class MyApp extends StatelessWidget {
           Pause.routeName: (ctx) => const Pause(),
           DeliveryScreen.routeName: (ctx) => DeliveryScreen(),
           DeliveryNote.routeName: (ctx) => DeliveryNote(),
-          VerificationScreen.routeName:(ctx)=>VerificationScreen(),
-          ChangePasswordScreen.routeName:(ctx)=>ChangePasswordScreen(),
+          VerificationScreen.routeName: (ctx) => VerificationScreen(),
+          ChangePasswordScreen.routeName: (ctx) => ChangePasswordScreen(),
+          AddPayment.routeName: (ctx) => AddPayment(),
         },
       ),
     );

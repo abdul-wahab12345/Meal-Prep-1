@@ -60,9 +60,8 @@ class _UserMealsScreenState extends State<UserMealsScreen> {
     var subId = ModalRoute.of(context)!.settings.arguments as int;
     Subscription? sub = Provider.of<Subscriptions>(context, listen: false)
         .getSubscriptionById(subId);
-    List<Meal> userMeals =
-        Provider.of<UserMealsData>(context).userMeals;
-        print(userMeals);
+    List<Meal> userMeals = Provider.of<UserMealsData>(context).userMeals;
+    print(userMeals);
     print('yeh ha id $subId');
     var _appBar = AppBar(
       backgroundColor: aPrimary,
@@ -93,56 +92,65 @@ class _UserMealsScreenState extends State<UserMealsScreen> {
     return Scaffold(
         appBar: _appBar,
         backgroundColor: abackground,
-        body: userMeals.isEmpty
+        body: isLoading
             ? AdaptiveIndecator()
-            : Container(
-                width: currentOrientation == Orientation.landscape
-                    ? 550
-                    : double.infinity,
-                margin:
-                    EdgeInsets.symmetric(horizontal: width * 2, vertical: 10),
-                child: ListView.builder(
-                  itemCount: userMeals.length,
-                  itemBuilder: (ctx, index) => GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, MealDetailsScreen.routeName,
-                          arguments: userMeals[index].id);
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                        top: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        color: aPrimary,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ChangeNotifierProvider.value(
-                            value: userMeals[index],
-                            child: ContentContainer(),
-                          ), //Content Container
-                          Container(
-                            height: 180,
-                            width: width * 35,
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            //color: Colors.white,
-                            child: Hero(
-                              tag: userMeals[index].id,
-                              child: Image.network(
-                                userMeals[index].imageUrl,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ), //ImageConatiner
-                        ],
+            : userMeals.isEmpty
+                ? Center(
+                    child: Text(
+                      "No Meal",
+                      style: Theme.of(context).textTheme.bodyText2,
+                    ),
+                  )
+                : Container(
+                    width: currentOrientation == Orientation.landscape
+                        ? 550
+                        : double.infinity,
+                    margin: EdgeInsets.symmetric(
+                        horizontal: width * 2, vertical: 10),
+                    child: ListView.builder(
+                      itemCount: userMeals.length,
+                      itemBuilder: (ctx, index) => GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, MealDetailsScreen.routeName,
+                              arguments: userMeals[index].id);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                            top: 20,
+                          ),
+                          decoration: BoxDecoration(
+                            color: aPrimary,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ChangeNotifierProvider.value(
+                                value: userMeals[index],
+                                child: ContentContainer(),
+                              ), //Content Container
+                              Container(
+                                height: 180,
+                                width: width * 35,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20),
+                                //color: Colors.white,
+                                child: Hero(
+                                  tag: userMeals[index].id,
+                                  child: Image.network(
+                                    userMeals[index].imageUrl,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ), //ImageConatiner
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ));
+                  ));
   }
 }
 

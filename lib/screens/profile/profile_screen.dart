@@ -61,6 +61,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
   }
 
+  void refresh(){
+    Provider.of<UserData>(context,listen: false).emptyUser();
+    Provider.of<UserData>(context, listen: false)
+          .getUserData().then((value) {
+            setState(() {
+              profileTabIndex = 1;
+            });
+          })
+          .catchError((error) {
+        showDialog(
+            context: context,
+            builder: (ctx) => AdaptiveDiaglog(
+                ctx: ctx,
+                title: 'An Error Occurred',
+                content: error.toString(),
+                btnYes: 'Okay',
+                yesPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    //to stop loading
+                  });
+                }));
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<UserData>(context).user;
@@ -88,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           newPass: newPass,
           confirmPass: confirmPass,
           width: width),
-      PaymentTab(height: height),
+      PaymentTab(height: height,refresh:refresh),
       AddressTab(),
       TasteTab(),
     ];

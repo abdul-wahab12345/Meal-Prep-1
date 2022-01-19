@@ -1,12 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Delivery/delivery_note.dart';
+import 'package:mealprep/widgets/adaptivedialog.dart';
+import 'package:provider/provider.dart';
 
-class DeliveryScreen extends StatelessWidget {
+class DeliveryScreen extends StatefulWidget {
   static const routeName = '/delivery';
   DeliveryScreen({Key? key}) : super(key: key);
-  
-  bool isLoading=false;
+
+  @override
+  State<DeliveryScreen> createState() => _DeliveryScreenState();
+}
+
+class _DeliveryScreenState extends State<DeliveryScreen> {
+  bool isLoading = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    var user = Provider.of<UserData>(context, listen: false).user;
+    if (user == null) {
+      Provider.of<UserData>(context, listen: false)
+          .getUserData()
+          .catchError((error) {
+        showDialog(
+            context: context,
+            builder: (ctx) => AdaptiveDiaglog(
+                ctx: ctx,
+                title: 'An Error Occurred',
+                content: error.toString(),
+                btnYes: 'Okay',
+                yesPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    //to stop loading
+                  });
+                }));
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Orientation currentOrientation = MediaQuery.of(context).orientation;
@@ -14,8 +49,10 @@ class DeliveryScreen extends StatelessWidget {
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
 
+    UserData userData = Provider.of<UserData>(context);
+
     return Center(
-      heightFactor:1,
+      heightFactor: 1,
       child: Container(
         width:
             currentOrientation == Orientation.landscape ? 600 : double.infinity,
@@ -26,7 +63,7 @@ class DeliveryScreen extends StatelessWidget {
             children: [
               LayoutBuilder(builder: (context, constraint) {
                 var stackWidth = constraint.maxWidth / 2;
-              
+
                 return Stack(
                   children: [
                     Container(
@@ -43,17 +80,19 @@ class DeliveryScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'The gate code is 2245. Please leave the bag ourside the door. Thank you',
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
+                          if (userData.delivery_note.isNotEmpty)
+                            Text(
+                              userData.delivery_note,
+                              style: Theme.of(context).textTheme.bodyText2,
+                            ),
                           TextButton(
                             child: Text(
                               'Click Here to update your delivery note...',
                               style: Theme.of(context).textTheme.bodyText2,
                             ),
                             onPressed: () {
-                              Navigator.of(context).pushNamed(DeliveryNote.routeName);
+                              Navigator.of(context)
+                                  .pushNamed(DeliveryNote.routeName);
                             },
                           )
                         ],
@@ -72,37 +111,36 @@ class DeliveryScreen extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.only(top: 30),
                   child: Text(
-                    'Next Delivery: Today around 2 pm',
+                    'Next Delivery: ${userData.next_delivery}',
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ),
               ),
-              Center(
-                child: Container(
-                  width: currentOrientation == Orientation.landscape
-                      ? width * 30
-                      : width * 50,
-                  height: currentOrientation == Orientation.landscape
-                      ? height * 15
-                      : height * 6,
+              // Center(
+              //   child: Container(
+              //     width: currentOrientation == Orientation.landscape
+              //         ? width * 30
+              //         : width * 50,
+              //     height: currentOrientation == Orientation.landscape
+              //         ? height * 15
+              //         : height * 6,
 
-                
-                  margin: const EdgeInsets.only(top: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    
-                    gradient: LinearGradient(colors: [
-                      gra1,
-                      gra2,
-                    ], begin: Alignment.topLeft),
-                  ),
-                  child: Center(
-                      child: Text(
-                    'Track Your Delivery',
-                    style: Theme.of(context).textTheme.bodyText2,
-                  )),
-                ),
-              ),
+              //     margin: const EdgeInsets.only(top: 20),
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(20),
+
+              //       gradient: LinearGradient(colors: [
+              //         gra1,
+              //         gra2,
+              //       ], begin: Alignment.topLeft),
+              //     ),
+              //     child: Center(
+              //         child: Text(
+              //       'Track Your Delivery',
+              //       style: Theme.of(context).textTheme.bodyText2,
+              //     )),
+              //   ),
+              // ),
             ],
           ),
         ),

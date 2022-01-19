@@ -57,10 +57,19 @@ class UserData with ChangeNotifier {
   User? user;
   String webUrl;
   int userId;
+  String delivery_note = '';
+  String allergies = '';
+  String dislikes = '';
+  String next_delivery = '';
   UserData({
     required this.webUrl,
     required this.userId,
   });
+
+void setNote(String note){
+  this.delivery_note = note;
+  notifyListeners();
+}
 
   Future<void> getUserData() async {
     try {
@@ -80,6 +89,11 @@ class UserData with ChangeNotifier {
       String userName = extractedData['name'];
       List<Card> cards = [];
       User? currentUser;
+
+      delivery_note = extractedData['delivery_note'];
+      allergies = extractedData['allergies'];
+      dislikes = extractedData['dislikes'];
+      next_delivery = extractedData['next_delivery'];
 
       //getting address
       var bill = extractedData['billing'] as Map<String, dynamic>;
@@ -107,27 +121,26 @@ class UserData with ChangeNotifier {
       //now of to getting payment details
       print(extractedData['payment_methods']);
 
-  var payment = extractedData['payment_methods'];
+      var payment = extractedData['payment_methods'];
 
-    if(payment.isNotEmpty){
-      var pay = extractedData['payment_methods'] as Map<String, dynamic>;
+      if (payment.isNotEmpty) {
+        var pay = extractedData['payment_methods'] as Map<String, dynamic>;
 
-      pay.forEach((key, value) {
-        var singleCard = value as List<dynamic>;
-        singleCard.forEach((element) {
-          cards.add(
-            Card(
-              name: userName,
-              btnText: 'btnText',
-              cardNumber: element['method']['last4'].toString(),
-              date: element['expires'].toString(),
-              isDefault: element['is_default'],
-            ),
-          );
+        pay.forEach((key, value) {
+          var singleCard = value as List<dynamic>;
+          singleCard.forEach((element) {
+            cards.add(
+              Card(
+                name: userName,
+                btnText: 'btnText',
+                cardNumber: element['method']['last4'].toString(),
+                date: element['expires'].toString(),
+                isDefault: element['is_default'],
+              ),
+            );
+          });
         });
-      });
-
-    }
+      }
 
       currentUser = User(
         name: extractedData['name'],
@@ -147,5 +160,22 @@ class UserData with ChangeNotifier {
     } catch (error) {
       throw error.toString();
     }
+  }
+
+  Future<void> addAllergies(String allergies, String dislikes) async {
+    var url = Uri.parse('${webUrl}wp-json/meal-prep/v1/add-allergies');
+    final response = await http.post(url, body: {
+      'user_id': userId.toString(),
+      'allergy': allergies,
+      'dislikes': dislikes
+    });
+    this.allergies = allergies;
+    this.dislikes = dislikes;
+    notifyListeners();
+  }
+
+  void emptyUser() {
+    this.user = null;
+    notifyListeners();
   }
 }

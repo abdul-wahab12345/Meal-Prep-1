@@ -34,6 +34,9 @@ class AddressTab extends StatelessWidget {
             title: '🚩 Billing Address',
             address: user.billingAddress,
           ),
+           const SizedBox(
+                  height: 10,
+                ),
         ],
       ),
     ));

@@ -12,6 +12,7 @@ class Subscription {
   String status;
   bool isCutOf;
   bool isCharged;
+  String endDate;
   List<int> productIds;
 
   Subscription({
@@ -20,6 +21,7 @@ class Subscription {
     required this.imageUrl,
     required this.nextDelivery,
     required this.status,
+    required this.endDate,
     required this.isCutOf,
     required this.isCharged,
     required this.productIds,
@@ -63,12 +65,14 @@ class Subscriptions with ChangeNotifier {
       final extractedData = json.decode(response.body) as List<dynamic>;
       List<Subscription> newSubs = [];
       extractedData.forEach((sub) {
+        print(sub['end_date']);
         newSubs.add(Subscription(
           id: sub['ID'],
           title: sub['title'],
           imageUrl: sub['imageUrl'] ?? '',
           nextDelivery: sub['next_delivery'] ?? '',
           status: sub['status'],
+          endDate: sub['end_date'].toString(),
           isCutOf: sub['payment_status']['show_options'] as bool,
           isCharged: sub['payment_status']['charged'] as bool,
           productIds: (sub['products'] as List<dynamic>).map((e) {
@@ -107,15 +111,14 @@ class Subscriptions with ChangeNotifier {
     }
   }
 
-  
-
   Future<String> reactvateSubscription(int id, Type type) async {
     try {
       final url;
       if (type == Type.UnPause) {
         url = Uri.parse('${webUrl}wp-json/meal-prep/v1/un-pause-subscription');
       } else {
-        url = Uri.parse('${webUrl}wp-json/meal-prep/v1/reactivate-subscription');
+        url =
+            Uri.parse('${webUrl}wp-json/meal-prep/v1/reactivate-subscription');
       }
 
       final response = await http.post(url, body: {
@@ -142,9 +145,11 @@ class Subscriptions with ChangeNotifier {
         //print(extractedData);
         return extractedData;
       } else {
-        //print('my name is sufyan');
-        final url = Uri.parse('${webUrl}wp-json/meal-prep/v1/add-note');
-
+        print('my name is sufyan');
+        final url =
+            Uri.parse('${webUrl}wp-json/meal-prep/v1/add-delivery-note');
+        print(data);
+        
         final response = await http.post(url, body: data);
         final extractedData = json.decode(response.body);
         // print('yeh delivery ka ha $extractedData');

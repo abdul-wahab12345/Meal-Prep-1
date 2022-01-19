@@ -1,7 +1,7 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/subscriptions.dart';
+import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Delivery/delivery_screen.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
@@ -26,9 +26,20 @@ class _DeliveryNoteState extends State<DeliveryNote> {
   bool isLoading = false;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    String delivery_note =
+        Provider.of<UserData>(context, listen: false).delivery_note;
+    if (delivery_note.isNotEmpty) {
+      _noteController.text = delivery_note;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     Orientation currentOrientation = MediaQuery.of(context).orientation;
-
 
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
@@ -52,6 +63,7 @@ class _DeliveryNoteState extends State<DeliveryNote> {
         )
       ],
     );
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: _appBar,
@@ -61,11 +73,9 @@ class _DeliveryNoteState extends State<DeliveryNote> {
           width: currentOrientation == Orientation.landscape
               ? 600
               : double.infinity,
-          
           margin: const EdgeInsets.only(left: 20, right: 20),
           child: SingleChildScrollView(
             child: Column(
-            
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 LayoutBuilder(builder: (context, constraint) {
@@ -74,7 +84,6 @@ class _DeliveryNoteState extends State<DeliveryNote> {
 
                   return Stack(
                     children: [
-                    
                       Container(
                         margin: EdgeInsets.only(top: height * 20),
                         decoration: BoxDecoration(
@@ -97,7 +106,7 @@ class _DeliveryNoteState extends State<DeliveryNote> {
                             },
                             controller: _noteController,
                             textInputAction: TextInputAction.done,
-                            onFieldSubmitted: (_){
+                            onFieldSubmitted: (_) {
                               FocusScope.of(context).unfocus();
                             },
                             maxLines: 6,
@@ -135,12 +144,12 @@ class _DeliveryNoteState extends State<DeliveryNote> {
                     : Center(
                         child: GestureDetector(
                           onTap: () async {
-                           
                             if (_formKey.currentState!.validate()) {
+                              int? user_id =
+                                  Provider.of<Auth>(context, listen: false).id;
                               Map<String, dynamic> data = {
-                                'aw_subscription_id': '1255',
                                 'note': _noteController.text,
-                                'note_type': 'delivery',
+                                'user_id': user_id.toString(),
                               };
                               setState(() {
                                 isLoading = true;
@@ -149,11 +158,11 @@ class _DeliveryNoteState extends State<DeliveryNote> {
                                       context,
                                       listen: false)
                                   .addNote(data)
-                                  .then((value) {
+                                  .then((value) async {
                                 setState(() {
                                   isLoading = false;
                                 });
-                                showDialog(
+                                await showDialog(
                                     context: context,
                                     builder: (ctx) => AdaptiveDiaglog(
                                         ctx: ctx,
@@ -161,16 +170,19 @@ class _DeliveryNoteState extends State<DeliveryNote> {
                                         content: 'Your note has been updated',
                                         btnYes: 'Okay',
                                         yesPressed: () {
-                                          Navigator.of(context).pushNamed(
-                                              DeliveryScreen.routeName);
+                                          Navigator.of(context).pop();
                                         }));
+                                        Provider.of<UserData>(context,listen: false).setNote( _noteController.text);
+                                Navigator.of(context).pop();
+
+                              }).catchError((error){
+                                setState(() {
+                                  isLoading = false;
+                                });
                               });
                               // print(response);
 
                               _formKey.currentState!.save();
-                              setState(() {
-                                _noteController.clear();
-                              });
                             }
                           },
                           child: Container(

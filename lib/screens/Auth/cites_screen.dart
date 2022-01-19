@@ -32,9 +32,13 @@ class _CityScreenState extends State<CityScreen> {
       'text': 'Austin',
       'value': 'https://austinmealprep.com/',
     },
+    {
+      'text': 'Houston',
+      'value': 'https://houstonmealprep.com/',
+    },
   ];
 
-  List<String> cityNames = ['Select a City', 'Austin Demo', 'Austin'];
+  List<String> cityNames = ['Select a City', 'Austin Demo', 'Austin','Houston'];
 
   @override
   Widget build(BuildContext context) {

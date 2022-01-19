@@ -44,6 +44,17 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> verifyToken() async {
+    var url = Uri.parse('${websiteUrl}wp-json/meal-prep/v1/verify-token');
+    var body = {'aw_user_id': id.toString(), 'aw_secure_hash': aw_hash};
+    //print(body);
+
+    final response = await http.post(url, body: body);
+    var data = json.decode(response.body);
+    print(data);
+    return data;
+  }
+
   Future<void> userLogin(String username, String password) async {
     try {
       var url = Uri.parse('${websiteUrl}wp-json/meal-prep/v1/user-login');
@@ -98,7 +109,8 @@ class Auth with ChangeNotifier {
       id = extractedUserData['userId'];
       name = extractedUserData['name'];
       aw_hash = extractedUserData['hash'];
-      
+      print(aw_hash);
+
       notifyListeners();
 
       return true;
@@ -158,7 +170,6 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> verifyPassword(String code, String email) async {
-  
     try {
       final url = Uri.parse('${websiteUrl}wp-json/meal-prep/v1/verify-code');
       final response = await http.post(
@@ -194,7 +205,7 @@ class Auth with ChangeNotifier {
       );
 
       print(response.body);
-      
+
       var extractedResponse = json.decode(response.body);
       if (extractedResponse['status'] == 'error') {
         throw extractedResponse['sms'].toString();
