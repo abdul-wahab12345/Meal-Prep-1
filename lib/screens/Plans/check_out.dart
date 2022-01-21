@@ -42,11 +42,14 @@ class _CheckOutState extends State<CheckOut> {
       varId = argsData['varId'] as int;
     }
     int subId = 0;
+    int productId = 0;
     if (argsData['subId'] != 0) {
       subId = argsData['subId'] as int;
     }
-    print(varId);
-    print(subId);
+    if (argsData['productId'] != 0) {
+      productId = argsData['productId'] as int;
+    }
+  
     _controller.future.then((value) => print(value.currentUrl()));
 
     webUrl = Provider.of<Auth>(context, listen: false).websiteUrl;
@@ -100,7 +103,7 @@ class _CheckOutState extends State<CheckOut> {
                 }
               }, //aw_user_id=7&aw_secure_hash=a1572204518cdff08453a7ab6026885f7
               initialUrl: webUrl +
-                  "cart?aw_add_to_cart=$varId&aw_variation_id=$varId&aw_user_id=${userId}&aw_secure_hash=${aw_hash}&planId=${subId}",
+                  "cart?aw_add_to_cart1=$productId&aw_variation_id=$varId&aw_user_id=${userId}&aw_secure_hash=${aw_hash}&planId=${subId}",
               javascriptMode: JavascriptMode.unrestricted,
             ),
             if (isLoading)

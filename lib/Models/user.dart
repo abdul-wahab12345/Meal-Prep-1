@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class Card {
+  int id;
   String name;
   String btnText;
   String cardNumber;
@@ -11,6 +12,7 @@ class Card {
   bool isDefault;
 
   Card({
+    required this.id,
     required this.name,
     required this.btnText,
     required this.cardNumber,
@@ -119,8 +121,7 @@ void setNote(String note){
       //issa uper address get hu raha ha
 
       //now of to getting payment details
-      print(extractedData['payment_methods']);
-
+      
       var payment = extractedData['payment_methods'];
 
       if (payment.isNotEmpty) {
@@ -129,8 +130,18 @@ void setNote(String note){
         pay.forEach((key, value) {
           var singleCard = value as List<dynamic>;
           singleCard.forEach((element) {
+            int payment_id = 0;
+            if(!element['is_default']){
+              
+              String actionUrl = element['actions']['default']['url'];
+              actionUrl = actionUrl.replaceAll('/set-default-payment-method/', "");
+              var ids = actionUrl.split('/?_wpnonce');
+              payment_id = int.parse(ids.first);
+              print(payment_id);
+            }
             cards.add(
               Card(
+                id: payment_id,
                 name: userName,
                 btnText: 'btnText',
                 cardNumber: element['method']['last4'].toString(),
@@ -172,6 +183,14 @@ void setNote(String note){
     this.allergies = allergies;
     this.dislikes = dislikes;
     notifyListeners();
+  }
+
+  Future<void> setDefaultPayment(int id) async {
+    var url = Uri.parse('${webUrl}wp-json/meal-prep/v1/make-default-payment-method');
+    final response = await http.post(url, body: {
+      'id':id.toString()
+    });
+    
   }
 
   void emptyUser() {

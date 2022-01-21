@@ -54,8 +54,11 @@ class MyApp extends StatelessWidget {
             previousData == null ? [] : previousData.userMeals,
           ),
         ),
-        ChangeNotifierProvider(
-          create: (ctx) => Products(),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          create: (_) => Products(''),
+          update: (ctx, auth, previousData) => Products(
+            auth.websiteUrl as String,
+          ),
         ),
         ChangeNotifierProxyProvider<Auth, Subscriptions>(
           create: (_) => Subscriptions(userId: 0, webUrl: ''),

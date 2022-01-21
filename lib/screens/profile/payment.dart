@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/profile/add-payment.dart';
+import 'package:mealprep/widgets/adaptive_indecator.dart';
+import 'package:mealprep/widgets/adaptivedialog.dart';
 import 'package:mealprep/widgets/auth_button.dart';
 import 'package:provider/provider.dart';
 
@@ -15,9 +17,36 @@ class PaymentTab extends StatefulWidget {
 }
 
 class _PaymentTabState extends State<PaymentTab> {
+  var paymentId = null;
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<UserData>(context).user;
+
+    void setDefaultPayment() {
+      Provider.of<UserData>(context, listen: false)
+          .setDefaultPayment(paymentId)
+          .then((value) {
+        setState(() {
+          paymentId = 0;
+          widget.refresh();
+        });
+      }).catchError((error) {
+        showDialog(
+            context: context,
+            builder: (ctx) {
+              return AdaptiveDiaglog(
+                  ctx: ctx,
+                  title: "An error occured",
+                  btnYes: 'Okay',
+                  yesPressed: () {
+                    setState(() {
+                      paymentId = 0;
+                    });
+                    Navigator.of(ctx).pop();
+                  });
+            });
+      });
+    }
 
     return Column(children: [
       if (user!.paymentMethod.isEmpty)
@@ -46,23 +75,26 @@ class _PaymentTabState extends State<PaymentTab> {
               children: [
                 ListTile(
                   title: Text(card.name),
-                  subtitle: InkWell(
-                    child: Text(
-                      card.isDefault ? "Default Card" : "Make Default",
-                      style: TextStyle(
-                          color: card.isDefault ? labelBlue : labelPurple,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    splashColor: Colors.blue,
-                    focusColor: Colors.red,
-                    onTap: () {
-                      if (!card.isDefault) {
-                        setState(() {
-                          card.isDefault = !card.isDefault;
-                        });
-                      }
-                    },
-                  ),
+                  subtitle: paymentId == card.id
+                      ? AdaptiveIndecator()
+                      : InkWell(
+                          child: Text(
+                            card.isDefault ? "Default Card" : "Make Default",
+                            style: TextStyle(
+                                color: card.isDefault ? labelBlue : labelPurple,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          splashColor: Colors.blue,
+                          focusColor: Colors.red,
+                          onTap: () {
+                            if (!card.isDefault) {
+                              setState(() {
+                                paymentId = card.id;
+                              });
+                              setDefaultPayment();
+                            }
+                          },
+                        ),
                   trailing: Image.asset(
                     "assets/images/card.png",
                     fit: BoxFit.cover,
@@ -102,9 +134,9 @@ class _PaymentTabState extends State<PaymentTab> {
               widget.refresh();
             }
           }),
-          const SizedBox(
-                  height: 10,
-                ),
+      const SizedBox(
+        height: 10,
+      ),
     ]);
   }
 }

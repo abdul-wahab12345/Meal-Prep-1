@@ -34,6 +34,8 @@ class Product {
 }
 
 class Products with ChangeNotifier {
+  String webUrl;
+  Products(@required this.webUrl);
   List<Product> _products = [];
 
   List<Product> get products {
@@ -48,7 +50,7 @@ class Products with ChangeNotifier {
   Future<void> fetchAndSetProducts() async {
     try{
     final url = Uri.parse(
-        'https://u1s.ee6.myftpupload.com/wp-json/meal-prep/v1/products?doing_wp_cron=1639480626.7294850349426269531250');
+        '${webUrl}wp-json/meal-prep/v1/products');
 
     final response = await http.get(url);
 
