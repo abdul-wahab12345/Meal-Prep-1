@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/products.dart';
+import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 
@@ -64,7 +65,7 @@ class _AddPlanState extends State<AddPlan> {
     print(subId);
 
     prod = Provider.of<Products>(context).products;
-
+var user = Provider.of<UserData>(context).user;
     var currentOrientation = Orientation.landscape;
     var _appBar = AppBar(
       backgroundColor: aPrimary,
@@ -77,7 +78,15 @@ class _AddPlanState extends State<AddPlan> {
           child: Container(
             padding: const EdgeInsets.all(8),
             child: CircleAvatar(
-              child: Image.asset('assets/images/person.png'),
+             child: user != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.network(
+                              user.imageUrl,
+                              height: 40,
+                              fit: BoxFit.cover,
+                            ))
+                        : Image.asset('assets/images/person.png'),
             ),
           ),
         )

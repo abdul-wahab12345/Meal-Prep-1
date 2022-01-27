@@ -159,7 +159,7 @@ class _TasteContainerState extends State<TasteContainer> {
               controller: widget.controller,
               decoration: InputDecoration(
                 labelStyle: Theme.of(context).textTheme.bodyText2,
-                label: Text('Enter ${widget.labelText} '),
+                label: Text('Enter comma seprated ${widget.labelText} '),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: const BorderSide(

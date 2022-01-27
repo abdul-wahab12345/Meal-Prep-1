@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/constant.dart';
+import 'package:mealprep/screens/profile/edit-billing-address.dart';
+import 'package:mealprep/screens/profile/edit-shipping.dart';
 import 'package:provider/provider.dart';
 
 class AddressTab extends StatelessWidget {
-  AddressTab({Key? key}) : super(key: key);
+  Function refresh;
+  AddressTab({required this.refresh});
 
   @override
   Widget build(BuildContext context) {
@@ -21,22 +24,49 @@ class AddressTab extends StatelessWidget {
           ),
           if (user!.billingAddress.ad1.isEmpty)
             Center(
-                child: Text(
-              "No billing address found",
-              style: Theme.of(context).textTheme.bodyText2,
-            ),),
-          AddressContainer(
-              title: '🚘 Delivery Address', address: user.shippingAddress),
+              child: Text(
+                "No billing address found",
+                style: Theme.of(context).textTheme.bodyText2,
+              ),
+            ),
+          GestureDetector(
+            onTap: () async {
+              final isLoad = await Navigator.of(context).push<bool>(
+                MaterialPageRoute(
+                  fullscreenDialog: true,
+                  builder: (ctx) => EditShipping(),
+                ),
+              );
+              if (isLoad != null && isLoad) {
+                refresh(1);
+              }
+            },
+            child: AddressContainer(
+                title: '🚘 Delivery Address', address: user.shippingAddress),
+          ),
           const SizedBox(
             height: 20,
           ),
-          AddressContainer(
-            title: '🚩 Billing Address',
-            address: user.billingAddress,
-          ),
-           const SizedBox(
-                  height: 10,
+          GestureDetector(
+            onTap: () async {
+              final isLoad = await Navigator.of(context).push<bool>(
+                MaterialPageRoute(
+                  fullscreenDialog: true,
+                  builder: (ctx) => EditBilling(),
                 ),
+              );
+              if (isLoad != null && isLoad) {
+                refresh(1);
+              }
+            },
+            child: AddressContainer(
+              title: '🚩 Billing Address',
+              address: user.billingAddress,
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
         ],
       ),
     ));

@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/products.dart';
+import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/check_out.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
@@ -26,7 +26,7 @@ class VariationsScreen extends StatelessWidget {
     int subId = 0;
     if (argsData['subId'] != 0) {
       subId = argsData['subId'] as int;
-    }
+    }var user = Provider.of<UserData>(context).user;
     print(subId);
     var product =
         Provider.of<Products>(context, listen: false).findById(prodId);
@@ -37,12 +37,20 @@ class VariationsScreen extends StatelessWidget {
       actions: [
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, PlanScreen.routeName,arguments: 2);
+            Navigator.pushNamed(context, PlanScreen.routeName, arguments: 2);
           },
           child: Container(
             padding: EdgeInsets.all(8),
             child: CircleAvatar(
-              child: Image.asset('assets/images/person.png'),
+              child: user != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.network(
+                              user.imageUrl,
+                              height: 40,
+                              fit: BoxFit.cover,
+                            ))
+                        : Image.asset('assets/images/person.png'),
             ),
           ),
         )
@@ -67,32 +75,12 @@ class VariationsScreen extends StatelessWidget {
             itemCount: variation.length,
             itemBuilder: (ctx, index) => GestureDetector(
               onTap: () {
-                showDialog(
-                  context: ctx,
-                  builder: (ctx) {
-                    return AdaptiveDiaglog(
-                      ctx: ctx,
-                      title: 'Checkout',
-                      content: 'Do you want to take this deal',
-                      btnYes: 'Yes',
-                     
-                      btnNO: 'No',
-                      noPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      yesPressed: () {
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pushNamed(
-                          CheckOut.routeName,
-                          arguments: <String, int>{
-                            'varId': variation[index].id,
-                            'subId': subId,
-                            'productId':prodId
-                          },
-                        );
-                      },
-                    );
-                   
+                Navigator.of(context).pushNamed(
+                  CheckOut.routeName,
+                  arguments: <String, int>{
+                    'varId': variation[index].id,
+                    'subId': subId,
+                    'productId': prodId
                   },
                 );
               },
@@ -116,29 +104,23 @@ class VariationsScreen extends StatelessWidget {
                         vertical: 19,
                       ),
                       child: Column(
-                        mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(variation[index].title,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6),
+                              style: Theme.of(context).textTheme.headline6),
                           const SizedBox(
                             height: 20,
                           ),
                           Text(
                             'Delivery Date',
-                            style:
-                                Theme.of(context).textTheme.bodyText2,
+                            style: Theme.of(context).textTheme.bodyText2,
                           ),
                           const SizedBox(
                             height: 1.5,
                           ),
                           Text(variation[index].deliverDate,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText2!),
+                              style: Theme.of(context).textTheme.bodyText2!),
                           const SizedBox(
                             height: 25,
                           ),
@@ -156,8 +138,7 @@ class VariationsScreen extends StatelessWidget {
                       width: 100,
                       margin: EdgeInsets.only(right: 15),
                       padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Image.network(product.imageUrl,
-                          fit: BoxFit.cover),
+                      child: Image.network(product.imageUrl, fit: BoxFit.cover),
                     ), //imageContainer
                   ],
                 ),

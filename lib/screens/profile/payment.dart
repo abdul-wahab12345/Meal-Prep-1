@@ -131,7 +131,7 @@ class _PaymentTabState extends State<PaymentTab> {
               ),
             );
             if (isLoad != null && isLoad) {
-              widget.refresh();
+              widget.refresh(1);
             }
           }),
       const SizedBox(

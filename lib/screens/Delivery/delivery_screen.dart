@@ -66,36 +66,35 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
 
                 return Stack(
                   children: [
-                    Container(
-                      width: double.infinity,
-                      margin: EdgeInsets.only(top: height * 20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: aPrimary,
-                      ),
-                      padding: EdgeInsets.only(
-                          top: height * 9, left: 30, right: 30, bottom: 30),
-                      height: height * 37,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          if (userData.delivery_note.isNotEmpty)
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(DeliveryNote.routeName);
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.only(top: height * 20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: aPrimary,
+                        ),
+                        padding: EdgeInsets.only(
+                            top: height * 9, left: 30, right: 30, bottom: 30),
+                        height: height * 37,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            if (userData.delivery_note.isNotEmpty)
+                              Text(
+                                userData.delivery_note,
+                                style: Theme.of(context).textTheme.bodyText2,
+                              ),
                             Text(
-                              userData.delivery_note,
-                              style: Theme.of(context).textTheme.bodyText2,
-                            ),
-                          TextButton(
-                            child: Text(
                               'Click Here to update your delivery note...',
                               style: Theme.of(context).textTheme.bodyText2,
-                            ),
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .pushNamed(DeliveryNote.routeName);
-                            },
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                     Positioned(

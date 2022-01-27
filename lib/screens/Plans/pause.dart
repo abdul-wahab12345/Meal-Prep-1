@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/subscriptions.dart';
+import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 
 import 'package:mealprep/widgets/adaptivedialog.dart';
@@ -33,7 +34,7 @@ class _PauseState extends State<Pause> {
   @override
   Widget build(BuildContext context) {
     DateTime _dateTime;
-
+var user = Provider.of<UserData>(context).user;
     var _appBar = AppBar(
       backgroundColor: aPrimary,
       title: const Text("Pause"),
@@ -45,7 +46,15 @@ class _PauseState extends State<Pause> {
           child: Container(
             padding: const EdgeInsets.all(8),
             child: CircleAvatar(
-              child: Image.asset('assets/images/person.png'),
+        child: user != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.network(
+                              user.imageUrl,
+                              height: 40,
+                              fit: BoxFit.cover,
+                            ))
+                        : Image.asset('assets/images/person.png'),
             ),
           ),
         )

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/subscriptions.dart';
+import 'package:mealprep/Models/user.dart';
 
 import 'package:mealprep/screens/Auth/cites_screen.dart';
 import 'package:mealprep/screens/Plans/add_plan_screen.dart';
@@ -13,7 +14,7 @@ import 'package:mealprep/widgets/custom_bottombar.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant.dart';
- 
+
 class PlanScreen extends StatefulWidget {
   static const routeName = '/plans_screen';
   const PlanScreen({Key? key}) : super(key: key);
@@ -130,7 +131,6 @@ class _PlanScreenState extends State<PlanScreen> {
             .then((value) {
           setState(() {
             isLoading = false;
-            
           });
         });
       });
@@ -234,7 +234,7 @@ class _PlanScreenState extends State<PlanScreen> {
         },
       );
     }
-
+    var user = Provider.of<UserData>(context).user;
     var _appBar = AppBar(
       backgroundColor: Colors.black,
       leading: GestureDetector(
@@ -286,9 +286,17 @@ class _PlanScreenState extends State<PlanScreen> {
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  //padding: const EdgeInsets.all(8),
                   child: CircleAvatar(
-                    child: Image.asset('assets/images/person.png'),
+                    child: user != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.network(
+                              user.imageUrl,
+                              height: 40,
+                              fit: BoxFit.cover,
+                            ))
+                        : Image.asset('assets/images/person.png'),
                   ),
                 ),
               )

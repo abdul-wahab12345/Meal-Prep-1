@@ -58,6 +58,7 @@ class User {
 class UserData with ChangeNotifier {
   User? user;
   String webUrl;
+  String? userImage;
   int userId;
   String delivery_note = '';
   String allergies = '';
@@ -68,10 +69,10 @@ class UserData with ChangeNotifier {
     required this.userId,
   });
 
-void setNote(String note){
-  this.delivery_note = note;
-  notifyListeners();
-}
+  void setNote(String note) {
+    this.delivery_note = note;
+    notifyListeners();
+  }
 
   Future<void> getUserData() async {
     try {
@@ -121,7 +122,7 @@ void setNote(String note){
       //issa uper address get hu raha ha
 
       //now of to getting payment details
-      
+
       var payment = extractedData['payment_methods'];
 
       if (payment.isNotEmpty) {
@@ -131,10 +132,10 @@ void setNote(String note){
           var singleCard = value as List<dynamic>;
           singleCard.forEach((element) {
             int payment_id = 0;
-            if(!element['is_default']){
-              
+            if (!element['is_default']) {
               String actionUrl = element['actions']['default']['url'];
-              actionUrl = actionUrl.replaceAll('/set-default-payment-method/', "");
+              actionUrl =
+                  actionUrl.replaceAll('/set-default-payment-method/', "");
               var ids = actionUrl.split('/?_wpnonce');
               payment_id = int.parse(ids.first);
               print(payment_id);
@@ -152,7 +153,7 @@ void setNote(String note){
           });
         });
       }
-
+      this.userImage = extractedData['image'];
       currentUser = User(
         name: extractedData['name'],
         imageUrl: extractedData['image'],
@@ -186,11 +187,20 @@ void setNote(String note){
   }
 
   Future<void> setDefaultPayment(int id) async {
-    var url = Uri.parse('${webUrl}wp-json/meal-prep/v1/make-default-payment-method');
-    final response = await http.post(url, body: {
-      'id':id.toString()
-    });
-    
+    var url =
+        Uri.parse('${webUrl}wp-json/meal-prep/v1/make-default-payment-method');
+    final response = await http.post(url, body: {'id': id.toString()});
+  }
+
+  Future<void> changeProfileImage(String base64Image) async {
+    var url = Uri.parse('${webUrl}wp-json/meal-prep/v1/change-profile-image');
+    final response = await http
+        .post(url, body: {'user_id': userId.toString(), 'image': base64Image});
+    print(response.body);
+    if (response.body != "error") {
+      this.userImage = json.decode(response.body);
+      notifyListeners();
+    }
   }
 
   void emptyUser() {

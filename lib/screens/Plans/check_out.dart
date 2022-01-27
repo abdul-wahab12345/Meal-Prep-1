@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/subscriptions.dart';
+import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 
@@ -56,7 +57,7 @@ class _CheckOutState extends State<CheckOut> {
 
     var userId = Provider.of<Auth>(context, listen: false).id;
     var aw_hash = Provider.of<Auth>(context, listen: false).aw_hash;
-
+var user = Provider.of<UserData>(context).user;
     var _appBar = AppBar(
       backgroundColor: aPrimary,
       title: const Text("Checkout"),
@@ -69,7 +70,15 @@ class _CheckOutState extends State<CheckOut> {
           child: Container(
             padding: const EdgeInsets.all(8),
             child: CircleAvatar(
-              child: Image.asset('assets/images/person.png'),
+              child: user != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.network(
+                              user.imageUrl,
+                              height: 40,
+                              fit: BoxFit.cover,
+                            ))
+                        : Image.asset('assets/images/person.png'),
             ),
           ),
         )

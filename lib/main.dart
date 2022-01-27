@@ -19,6 +19,7 @@ import 'package:mealprep/screens/Delivery/delivery_screen.dart';
 import 'package:mealprep/screens/meals/meal_details_screen.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 import 'package:mealprep/screens/profile/add-payment.dart';
+import 'package:mealprep/screens/profile/image_upload.dart';
 
 import 'package:mealprep/screens/profile/profile_screen.dart';
 import 'package:mealprep/screens/Auth/registeration_screen.dart';
@@ -128,6 +129,7 @@ class MyApp extends StatelessWidget {
           VerificationScreen.routeName: (ctx) => VerificationScreen(),
           ChangePasswordScreen.routeName: (ctx) => ChangePasswordScreen(),
           AddPayment.routeName: (ctx) => AddPayment(),
+          ImageUpload.routeName: (ctx) => ImageUpload(),
         },
       ),
     );

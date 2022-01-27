@@ -1,14 +1,20 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/user.dart';
 
 import 'package:mealprep/screens/profile/address.dart';
+import 'package:mealprep/screens/profile/image_upload.dart';
 import 'package:mealprep/screens/profile/payment.dart';
 import 'package:mealprep/screens/profile/taste.dart';
 import 'package:mealprep/widgets/adaptivedialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
 
 import 'package:mealprep/widgets/input_feild.dart';
+import 'package:mealprep/widgets/text_button.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -25,11 +31,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var newPass = TextEditingController();
   var confirmPass = TextEditingController();
   bool isFirst = true;
+  File? pickedImage;
+  String? base64Image;
 
   final _formKey = GlobalKey<FormState>();
 
   // User? curr;
-
 
   int profileTabIndex = 0;
 
@@ -61,29 +68,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
   }
 
-  void refresh(){
-    Provider.of<UserData>(context,listen: false).emptyUser();
-    Provider.of<UserData>(context, listen: false)
-          .getUserData().then((value) {
-            setState(() {
-              profileTabIndex = 1;
-            });
-          })
-          .catchError((error) {
-        showDialog(
-            context: context,
-            builder: (ctx) => AdaptiveDiaglog(
-                ctx: ctx,
-                title: 'An Error Occurred',
-                content: error.toString(),
-                btnYes: 'Okay',
-                yesPressed: () {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    //to stop loading
-                  });
-                }));
+  void chooseImage() async {
+    final ImagePicker _picker = ImagePicker();
+    // Pick an image
+    final XFile? image =
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 65);
+    if (image != null) {
+      setState(() {
+        pickedImage = File(image.path);
       });
+      base64Image = base64Encode(pickedImage!.readAsBytesSync());
+      print(base64Image);
+      final response = await Navigator.of(context).push<bool>(
+        MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (ctx) => ImageUpload(
+            base64Image: base64Image,
+            image: pickedImage,
+          ),
+        ),
+      );
+      if (response != null) {
+        //refresh(0);
+      }
+    }
+  }
+
+  void refresh(int index) {
+    Provider.of<UserData>(context, listen: false).emptyUser();
+    Provider.of<UserData>(context, listen: false).getUserData().then((value) {
+      setState(() {
+        profileTabIndex = index;
+      });
+    }).catchError((error) {
+      showDialog(
+          context: context,
+          builder: (ctx) => AdaptiveDiaglog(
+              ctx: ctx,
+              title: 'An Error Occurred',
+              content: error.toString(),
+              btnYes: 'Okay',
+              yesPressed: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  //to stop loading
+                });
+              }));
+    });
   }
 
   @override
@@ -113,8 +144,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           newPass: newPass,
           confirmPass: confirmPass,
           width: width),
-      PaymentTab(height: height,refresh:refresh),
-      AddressTab(),
+      PaymentTab(height: height, refresh: refresh),
+      AddressTab(refresh: refresh,),
       TasteTab(),
     ];
 
@@ -137,15 +168,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: height * 13,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: Image.network(
-                          user.imageUrl,
-                          fit: BoxFit.cover,
-                        ),
+                        child: pickedImage != null
+                            ? Image.file(
+                                pickedImage!,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                user.imageUrl,
+                                fit: BoxFit.cover,
+                              ),
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: height * 2,
+                    height: height * 1,
+                  ),
+                  AtextButton(text: 'Change Image', callBack: chooseImage),
+                  SizedBox(
+                    height: height * 1,
                   ),
                   Text(
                     user.name,
@@ -239,11 +279,11 @@ class UserFields extends StatefulWidget {
 }
 
 class _UserFieldsState extends State<UserFields> {
-  final _currentPassFocusNode =FocusNode();
-  final _newPassFocusNode =FocusNode();
-  final _confirmPassFocusNode =FocusNode();
+  final _currentPassFocusNode = FocusNode();
+  final _newPassFocusNode = FocusNode();
+  final _confirmPassFocusNode = FocusNode();
   bool isLoading = false;
- 
+
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<UserData>(context).user;
@@ -321,7 +361,7 @@ class _UserFieldsState extends State<UserFields> {
               inputController: widget.currentPass,
               textInputAction: TextInputAction.next,
               focusNode: _currentPassFocusNode,
-              submitted: (_){
+              submitted: (_) {
                 FocusScope.of(context).requestFocus(_newPassFocusNode);
               },
             ),
@@ -341,7 +381,7 @@ class _UserFieldsState extends State<UserFields> {
               inputController: widget.newPass,
               textInputAction: TextInputAction.next,
               focusNode: _newPassFocusNode,
-              submitted: (_){
+              submitted: (_) {
                 print('shani');
               },
             ),
@@ -360,7 +400,7 @@ class _UserFieldsState extends State<UserFields> {
               inputController: widget.confirmPass,
               textInputAction: TextInputAction.done,
               focusNode: _confirmPassFocusNode,
-              submitted: (_){
+              submitted: (_) {
                 FocusScope.of(context).unfocus();
               },
             ),
