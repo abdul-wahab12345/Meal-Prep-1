@@ -130,6 +130,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 height: height * 16,
                 width: height * 16,
                 child: Image.asset('assets/images/login_screen_image.png'),
+              ),
+              SizedBox(
+                height: height * 25,
               ), //Image Container
               Padding(
                 padding: EdgeInsets.only(
@@ -194,7 +197,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               ),
 
               Container(
-                margin: EdgeInsets.only(top: height * 10, left: 20, right: 20),
+                margin: EdgeInsets.only(top: height * 3, left: 20, right: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

@@ -57,17 +57,17 @@ class CustomBottomBar extends StatelessWidget {
             },
             icon: Icons.note_add_outlined,
           ),
-          BottomNavItem(
-            text: "Meals",
-            onTap: () {
+          // BottomNavItem(
+          //   text: "Meals",
+          //   onTap: () {
               
-              Provider.of<UserMealsData>(context, listen: false).subscription =
-                  subscription;
-              Navigator.of(context).pushNamed(UserMealsScreen.routeName,
-                  arguments: selectedPlanId);
-            },
-            icon: Icons.restaurant,
-          ),
+          //     Provider.of<UserMealsData>(context, listen: false).subscription =
+          //         subscription;
+          //     Navigator.of(context).pushNamed(UserMealsScreen.routeName,
+          //         arguments: selectedPlanId);
+          //   },
+          //   icon: Icons.restaurant,
+          // ),
         ],
       ),
     );

@@ -61,7 +61,7 @@ class _AddPaymentState extends State<AddPayment> {
                             borderRadius: BorderRadius.circular(100),
                             child: Image.network(
                               user.imageUrl,
-                              height: 40,
+                              height: 40,  width: double.infinity,
                               fit: BoxFit.cover,
                             ))
                         : Image.asset('assets/images/person.png'),

@@ -104,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 width: height * 16,
                 child: Image.asset('assets/images/login_screen_image.png'),
               ), //Image Container
-
+SizedBox(height: height*20,),
               Container(
                 margin: EdgeInsets.only(bottom: height * 3, top: height * 5),
                 child: Form(
@@ -180,7 +180,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
 
               Container(
-                margin: EdgeInsets.only(top: height * 7, left: 20, right: 20),
+                margin: EdgeInsets.only(top: height * 3, left: 20, right: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

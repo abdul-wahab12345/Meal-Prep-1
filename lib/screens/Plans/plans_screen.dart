@@ -4,6 +4,7 @@ import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/Models/user.dart';
 
 import 'package:mealprep/screens/Auth/cites_screen.dart';
+import 'package:mealprep/screens/Delivery/delivery_note.dart';
 import 'package:mealprep/screens/Plans/add_plan_screen.dart';
 import 'package:mealprep/screens/Delivery/delivery_screen.dart';
 import 'package:mealprep/screens/profile/profile_screen.dart';
@@ -175,20 +176,35 @@ class _PlanScreenState extends State<PlanScreen> {
           .getSubscriptionById(selectedPlanId);
       subs = data != null ? [data] : [];
 
-      bottomBar = Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-        height: 75,
-        margin: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
-        decoration: BoxDecoration(
-            color: ashwhite, borderRadius: BorderRadius.circular(25)),
-        child: reactivateLoading
-            ? AdaptiveIndecator()
-            : BottomNavItem(
-                text: "Reactivate",
-                onTap: reactivateSubscription,
-                icon: Icons.play_arrow_outlined,
-              ),
+      bottomBar = Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            height: 75,
+            margin: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
+            decoration: BoxDecoration(
+                color: ashwhite, borderRadius: BorderRadius.circular(25)),
+            child: reactivateLoading
+                ? AdaptiveIndecator()
+                : BottomNavItem(
+                    text: "Reactivate",
+                    onTap: reactivateSubscription,
+                    icon: Icons.play_arrow_outlined,
+                  ),
+          ),
+          BottomNavBar(
+            index: bottomIndex,
+            onTap: (index) {
+              setState(() {
+                forcedMove = true;
+                bottomIndex = index;
+              });
+            },
+          )
+        ],
       );
     } else if (_type == Type.UnPause) {
       /**
@@ -199,20 +215,35 @@ class _PlanScreenState extends State<PlanScreen> {
           .getSubscriptionById(selectedPlanId);
       subs = data != null ? [data] : [];
 
-      bottomBar = Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-        height: 75,
-        margin: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
-        decoration: BoxDecoration(
-            color: ashwhite, borderRadius: BorderRadius.circular(25)),
-        child: reactivateLoading
-            ? AdaptiveIndecator()
-            : BottomNavItem(
-                text: "Reactivate",
-                onTap: reactivateSubscription,
-                icon: Icons.play_arrow_outlined,
-              ),
+      bottomBar = Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            height: 75,
+            margin: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
+            decoration: BoxDecoration(
+                color: ashwhite, borderRadius: BorderRadius.circular(25)),
+            child: reactivateLoading
+                ? AdaptiveIndecator()
+                : BottomNavItem(
+                    text: "Reactivate",
+                    onTap: reactivateSubscription,
+                    icon: Icons.play_arrow_outlined,
+                  ),
+          ),
+          BottomNavBar(
+            index: bottomIndex,
+            onTap: (index) {
+              setState(() {
+                forcedMove = true;
+                bottomIndex = index;
+              });
+            },
+          )
+        ],
       );
     } else if (Type.Pause == _type) {
       /**
@@ -222,7 +253,22 @@ class _PlanScreenState extends State<PlanScreen> {
           .getSubscriptionById(selectedPlanId);
       subs = data != null ? [data] : [];
 
-      bottomBar = CustomBottomBar(selectedPlanId: selectedPlanId);
+      bottomBar = Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          CustomBottomBar(selectedPlanId: selectedPlanId),
+          BottomNavBar(
+            index: bottomIndex,
+            onTap: (index) {
+              setState(() {
+                forcedMove = true;
+                bottomIndex = index;
+              });
+            },
+          )
+        ],
+      );
     } else {
       bottomBar = BottomNavBar(
         index: bottomIndex,
@@ -270,8 +316,10 @@ class _PlanScreenState extends State<PlanScreen> {
                         await Provider.of<Auth>(context, listen: false)
                             .logout()
                             .then((value) {
-                          Navigator.of(context)
-                              .pushReplacementNamed(CityScreen.routeName);
+                               Navigator.of(context).pushNamedAndRemoveUntil(
+                             CityScreen.routeName,
+                              (Route<dynamic> route) => false);
+                          
                         });
                       },
                     ),
@@ -294,6 +342,7 @@ class _PlanScreenState extends State<PlanScreen> {
                             child: Image.network(
                               user.imageUrl,
                               height: 40,
+                              width: double.infinity,
                               fit: BoxFit.cover,
                             ))
                         : Image.asset('assets/images/person.png'),
@@ -441,7 +490,7 @@ class _PlanScreenState extends State<PlanScreen> {
               );
 
     List<Widget> pages = [
-      DeliveryScreen(),
+      DeliveryNote(),
       _plansTab,
       const ProfileScreen(),
     ];

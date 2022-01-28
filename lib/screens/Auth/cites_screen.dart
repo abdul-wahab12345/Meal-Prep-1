@@ -38,7 +38,12 @@ class _CityScreenState extends State<CityScreen> {
     },
   ];
 
-  List<String> cityNames = ['Select a City', 'Austin Demo', 'Austin','Houston'];
+  List<String> cityNames = [
+    'Select a City',
+    'Austin Demo',
+    'Austin',
+    'Houston'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +63,9 @@ class _CityScreenState extends State<CityScreen> {
               width: height * 16,
               child: Image.asset('assets/images/login_screen_image.png'),
             ), //Image Container
-
+            SizedBox(
+              height: height * 35,
+            ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               height: height * 6,

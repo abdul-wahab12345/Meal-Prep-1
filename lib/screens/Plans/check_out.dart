@@ -50,14 +50,14 @@ class _CheckOutState extends State<CheckOut> {
     if (argsData['productId'] != 0) {
       productId = argsData['productId'] as int;
     }
-  
+
     _controller.future.then((value) => print(value.currentUrl()));
 
     webUrl = Provider.of<Auth>(context, listen: false).websiteUrl;
 
     var userId = Provider.of<Auth>(context, listen: false).id;
     var aw_hash = Provider.of<Auth>(context, listen: false).aw_hash;
-var user = Provider.of<UserData>(context).user;
+    var user = Provider.of<UserData>(context).user;
     var _appBar = AppBar(
       backgroundColor: aPrimary,
       title: const Text("Checkout"),
@@ -71,14 +71,15 @@ var user = Provider.of<UserData>(context).user;
             padding: const EdgeInsets.all(8),
             child: CircleAvatar(
               child: user != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.network(
-                              user.imageUrl,
-                              height: 40,
-                              fit: BoxFit.cover,
-                            ))
-                        : Image.asset('assets/images/person.png'),
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image.network(
+                        user.imageUrl,
+                        height: 40,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ))
+                  : Image.asset('assets/images/person.png'),
             ),
           ),
         )

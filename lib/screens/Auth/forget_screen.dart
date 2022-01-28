@@ -88,7 +88,7 @@ class _ForgetScreenState extends State<ForgetScreen> {
                 width: height * 16,
                 child: Image.asset('assets/images/login_screen_image.png'),
               ), //Image Container
-
+SizedBox(height: height*33,),
               Form(
                 key: _formKey,
                 child: Container(
@@ -126,7 +126,7 @@ class _ForgetScreenState extends State<ForgetScreen> {
                     ),
 
               Container(
-                margin: EdgeInsets.only(top: height * 10, left: 20, right: 20),
+                margin: EdgeInsets.only(top: height * 3, left: 20, right: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

@@ -52,7 +52,10 @@ class _LoginScreenState extends State<LoginScreen> {
           passwordController.text,
         );
 
-        Navigator.of(context).pushReplacementNamed(PlanScreen.routeName);
+         Navigator.of(context).pushNamedAndRemoveUntil(
+                              PlanScreen.routeName,
+                              (Route<dynamic> route) => false);
+
       } catch (error) {
         print(error);
         await showDialog(
@@ -104,6 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
         margin: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
           child: Column(
+         
             children: [
               Container(
                 margin: EdgeInsets.only(top: height * 7),
@@ -111,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: height * 16,
                 child: Image.asset('assets/images/login_screen_image.png'),
               ), //Image Container
-
+SizedBox(height: height*18,),
               Container(
                 margin: EdgeInsets.only(bottom: height * 5, top: height * 5),
                 child: Form(
@@ -169,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
 
               Container(
-                margin: EdgeInsets.only(top: height * 10, left: 20, right: 20),
+                margin: EdgeInsets.only(top: height * 2, left: 20, right: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

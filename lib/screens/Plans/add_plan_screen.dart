@@ -17,7 +17,6 @@ class AddPlan extends StatefulWidget {
   State<AddPlan> createState() => _AddPlanState();
 }
 
-
 class _AddPlanState extends State<AddPlan> {
   List<Product> prod = [];
 
@@ -65,7 +64,7 @@ class _AddPlanState extends State<AddPlan> {
     print(subId);
 
     prod = Provider.of<Products>(context).products;
-var user = Provider.of<UserData>(context).user;
+    var user = Provider.of<UserData>(context).user;
     var currentOrientation = Orientation.landscape;
     var _appBar = AppBar(
       backgroundColor: aPrimary,
@@ -78,15 +77,16 @@ var user = Provider.of<UserData>(context).user;
           child: Container(
             padding: const EdgeInsets.all(8),
             child: CircleAvatar(
-             child: user != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.network(
-                              user.imageUrl,
-                              height: 40,
-                              fit: BoxFit.cover,
-                            ))
-                        : Image.asset('assets/images/person.png'),
+              child: user != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image.network(
+                        user.imageUrl,
+                        height: 40,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ))
+                  : Image.asset('assets/images/person.png'),
             ),
           ),
         )

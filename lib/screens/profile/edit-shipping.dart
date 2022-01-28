@@ -58,7 +58,7 @@ class _EditShippingState extends State<EditShipping> {
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: Image.network(
-                              user.imageUrl,
+                              user.imageUrl,  width: double.infinity,
                               height: 40,
                               fit: BoxFit.cover,
                             ))
