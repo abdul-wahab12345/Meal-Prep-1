@@ -44,16 +44,7 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> verifyToken() async {
-    var url = Uri.parse('${websiteUrl}wp-json/meal-prep/v1/verify-token');
-    var body = {'aw_user_id': id.toString(), 'aw_secure_hash': aw_hash};
-    //print(body);
-
-    final response = await http.post(url, body: body);
-    var data = json.decode(response.body);
-    print(data);
-    return data;
-  }
+  
 
   Future<void> userLogin(String username, String password) async {
     try {

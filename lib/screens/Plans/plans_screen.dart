@@ -201,6 +201,9 @@ class _PlanScreenState extends State<PlanScreen> {
               setState(() {
                 forcedMove = true;
                 bottomIndex = index;
+                if (index != 1) {
+                  _type = Type.Default;
+                }
               });
             },
           )
@@ -239,6 +242,9 @@ class _PlanScreenState extends State<PlanScreen> {
             onTap: (index) {
               setState(() {
                 forcedMove = true;
+                if (index != 1) {
+                  _type = Type.Default;
+                }
                 bottomIndex = index;
               });
             },
@@ -264,6 +270,9 @@ class _PlanScreenState extends State<PlanScreen> {
               setState(() {
                 forcedMove = true;
                 bottomIndex = index;
+                if (index != 1) {
+                  _type = Type.Default;
+                }
               });
             },
           )
@@ -276,6 +285,9 @@ class _PlanScreenState extends State<PlanScreen> {
           setState(() {
             forcedMove = true;
             bottomIndex = index;
+            if (index != 1) {
+              _type = Type.Default;
+            }
           });
         },
       );
@@ -316,10 +328,9 @@ class _PlanScreenState extends State<PlanScreen> {
                         await Provider.of<Auth>(context, listen: false)
                             .logout()
                             .then((value) {
-                               Navigator.of(context).pushNamedAndRemoveUntil(
-                             CityScreen.routeName,
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              CityScreen.routeName,
                               (Route<dynamic> route) => false);
-                          
                         });
                       },
                     ),

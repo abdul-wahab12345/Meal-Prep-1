@@ -174,6 +174,107 @@ class UserData with ChangeNotifier {
     }
   }
 
+  Future<void> setUserData(Map<String, dynamic> extractedData) async {
+    try {
+      if (extractedData.isEmpty) {
+        return;
+      }
+      // print(extractedData);
+      Address? billAddress;
+      Address? shipAddress;
+      String userName = extractedData['name'];
+      List<Card> cards = [];
+      User? currentUser;
+
+      delivery_note = extractedData['delivery_note'];
+      allergies = extractedData['allergies'];
+      dislikes = extractedData['dislikes'];
+      next_delivery = extractedData['next_delivery'];
+
+      //getting address
+      var bill = extractedData['billing'] as Map<String, dynamic>;
+
+      billAddress = Address(
+        ad1: bill['address_1'].toString(),
+        ad2: bill['address_2'].toString(),
+        city: bill['city'].toString(),
+        state: bill['state'].toString(),
+        postalCode: bill['postcode'].toString(),
+      );
+
+      var ship = extractedData['shipping'] as Map<String, dynamic>;
+
+      shipAddress = Address(
+        ad1: ship['address_1'].toString(),
+        ad2: ship['address_2'].toString(),
+        city: ship['city'].toString(),
+        state: ship['state'].toString(),
+        postalCode: ship['postcode'].toString(),
+      );
+
+      //issa uper address get hu raha ha
+
+      //now of to getting payment details
+
+      var payment = extractedData['payment_methods'];
+
+      if (payment.isNotEmpty) {
+        var pay = extractedData['payment_methods'] as Map<String, dynamic>;
+
+        pay.forEach((key, value) {
+          var singleCard = value as List<dynamic>;
+          singleCard.forEach((element) {
+            int payment_id = 0;
+            if (!element['is_default']) {
+              String actionUrl = element['actions']['default']['url'];
+              actionUrl =
+                  actionUrl.replaceAll('/set-default-payment-method/', "");
+              var ids = actionUrl.split('/?_wpnonce');
+              payment_id = int.parse(ids.first);
+              print(payment_id);
+            }
+            cards.add(
+              Card(
+                id: payment_id,
+                name: userName,
+                btnText: 'btnText',
+                cardNumber: element['method']['last4'].toString(),
+                date: element['expires'].toString(),
+                isDefault: element['is_default'],
+              ),
+            );
+          });
+        });
+      }
+      this.userImage = extractedData['image'];
+      currentUser = User(
+        name: extractedData['name'],
+        imageUrl: extractedData['image'],
+        email: extractedData['email'],
+        billingAddress: billAddress,
+        shippingAddress: shipAddress,
+        paymentMethod: cards,
+      );
+
+      user = currentUser;
+
+      notifyListeners();
+    } catch (error) {
+      throw error.toString();
+    }
+  }
+
+  Future<dynamic> verifyToken(String aw_hash) async {
+    var url = Uri.parse('${webUrl}wp-json/meal-prep/v1/verify-token');
+    var body = {'user_id': userId.toString(), 'aw_secure_hash': aw_hash};
+    //print(body);
+
+    final response = await http.post(url, body: body);
+    var data = json.decode(response.body);
+   
+    return data;
+  }
+
   Future<void> addAllergies(String allergies, String dislikes) async {
     var url = Uri.parse('${webUrl}wp-json/meal-prep/v1/add-allergies');
     final response = await http.post(url, body: {

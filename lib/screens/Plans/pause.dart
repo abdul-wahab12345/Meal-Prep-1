@@ -23,10 +23,9 @@ class Pause extends StatefulWidget {
 }
 
 class _PauseState extends State<Pause> {
-  
   final _dateController = TextEditingController();
   final _reasonController = TextEditingController();
-  
+
   String errorText = '';
   bool indefinitltLoader = false;
   bool saveLoader = false;
@@ -34,7 +33,7 @@ class _PauseState extends State<Pause> {
   @override
   Widget build(BuildContext context) {
     DateTime _dateTime;
-var user = Provider.of<UserData>(context).user;
+    var user = Provider.of<UserData>(context).user;
     var _appBar = AppBar(
       backgroundColor: aPrimary,
       title: const Text("Pause"),
@@ -46,15 +45,16 @@ var user = Provider.of<UserData>(context).user;
           child: Container(
             padding: const EdgeInsets.all(8),
             child: CircleAvatar(
-        child: user != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.network(
-                              user.imageUrl,
-                              height: 40,  width: double.infinity,
-                              fit: BoxFit.cover,
-                            ))
-                        : Image.asset('assets/images/person.png'),
+              child: user != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image.network(
+                        user.imageUrl,
+                        height: 40,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ))
+                  : Image.asset('assets/images/person.png'),
             ),
           ),
         )
@@ -136,7 +136,6 @@ var user = Provider.of<UserData>(context).user;
                 ],
               ),
             ),
-           
             Container(
               margin: EdgeInsets.only(top: 15, left: 10, right: 10),
               child: TextFormField(
@@ -185,7 +184,9 @@ var user = Provider.of<UserData>(context).user;
                     errorText,
                     style: TextStyle(color: Colors.red),
                   )),
-
+            SizedBox(
+              height: 15,
+            ),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 10),
               child: Flex(
@@ -231,7 +232,7 @@ var user = Provider.of<UserData>(context).user;
                                         'reason': _reasonController.text,
                                         'next_delivery': deliveryDate,
                                       };
-                                    
+
                                       String response =
                                           await Provider.of<Subscriptions>(
                                                   context,
@@ -318,7 +319,7 @@ var user = Provider.of<UserData>(context).user;
                                             : 'false',
                                         'reason': _reasonController.text,
                                       };
-                                   
+
                                       String response =
                                           await Provider.of<Subscriptions>(
                                                   context,
