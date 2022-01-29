@@ -294,6 +294,7 @@ class UserData with ChangeNotifier {
   }
 
   Future<void> changeProfileImage(String base64Image) async {
+    print(12);
     var url = Uri.parse('${webUrl}wp-json/meal-prep/v1/change-profile-image');
     final response = await http
         .post(url, body: {'user_id': userId.toString(), 'image': base64Image});
