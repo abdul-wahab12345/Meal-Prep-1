@@ -201,9 +201,8 @@ class _PlanScreenState extends State<PlanScreen> {
               setState(() {
                 forcedMove = true;
                 bottomIndex = index;
-                if (index != 1) {
-                  _type = Type.Default;
-                }
+                selectedPlanId = 0;
+                _type = Type.Default;
               });
             },
           )
@@ -242,9 +241,10 @@ class _PlanScreenState extends State<PlanScreen> {
             onTap: (index) {
               setState(() {
                 forcedMove = true;
-                if (index != 1) {
-                  _type = Type.Default;
-                }
+
+                _type = Type.Default;
+                selectedPlanId = 0;
+
                 bottomIndex = index;
               });
             },
@@ -270,9 +270,9 @@ class _PlanScreenState extends State<PlanScreen> {
               setState(() {
                 forcedMove = true;
                 bottomIndex = index;
-                if (index != 1) {
-                  _type = Type.Default;
-                }
+
+                _type = Type.Default;
+                selectedPlanId = 0;
               });
             },
           )
@@ -285,9 +285,9 @@ class _PlanScreenState extends State<PlanScreen> {
           setState(() {
             forcedMove = true;
             bottomIndex = index;
-            if (index != 1) {
-              _type = Type.Default;
-            }
+            selectedPlanId = 0;
+
+            _type = Type.Default;
           });
         },
       );
@@ -362,6 +362,8 @@ class _PlanScreenState extends State<PlanScreen> {
               )
       ],
     );
+//Sorting
+    subs.sort((a, b) => a.status.toString().compareTo(b.status.toString()));
 
     Widget _plansTab = isLoading
         ? AdaptiveIndecator()

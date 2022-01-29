@@ -53,7 +53,8 @@ class _PauseState extends State<Pause> {
                         height: 40,
                         width: double.infinity,
                         fit: BoxFit.cover,
-                      ))
+                      ),
+                    )
                   : Image.asset('assets/images/person.png'),
             ),
           ),
