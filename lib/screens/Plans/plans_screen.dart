@@ -142,6 +142,12 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // var data = Provider.of<Auth>(context, listen: false).userData;
+    // if (data != null) {
+    //   Provider.of<UserData>(context, listen: false)
+    //       .setUserData(data as Map<String, dynamic>);
+    // }
+
     var profileIndex = ModalRoute.of(context)!.settings.arguments;
     if (profileIndex != null && !forcedMove) {
       setState(() {

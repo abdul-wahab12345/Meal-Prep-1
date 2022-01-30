@@ -64,6 +64,7 @@ class UserData with ChangeNotifier {
   String allergies = '';
   String dislikes = '';
   String next_delivery = '';
+
   UserData({
     required this.webUrl,
     required this.userId,
@@ -175,11 +176,12 @@ class UserData with ChangeNotifier {
   }
 
   Future<void> setUserData(Map<String, dynamic> extractedData) async {
+    print(extractedData);
     try {
       if (extractedData.isEmpty) {
         return;
       }
-      // print(extractedData);
+      print(5555);
       Address? billAddress;
       Address? shipAddress;
       String userName = extractedData['name'];
@@ -271,7 +273,7 @@ class UserData with ChangeNotifier {
 
     final response = await http.post(url, body: body);
     var data = json.decode(response.body);
-   
+
     return data;
   }
 

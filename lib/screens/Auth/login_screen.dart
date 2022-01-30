@@ -1,10 +1,10 @@
 import 'dart:io';
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:mealprep/Models/auth.dart';
+import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/constant.dart';
 
 import 'package:mealprep/screens/Auth/forget_screen.dart';
@@ -32,17 +32,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailFocusNode = FocusNode();
   final _passFocusNode = FocusNode();
 
- // String modalData='';
+  // String modalData='';
 
   final userNameController = TextEditingController();
-  
 
   final passwordController = TextEditingController();
 
   Future<void> tryLogin() async {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
-      
       setState(() {
         isLoading = true;
       });
@@ -52,10 +50,8 @@ class _LoginScreenState extends State<LoginScreen> {
           passwordController.text,
         );
 
-         Navigator.of(context).pushNamedAndRemoveUntil(
-                              PlanScreen.routeName,
-                              (Route<dynamic> route) => false);
-
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            PlanScreen.routeName, (Route<dynamic> route) => false);
       } catch (error) {
         print(error);
         await showDialog(
@@ -91,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     // if(modalData==''){
     //    userNameController.text=modalData;
-       
+
     // }
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
@@ -107,7 +103,6 @@ class _LoginScreenState extends State<LoginScreen> {
         margin: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
           child: Column(
-         
             children: [
               Container(
                 margin: EdgeInsets.only(top: height * 7),
@@ -115,7 +110,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: height * 16,
                 child: Image.asset('assets/images/login_screen_image.png'),
               ), //Image Container
-SizedBox(height: height*18,),
+              SizedBox(
+                height: height * 18,
+              ),
               Container(
                 margin: EdgeInsets.only(bottom: height * 5, top: height * 5),
                 child: Form(

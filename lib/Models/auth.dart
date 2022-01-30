@@ -8,6 +8,7 @@ class Auth with ChangeNotifier {
   int? id;
   String? name;
   String? aw_hash;
+  dynamic userData;
 
   List<Map<String, String>> errorcodes = [
     {'code': 'invalid_username', 'text': "Username is invalid!"},
@@ -44,8 +45,6 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
-  
-
   Future<void> userLogin(String username, String password) async {
     try {
       var url = Uri.parse('${websiteUrl}wp-json/meal-prep/v1/user-login');
@@ -60,6 +59,7 @@ class Auth with ChangeNotifier {
         id = user['data']['ID'];
         name = user['data']['fullName'];
         aw_hash = user['data']['hash'];
+        this.userData = user['profile_data'];
 
         final prefs = await SharedPreferences.getInstance();
         final userData = json.encode({

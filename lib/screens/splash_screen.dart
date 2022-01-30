@@ -32,12 +32,11 @@ class _SplashScreenState extends State<SplashScreen> {
           String? aw_hash = Provider.of<Auth>(context, listen: false).aw_hash;
           var data = await Provider.of<UserData>(context, listen: false)
               .verifyToken(aw_hash!);
-                print(data);
+          print(data);
           // ignore: unnecessary_null_comparison
           if (data != null) {
-          
-           await Provider.of<UserData>(context, listen: false)
-                .setUserData(data as Map<String,dynamic>);
+            await Provider.of<UserData>(context, listen: false)
+                .setUserData(data as Map<String, dynamic>);
             Navigator.of(context).pushReplacementNamed(PlanScreen.routeName);
           } else {
             Provider.of<Auth>(context, listen: false).logout();
