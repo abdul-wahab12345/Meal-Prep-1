@@ -8,7 +8,7 @@ class Auth with ChangeNotifier {
   int? id;
   String? name;
   String? aw_hash;
-  dynamic userData;
+  dynamic? userData;
 
   List<Map<String, String>> errorcodes = [
     {'code': 'invalid_username', 'text': "Username is invalid!"},
