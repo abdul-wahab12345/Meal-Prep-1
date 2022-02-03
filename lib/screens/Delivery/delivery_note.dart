@@ -3,8 +3,6 @@ import 'package:mealprep/Models/auth.dart';
 import 'package:mealprep/Models/subscriptions.dart';
 import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/constant.dart';
-import 'package:mealprep/screens/Delivery/delivery_screen.dart';
-import 'package:mealprep/screens/Plans/plans_screen.dart';
 
 import 'package:mealprep/widgets/adaptivedialog.dart';
 import 'package:mealprep/widgets/adaptive_indecator.dart';
@@ -55,7 +53,7 @@ class _DeliveryNoteState extends State<DeliveryNote> {
                 content: error.toString(),
                 btnYes: 'Okay',
                 yesPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(ctx).pop();
                   setState(() {
                     //to stop loading
                   });
@@ -195,11 +193,11 @@ class _DeliveryNoteState extends State<DeliveryNote> {
                                       content: 'Your note has been updated',
                                       btnYes: 'Okay',
                                       yesPressed: () {
-                                        Navigator.of(context).pop();
+                                        Navigator.of(ctx).pop();
                                       }));
                               Provider.of<UserData>(context, listen: false)
                                   .setNote(_noteController.text);
-                              Navigator.of(context).pop();
+                             // Navigator.of(context).pop();
                             }).catchError((error) {
                               setState(() {
                                 isLoading = false;
