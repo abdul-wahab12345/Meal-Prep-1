@@ -216,7 +216,7 @@ class _DeliveryNoteState extends State<DeliveryNote> {
                               ? height * 15
                               : height * 6,
 
-                          //alignment: Alignment.bottomLeft,
+                    
                           margin: const EdgeInsets.only(top: 30),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
