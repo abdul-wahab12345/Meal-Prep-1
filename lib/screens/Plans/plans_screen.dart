@@ -29,6 +29,7 @@ class _PlanScreenState extends State<PlanScreen> {
   int bottomIndex = 1;
   bool forcedMove = false;
   bool isLoading = false;
+  String planstatus = '';
 
   final List<String> screenTitles = [
     'My Delivery',
@@ -40,6 +41,12 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   void initState() {
+    var data = Provider.of<Auth>(context, listen: false).userData;
+
+    if (data != null) {
+      Provider.of<UserData>(context, listen: false)
+          .setUserData(data as Map<String, dynamic>);
+    }
     List<Subscription> subs =
         Provider.of<Subscriptions>(context, listen: false).subscriptions;
     if (subs.isEmpty) {
@@ -269,7 +276,11 @@ class _PlanScreenState extends State<PlanScreen> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          CustomBottomBar(selectedPlanId: selectedPlanId),
+          CustomBottomBar(
+            selectedPlanId: selectedPlanId,
+            status: planstatus,
+            callback: reactivateSubscription,
+          ),
           BottomNavBar(
             index: bottomIndex,
             onTap: (index) {
@@ -397,106 +408,117 @@ class _PlanScreenState extends State<PlanScreen> {
                           height: currentOrientation == Orientation.landscape
                               ? height * 70
                               : height * 80,
-                          child: ListView.builder(
-                            itemCount: subs.length,
-                            itemBuilder: (ctx, index) => GestureDetector(
-                              onTap: () {
-                                print(subs[index].isCharged);
-                                setState(() {
-                                  if (selectedPlanId == subs[index].id) {
-                                    _type = Type.Default;
-                                    selectedPlanId = 0;
-                                    return;
-                                  }
-                                  selectedPlanId = subs[index].id;
-
-                                  if (subs[index].status == "Inactive") {
-                                    _type = Type.Reactive;
-                                  } else if (subs[index].status == "Paused") {
-                                    _type = Type.UnPause;
-                                  } else if (subs[index].status == "Active") {
-                                    _type = Type.Pause;
-                                  } else {
-                                    _type = Type.Default;
-                                  }
-                                });
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                  top: 17,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: aPrimary,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                        left: width * 5,
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 19,
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            width: width * 58,
-                                            child: Text(subs[index].title,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline6),
-                                          ),
-                                          SizedBox(
-                                            height:
-                                                subs[index].status != "Inactive"
-                                                    ? 10
-                                                    : 60,
-                                          ),
-                                          if (subs[index].status != "Inactive")
-                                            ConditionalInfo(subs[index]),
-                                          Text(
-                                            subs[index].status,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText2!
-                                                .copyWith(
-                                                    color: statusColors[
-                                                        subs[index].status]),
-                                          ),
-                                        ],
-                                      ),
-                                    ), //ContentConatiner
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                          20,
+                          child: RefreshIndicator(
+                            color: aPrimary,
+                            onRefresh: () async {
+                              await Provider.of<Subscriptions>(context,
+                                      listen: false)
+                                  .fetchAndSetSubs();
+                            },
+                            child: ListView.builder(
+                              itemCount: subs.length,
+                              itemBuilder: (ctx, index) => GestureDetector(
+                                onTap: () {
+                                  print(subs[index].isCharged);
+                                  setState(() {
+                                    if (selectedPlanId == subs[index].id) {
+                                      _type = Type.Default;
+                                      selectedPlanId = 0;
+                                      return;
+                                    }
+                                    selectedPlanId = subs[index].id;
+                                    planstatus = subs[index].status;
+                                    if (subs[index].status == "Inactive") {
+                                      _type = Type.Reactive;
+                                    } else if (subs[index].status == "Paused") {
+                                      _type = Type.Pause;
+                                    } else if (subs[index].status == "Active") {
+                                      _type = Type.Pause;
+                                    } else {
+                                      _type = Type.Default;
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(
+                                    top: 17,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: aPrimary,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                          left: width * 5,
                                         ),
-                                      ),
-                                      width: 100,
-                                      margin: const EdgeInsets.only(
-                                        right: 15,
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 20),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: Hero(
-                                          tag: subs[index].id,
-                                          child: Image.network(
-                                              subs[index].imageUrl,
-                                              fit: BoxFit.cover),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 19,
                                         ),
-                                      ),
-                                    ), //imageContainer
-                                  ],
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              width: width * 58,
+                                              child: Text(subs[index].title,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6),
+                                            ),
+                                            SizedBox(
+                                              height: subs[index].status !=
+                                                      "Inactive"
+                                                  ? 10
+                                                  : 60,
+                                            ),
+                                            if (subs[index].status !=
+                                                "Inactive")
+                                              ConditionalInfo(subs[index]),
+                                            Text(
+                                              subs[index].status,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText2!
+                                                  .copyWith(
+                                                      color: statusColors[
+                                                          subs[index].status]),
+                                            ),
+                                          ],
+                                        ),
+                                      ), //ContentConatiner
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                        ),
+                                        width: 100,
+                                        margin: const EdgeInsets.only(
+                                          right: 15,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 20),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: Hero(
+                                            tag: subs[index].id,
+                                            child: Image.network(
+                                                subs[index].imageUrl,
+                                                fit: BoxFit.cover),
+                                          ),
+                                        ),
+                                      ), //imageContainer
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

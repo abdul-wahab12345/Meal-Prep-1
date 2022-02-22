@@ -50,6 +50,9 @@ class _LoginScreenState extends State<LoginScreen> {
           passwordController.text,
         );
 
+       
+          //  Navigator.of(context).pushReplacementNamed(PlanScreen.routeName);
+
         Navigator.of(context).pushNamedAndRemoveUntil(
             PlanScreen.routeName, (Route<dynamic> route) => false);
       } catch (error) {

@@ -30,6 +30,7 @@ class _PauseState extends State<Pause> {
   bool indefinitltLoader = false;
   bool saveLoader = false;
   String deliveryDate = '';
+  String showDate = '';
   @override
   Widget build(BuildContext context) {
     DateTime _dateTime;
@@ -84,28 +85,24 @@ class _PauseState extends State<Pause> {
                   Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 17),
             ),
             Container(
+              margin: EdgeInsets.only(top: 10),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Flexible(
-                    flex: 2,
-                    child: InputFeild(
-                      inputController: _dateController,
-                      hinntText: 'Choose a Date',
-                      validatior: (value) {
-                        return null;
-                      },
+                  if (showDate.isNotEmpty)
+                    Flexible(
+                      flex: 2,
+                      child: Text(showDate),
                     ),
-                  ),
                   Flexible(
                     flex: 1,
-                    child: TextButton(
+                    child: GestureDetector(
                       child: Text(
                         'Choose Date',
                         style: TextStyle(color: btnColor),
                       ),
-                      onPressed: () {
+                      onTap: () {
                         var now = DateTime.now();
 
                         var today = DateTime.now();
@@ -125,7 +122,7 @@ class _PauseState extends State<Pause> {
                           setState(() {
                             _dateTime = value;
 
-                            _dateController.text =
+                            showDate =
                                 DateFormat("M/d/y").format(value);
                             deliveryDate = DateFormat("y-M-d").format(value);
                             print(deliveryDate);
@@ -209,7 +206,7 @@ class _PauseState extends State<Pause> {
                                   }
                                 : () async {
                                     if (_reasonController.text.isEmpty ||
-                                        _dateController.text.isEmpty) {
+                                       showDate.isEmpty) {
                                       setState(() {
                                         errorText =
                                             'Please enter the date and reason';

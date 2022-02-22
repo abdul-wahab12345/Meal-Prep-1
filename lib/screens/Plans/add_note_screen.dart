@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mealprep/Models/subscriptions.dart';
+import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/constant.dart';
 import 'package:mealprep/screens/Plans/plans_screen.dart';
 
@@ -36,6 +37,7 @@ class _AddNoteState extends State<AddNote> {
     if (currentOrientation == Orientation.landscape) {
       height = 600 / 100;
     }
+    var user = Provider.of<UserData>(context).user;
     var _appBar = AppBar(
       backgroundColor: Colors.black,
       title: const Text("Add Note"),
@@ -47,7 +49,17 @@ class _AddNoteState extends State<AddNote> {
           child: Container(
             padding: const EdgeInsets.all(8),
             child: CircleAvatar(
-              child: Image.asset('assets/images/person.png'),
+              child: user != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image.network(
+                        user.imageUrl,
+                        height: 40,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : Image.asset('assets/images/person.png'),
             ),
           ),
         )
