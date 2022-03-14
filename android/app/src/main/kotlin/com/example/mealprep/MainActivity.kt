@@ -1,4 +1,4 @@
-package com.example.mealprep
+package com.alphatrait.nutrition
 
 import io.flutter.embedding.android.FlutterActivity
 
