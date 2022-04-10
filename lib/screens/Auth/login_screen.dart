@@ -50,8 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
           passwordController.text,
         );
 
-       
-          //  Navigator.of(context).pushReplacementNamed(PlanScreen.routeName);
+        //  Navigator.of(context).pushReplacementNamed(PlanScreen.routeName);
 
         Navigator.of(context).pushNamedAndRemoveUntil(
             PlanScreen.routeName, (Route<dynamic> route) => false);
@@ -97,103 +96,119 @@ class _LoginScreenState extends State<LoginScreen> {
 
     // modalData=ModalRoute.of(context)!.settings.arguments as String;
 
-    return Scaffold(
-      appBar: AppBar(
+    return SafeArea(
+      child: Scaffold(
+        // appBar: AppBar(
+        //   backgroundColor: abackground,
+        // ),
         backgroundColor: abackground,
-      ),
-      backgroundColor: abackground,
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: height * 7),
-                height: height * 16,
-                width: height * 16,
-                child: Image.asset('assets/images/login_screen_image.png'),
-              ), //Image Container
-              SizedBox(
-                height: height * 18,
-              ),
-              Container(
-                margin: EdgeInsets.only(bottom: height * 5, top: height * 5),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
+        body: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: SingleChildScrollView(
+            child: SizedBox(
+              height: height * 88,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: height * 12),
+                    height: height * 16,
+                    width: height * 16,
+                    child: Image.asset(
+                      'assets/images/login_screen_image.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ), //Image Container
+                  // SizedBox(
+                  //   height: height * 20,
+                  // ),
+                  Column(
                     children: [
-                      InputFeild(
-                        hinntText: 'Username or email',
-                        validatior: (String value) {
-                          if (value.isEmpty) {
-                            return "Please enter username or email!";
-                          }
-                          return null;
-                        },
-                        inputController: userNameController,
-                        textInputAction: TextInputAction.next,
-                        focusNode: _emailFocusNode,
-                        submitted: (_) {
-                          FocusScope.of(context).requestFocus(_passFocusNode);
-                        },
+                      Container(
+                        margin: EdgeInsets.only(
+                            bottom: height * 3, top: height * 5),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              InputFeild(
+                                hinntText: 'Username or email',
+                                validatior: (String value) {
+                                  if (value.isEmpty) {
+                                    return "Please enter username or email!";
+                                  }
+                                  return null;
+                                },
+                                inputController: userNameController,
+                                textInputAction: TextInputAction.next,
+                                focusNode: _emailFocusNode,
+                                submitted: (_) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_passFocusNode);
+                                },
+                              ),
+                              InputFeild(
+                                hinntText: 'Password',
+                                validatior: (String value) {
+                                  if (value.isEmpty) {
+                                    return "Please enter password!";
+                                  }
+                                  return null;
+                                },
+                                secure: true,
+                                inputController: passwordController,
+                                textInputAction: TextInputAction.done,
+                                focusNode: _passFocusNode,
+                                submitted: (_) {
+                                  FocusScope.of(context).unfocus();
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      InputFeild(
-                        hinntText: 'Password',
-                        validatior: (String value) {
-                          if (value.isEmpty) {
-                            return "Please enter password!";
-                          }
-                          return null;
-                        },
-                        secure: true,
-                        inputController: passwordController,
-                        textInputAction: TextInputAction.done,
-                        focusNode: _passFocusNode,
-                        submitted: (_) {
-                          FocusScope.of(context).unfocus();
-                        },
-                      ),
+                      isLoading
+                          ? Platform.isIOS
+                              ? const CupertinoActivityIndicator(
+                                  radius: 30,
+                                )
+                              : const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                          : CustomButton(
+                              text: 'Login',
+                              callback: tryLogin,
+                            ),
+
+                      Container(
+                        margin: EdgeInsets.only(
+                            top: height * 2, left: 20, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AtextButton(
+                              text: 'Forget Password',
+                              callBack: () {
+                                Navigator.of(context)
+                                    .pushNamed(ForgetScreen.routeName);
+                              },
+                            ),
+                            AtextButton(
+                              text: 'Register',
+                              callBack: () {
+                                Navigator.of(context)
+                                    .pushNamed(RegisterScreen.routeName);
+                              },
+                            ),
+                          ],
+                        ),
+                      ), //Text button Container
                     ],
                   ),
-                ),
+                  //TextFeild Container
+                ],
               ),
-              //TextFeild Container
-
-              isLoading
-                  ? Platform.isIOS
-                      ? const CupertinoActivityIndicator(
-                          radius: 30,
-                        )
-                      : const CircularProgressIndicator(
-                          color: Colors.white,
-                        )
-                  : CustomButton(
-                      text: 'Login',
-                      callback: tryLogin,
-                    ),
-
-              Container(
-                margin: EdgeInsets.only(top: height * 2, left: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AtextButton(
-                      text: 'Forget Password',
-                      callBack: () {
-                        Navigator.of(context).pushNamed(ForgetScreen.routeName);
-                      },
-                    ),
-                    AtextButton(
-                      text: 'Register',
-                      callBack: () {
-                        Navigator.of(context)
-                            .pushNamed(RegisterScreen.routeName);
-                      },
-                    ),
-                  ],
-                ),
-              ), //Text button Container
-            ],
+            ),
           ),
         ),
       ),

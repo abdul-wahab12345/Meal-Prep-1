@@ -467,7 +467,7 @@ class _PlanScreenState extends State<PlanScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Container(
-                                              width: width * 58,
+                                              width: width * 50,
                                               child: Text(subs[index].title,
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -500,7 +500,7 @@ class _PlanScreenState extends State<PlanScreen> {
                                             20,
                                           ),
                                         ),
-                                        width: 100,
+                                        width: width * 30,
                                         margin: const EdgeInsets.only(
                                           right: 15,
                                         ),

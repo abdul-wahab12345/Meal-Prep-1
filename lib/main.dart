@@ -7,7 +7,6 @@ import 'package:mealprep/Models/user.dart';
 import 'package:mealprep/screens/Auth/change_password.dart';
 import 'package:mealprep/screens/Auth/verification.dart';
 import 'package:mealprep/screens/Delivery/delivery_note.dart';
-import 'package:mealprep/screens/Error%20Screens/maintainance.dart';
 import 'package:mealprep/screens/Plans/add_note_screen.dart';
 import 'package:mealprep/screens/Plans/add_plan_screen.dart';
 import 'package:mealprep/screens/Plans/pause.dart';
@@ -126,7 +125,7 @@ class MyApp extends StatelessWidget {
           Pause.routeName: (ctx) => const Pause(),
           DeliveryScreen.routeName: (ctx) => DeliveryScreen(),
           DeliveryNote.routeName: (ctx) => DeliveryNote(),
-          VerificationScreen.routeName: (ctx) => VerificationScreen(),
+          VerificationScreen.routeName: (ctx ) => VerificationScreen(),
           ChangePasswordScreen.routeName: (ctx) => ChangePasswordScreen(),
           AddPayment.routeName: (ctx) => AddPayment(),
           ImageUpload.routeName: (ctx) => ImageUpload(),
